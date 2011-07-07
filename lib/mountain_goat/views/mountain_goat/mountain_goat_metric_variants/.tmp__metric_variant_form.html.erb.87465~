@@ -16,16 +16,6 @@
 		<%= f.label :value, 'Metric value' %><br />
 		<%= f.text_area :value %>
 	</div>
-	
-	<div class="item opt1">
-		<%= f.label :opt1, 'Option 1' %><br />
-		<%= f.text_area :opt1 %>
-	</div>
-	
-	<div class="item opt2">
-		<%= f.label :opt2, 'Option 2' %><br />
-		<%= f.text_area :opt2 %>
-	</div>
 <% end %>
 <div class="item priority">
 	<%= f.label :priority, 'Priority' %><br />

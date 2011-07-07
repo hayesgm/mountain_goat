@@ -32,8 +32,8 @@ module MetricTracking
       block.call(SwitchVariant.new( logger, metric, convert, var ) )
     end
     
-    def mv(metric_type, convert_type, default)
-      return get_metric_variant(metric_type, convert_type, default)
+    def mv(metric_type, convert_type, default, opts = {}, opt = nil)
+      return get_metric_variant(metric_type, convert_type, default, opts, opt)
     end
   
     #shorthand
@@ -76,47 +76,48 @@ module MetricTracking
       #we need to see what meta information we should fill based on the conversion type
       Rally.create!( { :convert_id => convert.id } ).set_meta_data(options)
       
-      #we just converted, let's tally each of our metrics (from cookies)
-      convert.metrics.each do |metric|
-        metric_sym = "metric_#{metric.metric_type}".to_sym
-        metric_variant_sym = "metric_#{metric.metric_type}_variant".to_sym
-        
-        value = cookies[metric_sym]
-        variant_id = cookies[metric_variant_sym]
-        
-        #logger.warn "Value: #{metric_sym} - #{value}"
-        #logger.warn "Value: #{metric_variant_sym} - #{variant_id}"
-        
-        if variant_id.blank? #the user just doesn't have this set
-          next
+      if defined?(cookies)
+        #we just converted, let's tally each of our metrics (from cookies)
+        convert.metrics.each do |metric|
+          metric_sym = "metric_#{metric.metric_type}".to_sym
+          metric_variant_sym = "metric_#{metric.metric_type}_variant".to_sym
+          
+          value = cookies[metric_sym]
+          variant_id = cookies[metric_variant_sym]
+          
+          #logger.warn "Value: #{metric_sym} - #{value}"
+          #logger.warn "Value: #{metric_variant_sym} - #{variant_id}"
+          
+          if variant_id.blank? #the user just doesn't have this set
+            next
+          end
+          
+          variant = MetricVariant.first(:conditions => { :id => variant_id.to_i } )
+          
+          if variant.nil?
+            logger.error "Variant #{variant_id} not in metric variants for #{metric.title}"
+            next
+          end
+          
+          if variant.value != value
+            logger.warn "Variant #{variant.name} values differ for metric #{metric.title}.  '#{variant.value}' != '#{value}'!"
+          end
+          
+          logger.warn "Tallying conversion #{convert.name} for #{metric.title} - #{variant.name} (#{variant.value} - #{variant.id})"
+          variant.tally_convert
         end
-        
-        variant = MetricVariant.first(:conditions => { :id => variant_id.to_i } )
-        
-        if variant.nil?
-          logger.error "Variant #{variant_id} not in metric variants for #{metric.title}"
-          next
-        end
-        
-        if variant.value != value
-          logger.warn "Variant #{variant.name} values differ for metric #{metric.title}.  '#{variant.value}' != '#{value}'!"
-        end
-        
-        logger.warn "Tallying conversion #{convert.name} for #{metric.title} - #{variant.name} (#{variant.value} - #{variant.id})"
-        variant.tally_convert
       end
     end
     
     private
     
-    def get_metric_variant(metric_type, convert_type, default)
-      metric_sym = "metric_#{metric_type}".to_sym
+    def get_metric_variant(metric_type, convert_type, default, opts = {}, opt = nil)
+      metric_sym = "metric_#{metric_type}#{ opt.nil? ? "" : '_' + opt.to_s }".to_sym
       metric_variant_sym = "metric_#{metric_type}_variant".to_sym
       
       #first, we'll check for a cookie value
-      if cookies[metric_sym] && !cookies[metric_sym].blank?
-        #we have the cookie
-        
+      if defined?(cookies) && cookies[metric_sym] && !cookies[metric_sym].blank?
+        #we have the cookie  
         variant_id = cookies[metric_variant_sym]
         variant = MetricVariant.first(:conditions => { :id => variant_id.to_i } )
         if !variant.nil?
@@ -124,7 +125,7 @@ module MetricTracking
             variant.tally_serve
           end
         else
-          logger.warn "Serving metric #{metric_type} without finding / tallying variant."
+          logger.warn "Serving metric #{metric_type} #{ opt.nil? ? "" : opt.to_s } without finding / tallying variant."
         end
         
         return cookies[metric_sym] #it's the best we can do
@@ -141,16 +142,20 @@ module MetricTracking
         
         if metric_variant.nil?
           logger.warn "Missing metric variants for #{metric_type}"
-          metric_variant = MetricVariant.create!( :metric_id => metric.id, :value => default, :name => default )
+          metric_variant = MetricVariant.create!( { :metric_id => metric.id, :value => default, :name => default }.merge(opts) )
         end
         
         metric_variant.tally_serve #donate we served this to a user
-        logger.debug "Serving #{metric_variant.name} (#{metric_variant.value}) for #{metric_sym}"
+        value = metric_variant.read_attribute( opt.nil? ? :value : opt )
+        logger.debug "Serving #{metric_variant.name} (#{value}) for #{metric_sym}"
         #good, we have a variant, let's store it in session
-        cookies[metric_sym] = { :value => metric_variant.value } #, :domain => WILD_DOMAIN
-        cookies[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
         
-        return metric_variant.value
+        if defined?(cookies)
+          cookies[metric_sym] = { :value => value } #, :domain => WILD_DOMAIN
+          cookies[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
+        end
+        
+        return value
       end
     end
     
@@ -158,7 +163,7 @@ module MetricTracking
       metric_variant_sym = "metric_#{metric_type}_variant".to_sym
       
       #first, we'll check for a cookie selection
-      if cookies[metric_variant_sym] && !cookies[metric_variant_sym].blank?
+      if defined?(cookies) && cookies[metric_variant_sym] && !cookies[metric_variant_sym].blank?
         #we have the cookie
         
         variant_id = cookies[metric_variant_sym]
@@ -195,7 +200,9 @@ module MetricTracking
       metric_variant.tally_serve #donate we served this to a user
       logger.debug "Serving #{metric_variant.name} (#{metric_variant.switch_type}) for #{metric.title} (switch-type)"
       #good, we have a variant, let's store it in session (not the value, just the selection)
-      cookies[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
+      if defined?(cookies)
+        cookies[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
+      end
       
       return metric_variant
     end
@@ -238,4 +245,6 @@ class ActionView::Base
   include MetricTracking::View
 end
 
-
+class ActionMailer::Base
+  include MetricTracking::Controller  
+end
