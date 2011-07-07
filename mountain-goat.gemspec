@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "mountain-goat/version"
+require "mountain_goat/version"
 
 Gem::Specification.new do |s|
   s.name        = "mountain-goat"
