@@ -1,0 +1,27 @@
+<%# locals => f %>
+
+<%= f.hidden_field :metric_id %>
+
+<% if f.object.metric.is_switch %>
+	<span class="switch-type"><%=h f.object.switch_type %></span>
+<% end %>
+
+<div class="item name">
+	<%= f.label :name, 'Variant name' %><br />
+	<%= f.text_field :name %>
+</div>
+
+<% if !f.object.metric.is_switch %>
+	<div class="item value">
+		<%= f.label :value, 'Metric value' %><br />
+		<%= f.text_area :value %>
+	</div>
+<% end %>
+<div class="item priority">
+	<%= f.label :priority, 'Priority' %><br />
+	<%= f.text_field :priority %>
+</div>
+
+<div class="item submit">
+	<%= f.submit 'Submit' %>
+</div>

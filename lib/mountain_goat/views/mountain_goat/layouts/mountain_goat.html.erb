@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<% is_mobile = false if local_assigns[:is_mobile].nil? %>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>Mountain Goat <% if @title %> - <%=h @title %><% end %></title>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	
+	<%# These are mobile specific settings.  We are disabling zooming and fixing the width. %>
+	<meta content='True' name='HandheldFriendly' />
+	<!--<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />-->
+	<meta name="viewport" content="width=device-width" />
+	
+		
+</head>
+
+<body>
+	
+	<% if !flash[:message].blank? %>
+		<div class="ocelot-flash message">
+			<div class="message"><%= flash[:message] %></div>
+		</div>
+	<% end %>
+	
+	<% if !flash[:model].blank? %>
+		<div class="ocelot-flash-model model">
+			<div class="jqmWindow" id="dialog">
+				<a href="#" class="jqmClose">Close</a>
+				<div class="model"><%= flash[:model] %></div>
+			</div>
+		</div>
+	<% end %>
+	
+	<% if !flash[:notice].blank? || !flash[:error].blank? %>
+		<div class="ocelot-flash">
+			<% if !flash[:error].blank? %><div class="error"><%= flash[:error] %></div><% end %>
+			<% if !flash[:notice].blank? %><div class="notice"><%= flash[:notice] %></div><% end %>
+		</div>
+	<% end %>
+	
+	<div id="ocelot-main">
+		<%= yield %>
+
+		<div id="container-footer">
+			
+		</div>
+	</div>
+</body>
+
+</html>

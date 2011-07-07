@@ -1,0 +1,27 @@
+<%# locals => cmt_f %>
+
+<div class="meta">
+	<span class="title">Meta Item</span>
+	<div class="item meta-name">
+		<%= cmt_f.label :name, 'Name' %><br />
+		<%= cmt_f.text_field :name %>
+	</div>
+	<% if cmt_f.object.new_record? %>
+		<div class="item meta-var">
+			<%= cmt_f.label :var, 'Var' %><br />
+			<%= cmt_f.text_field :var %>
+		</div>
+	<% else %>
+		<span class="metric-variant-name"><%=h cmt_f.object.var %></span>
+	<% end %>
+	
+	<div class="item meta-meta-type">
+		<%= cmt_f.label :meta_type, 'Meta Type' %><br />
+		<%= cmt_f.collection_select :meta_type, [ { :val => "ci_meta", :text => "Integer" }, { :val => "cs_meta", :text => "String" } ], :val, :text %>
+	</div>
+	
+	<div class="item meta-destroy">
+		<%= cmt_f.check_box :_destroy %>  
+		<%= cmt_f.label :_destroy, "Remove Meta" %>
+	</div>
+</div>

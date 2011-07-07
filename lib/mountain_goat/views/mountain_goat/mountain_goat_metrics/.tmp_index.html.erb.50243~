@@ -1,0 +1,30 @@
+<%= render :partial => 'ocelot/ocelot_users/user_bar' %>
+
+
+<div id="container-main" class="mt-metrics">
+	<div class="ocelot-panel">
+		<h2>Listing metrics</h2>
+	
+		<table>
+		  <tr>
+		    <th>Type</th>
+		    <th>Title</th>
+			<th>Convert</th>
+		  </tr>
+		
+		<% @metrics.each do |metric| %>
+		  <tr>
+		    <td><%=h metric.metric_type %></td>
+		    <td><%=h metric.title %></td>
+		    <td><%=h metric.convert_id %></td>
+		    <td><a href="<%= ocelot_ocelot_metric_url metric %>">Details</a></td>
+		    <td><a href="<%= edit_ocelot_ocelot_metric_url(metric)%>">Edit</a></td>
+		  </tr>
+		<% end %>
+		</table>
+		
+		<br />
+	
+		<a href="<%= new_ocelot_ocelot_metric_url %>">New metric</a>
+	</div>
+</div>

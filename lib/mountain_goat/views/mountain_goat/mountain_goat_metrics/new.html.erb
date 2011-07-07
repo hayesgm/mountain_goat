@@ -1,0 +1,14 @@
+
+
+<div id="container-main" class="mt-metrics">
+	<div class="mountain-goat-panel cenetered">
+		<h2>New metric for <%=h @convert.name %></h2>
+	
+		<% form_for :metric, @metric, :url => mountain_goat_metrics_url do |f| %>
+			<%= f.error_messages %>
+		
+			<%= render :partial => 'mountain_goat_metrics/metric_form', :locals => { :f => f } %>
+		<% end %>
+	
+	</div>
+</div>

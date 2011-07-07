@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<% is_mobile = false if local_assigns[:is_mobile].nil? %>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>drawn.to<% if @title %> - <%=h @title %><% end %></title>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<% if @favicon %>
+		<%#does png work for ie? %>
+		<link rel="shortcut icon" href="<%= @favicon %>" />
+	<% else %>
+		<link rel="shortcut icon" href="/favicon.ico" />
+	<% end %>
+	<meta name="keywords" content="drawn.to drawn to fill the house marketing buzz analytics social media socialmedia" >
+	
+	<%# These are mobile specific settings.  We are disabling zooming and fixing the width. %>
+	<meta content='True' name='HandheldFriendly' />
+	<!--<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />-->
+	<meta name="viewport" content="width=device-width" />
+	
+	<meta property="og:type" content="activity"/>
+	<meta property="og:title" content="<% if @title %><%=h @title %><% end %>"/>
+	
+	<% if !@image.nil? %>
+		<meta property="og:image" content="<%= @image %>"/>
+	<% end %>
+	
+	<% if @facebook_url %>
+		<meta property="og:url" content="<%= @facebook_url %>"/>
+	<% end %>
+	
+	<meta property="og:site_name" content="drawn.to"/>
+
+	<%# Our Stylesheets %>
+	<link rel="stylesheet" href="/stylesheets/webflyer.css" type="text/css" />
+	<link rel="stylesheet" href="/stylesheets/jquery.flyerplayer.css" type="text/css" />
+	<link rel="stylesheet" href="/stylesheets/stylize.css" type="text/css" />
+	<link rel="stylesheet" href="/stylesheets/jqModel.css" type="text/css" />
+	<link rel="stylesheet" href="/stylesheets/prettyPhoto.css" type="text/css" media="screen" charset="utf-8" />
+	<link rel="stylesheet" href="/markitup/skins/simple/style.css" type="text/css" />
+	<link rel="stylesheet" href="/markitup/sets/markdown/style.css" type="text/css" />
+	<link rel="stylesheet" href="/stylesheets/jquery-ui-1.8.14.custom.css" type="text/css" />
+	
+	<%# JQuery API %>
+	<script src="/javascripts/jquery152min.js" type="text/javascript"></script>
+	<script src="/javascripts/modernizr-1.7.min.js" type="text/javascript"></script>
+	<script src="/javascripts/webflyer.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.flyerplayer.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.ez-bg-resize.js" type="text/javascript"></script>
+	<script src="/javascripts/utils.js" type="text/javascript"></script>
+	<script src="/javascripts/sabertooth.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.form.js" type="text/javascript"></script>
+	<script src="/javascripts/jqModel.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.ba-bbq.min.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.timeago.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/jquery.flot.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.flot.pie.js" type="text/javascript"></script>
+	<script src="/markitup/jquery.markitup.js" type="text/javascript"></script>
+	<script src="/markitup/sets/markdown/set.js" type="text/javascript"></script>
+	<script src="https://apis.google.com/js/plusone.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
+	
+	<% if @stylize %>
+		<script src="/javascripts/stylize.js?cache=<%= Time.new.to_i %>" type="text/javascript"></script>
+		<link rel="stylesheet" href="/stylesheets/palette.css?cache=<%= Time.new.to_i %>" type="text/css" />
+	<% end %>
+	
+	<% if !ssl? %>
+		<%# TODO: How do we selectively load this? %>
+		<%= GMap.header( :host => request.host ) %>
+	<% end %>
+	
+	<%# Google Analytics %>
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-<%= GA[:account_key] %>-<%= GA[:profile_key] %>']);
+	  _gaq.push(['_setDomainName', '<%= GA[:base_url] %>']);
+	  
+	  <% if !@clique.nil? %>
+	  	<% if !@clique.owner.nil? %>
+	  		_gaq.push(['_setCustomVar', 1, 'User', '<%= @clique.owner.id %>']);
+		<% end %>
+		_gaq.push(['_setCustomVar', 1, 'Flyer', '<%= @clique.id %>']);
+	  <% elsif !@user.nil? %>
+	    _gaq.push(['_setCustomVar', 1, 'User', '<%= @user.id %>']);
+	  <% end %>
+	  
+	  <% if !@link.nil? %>
+	    _gaq.push(['_setCustomVar', 1, 'Link', '<%= @link.id %>']);
+		_gaq.push(['_setCustomVar', 1, 'Linkcode', '<%= @link.link_code %>']);
+	  <% end %>
+	  
+	  _gaq.push(['_setCustomVar', 2, 'Controller', '<%= @controller.controller_name %>']);
+	  _gaq.push(['_setCustomVar', 2, 'Action', '<%= @controller.action_name %>']);
+	  
+	  _gaq.push(['_setAllowLinker', 'true']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	
+	</script>
+	
+</head>
+
+<% bg = mv(:bg_image, :new_user, '/images/bg-street.jpg') %>
+<body class="ocelot <% if @controller.is_mobile? %>mobile<% else %>desktop<% end %>" data-background-url="<%= @backdrop ? @backdrop : bg %>" style="background-image: url(<%= @backdrop ? @backdrop : bg %>)">
+	
+	<% if signed_in? %>
+		<div class="userLogin" data-id="<%=h current_user.id %>"></div>
+	<% end %>
+	
+	<% if !flash[:message].blank? %>
+		<div class="ocelot-flash message">
+			<div class="message"><%= flash[:message] %></div>
+		</div>
+	<% end %>
+	
+	<% if !flash[:model].blank? %>
+		<div class="ocelot-flash-model model">
+			<div class="jqmWindow" id="dialog">
+				<a href="#" class="jqmClose">Close</a>
+				<div class="model"><%= flash[:model] %></div>
+			</div>
+		</div>
+	<% end %>
+	
+	<% if !flash[:notice].blank? || !flash[:error].blank? %>
+		<div class="ocelot-flash">
+			<% if !flash[:error].blank? %><div class="error"><%= flash[:error] %></div><% end %>
+			<% if !flash[:notice].blank? %><div class="notice"><%= flash[:notice] %></div><% end %>
+		</div>
+	<% end %>
+	
+	<div id="ocelot-main">
+		<%= yield %>
+
+		<div id="container-footer">
+			<div id="watermark"><a href="<%= root_url :subdomain => PENGUIN_SUBDOMAIN %>">drawn.to</a></div>
+			<div id="footerlink">
+				<a href="<%= root_url :subdomain => PENGUIN_SUBDOMAIN, :main => 1 %>">drawn.to</a>
+				<a href="http://blog.drawn.to/">blog</a>
+				<a href="<%= penguin_sayhello_url %>">say hello</a>
+				<a href="<%= ocelot_featured_flyers_url( :subdomain => PENGUIN_SUBDOMAIN ) %>">featured events</a>
+			</div>
+			<div id="corporatese">
+				<a href="<%= penguin_privacy_url %>" class="corp">Privacy Policy</a>
+				<a href="<%= penguin_tos_url %>" class="corp">Terms of Service</a>
+				<% if signed_in? && current_user.is_admin? %><a class="corp" href="<%= ocelot_fresh_metrics_url %>">Refresh:Metrics</a><% end %>
+				<span class="corp">Chattr LLC 2011</span>
+			</div>
+			
+			<% if RAILS_ENV != 'production' %>
+				<span class="internal-notice">This page is for internal-use only for demonstration purposes.  Distribution is prohibited.</span>
+			<% end %>
+		</div>
+	</div>
+</body>
+
+</html>

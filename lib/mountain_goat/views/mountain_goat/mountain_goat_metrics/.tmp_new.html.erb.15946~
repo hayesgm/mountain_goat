@@ -1,0 +1,14 @@
+<%= render :partial => 'ocelot/ocelot_users/user_bar' %>
+
+<div id="container-main" class="mt-metrics">
+	<div class="ocelot-panel cenetered">
+		<h2>New metric for <%=h @convert.name %></h2>
+	
+		<% form_for :metric, @metric, :url => ocelot_ocelot_metrics_url do |f| %>
+			<%= f.error_messages %>
+		
+			<%= render :partial => 'ocelot/ocelot_metrics/metric_form', :locals => { :f => f } %>
+		<% end %>
+	
+	</div>
+</div>

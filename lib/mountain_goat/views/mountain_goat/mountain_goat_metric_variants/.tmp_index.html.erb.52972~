@@ -1,0 +1,35 @@
+<%= render :partial => 'ocelot/ocelot_users/user_bar' %>
+
+<div id="container-main" class="mt-metric-variants">
+	<div class="ocelot-panel cenetered">
+		<h1>Listing Metric Variants</h1>
+		
+		<table>
+		  <tr>
+		    <th>Metric</th>
+		    <th>Value</th>
+		    <th>Opt1</th>
+		    <th>Opt2</th>
+		    <th>Served</th>
+		    <th>Conversions</th>
+		  </tr>
+		
+		<% @metric_variants.each do |metric_variant| %>
+		  <tr>
+		    <td><%=h metric_variant.metric_id %></td>
+		    <td><%=h metric_variant.value %></td>
+		    <td><%=h metric_variant.opt1 %></td>
+		    <td><%=h metric_variant.opt2 %></td>
+		    <td><%=h metric_variant.served %></td>
+		    <td><%=h metric_variant.conversions %></td>
+		    <td><a href="<%= ocelot_ocelot_metric_variant_url metric_variant %>">Show</a></td>
+		    <td><a href="<%= edit_ocelot_ocelot_metric_variant_url metric_variant %>">Edit</a></td>
+		  </tr>
+		<% end %>
+		</table>
+		
+		<br />
+		
+		<%= link_to 'New metric_variant', new_ocelot_ocelot_metric_variant_url %>
+	</div>
+</div>
