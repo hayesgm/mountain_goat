@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  # Developmnet Dependencies
+  # Development Dependencies
   s.add_development_dependency(%q<rspec>, ["~> 2.2.0"])
   s.add_development_dependency(%q<rack-test>, [">= 0.5.6"])
 end
