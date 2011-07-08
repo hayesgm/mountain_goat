@@ -2,6 +2,7 @@ require File.join([File.dirname(__FILE__), 'switch_variant'])
 
 module MetricTracking
   
+  #def rand = 
   #Metric Tracking routes
   class << ActionController::Routing::Routes;self;end.class_eval do
     define_method :clear!, lambda {}
@@ -13,7 +14,6 @@ module MetricTracking
     map.resources :mountain_goat_metric_variants
     map.resources :mountain_goat_converts, :has_many => :mountain_goat_metrics
     map.resources :mountain_goat_metrics, :has_many => :mountain_goat_metric_variants
-    map.resources :mountain_goat_upgrade_orders
     map.fresh_metrics '/fresh-metrics', :controller => :mountain_goat_metrics, :action => :fresh_metrics
     map.connect '/mg/public/:file', :controller => :mountain_goat, :action => :fetch
   end
@@ -90,6 +90,7 @@ module MetricTracking
           #logger.warn "Value: #{metric_variant_sym} - #{variant_id}"
           
           if variant_id.blank? #the user just doesn't have this set
+            logger.error "No variant found for #{metric.title}"
             next
           end
           

@@ -1,0 +1,59 @@
+
+<% if !respond_to?(:chart) %>
+	<% def chart(*args); 'Please install Flotilla plugin (http://flotilla.rubyforge.org/) for charts'; end; %>
+<% end %>
+
+<div id="container-main" class="mt-metrics">
+	<div class="mountain-goat-panel cenetered">
+		<a href="<%= mountain_goat_converts_url %>">Goals</a> > <a href="<%= mountain_goat_convert_url :id => @metric.convert.id %>"><%=h @metric.convert.name %> Goal</a> > <span class="metric-type"><%=h @metric.metric_type %></span>
+		
+		<h2><%=h @metric.title %></h2>
+		
+		<div class="variants">
+			<% if @metric.metric_variants.count == 0 %>
+				<span class="none">No metric variants</span>
+			<% else %>
+				<div class="flyer-analysis countbar">
+					<div class="title">Conversion Rates</div>
+					<div class="graph">
+						<%= chart("analysis_graph#{@metric.id}",
+											{ "Served" => { :collection => @rates[:served], :x => :variant_type, :y => :value },
+												"Conversions" => { :collection => @rates[:conversions], :x => :variant_type, :y => :value } },
+												{ :xaxis => {:autoscaleMargin => 0.1, :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :position => "ne" } }, :placeholder_size => "300x200") %>
+					
+					</div>
+					<div class="graph">
+						<%= chart("analysis_conv_graph#{@metric.id}",
+											{ "Conversion Rate (%)" => { :collection => @rates[:conversion_rates], :x => :variant_type, :y => :value } },
+												{ :xaxis => {:autoscaleMargin => 0.1, :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :position => "ne" } }, :placeholder_size => "300x200") %>
+					
+					</div>
+				</div>
+				<% @metric.metric_variants.each do |mv| %>
+					<div class="metric-variant">
+						<div class="item name">
+							<span class="desc">Name</span>
+							<span class="val"><a href="<%= mountain_goat_metric_variant_url mv %>"><%= mv.name %></a> [<a href="<%= edit_mountain_goat_metric_variant_url :id => mv.id %>">Edit</a>]</span>
+						</div>
+						
+						<div class="item value">
+							<span class="desc">Value</span>
+							<span class="val"><%= mv.value %></span>
+						</div>
+						
+						<div class="item rate">
+							<span class="rates">Conversion:</span>
+							<span class="conversions"><%= mv.conversions %></span> /
+							<span class="served"><%= mv.served %></span>
+							(<span class="val"><%= number_to_percentage(mv.conversion_rate, :precision => 0) %></span>)
+						</div>
+					</div>
+					
+				<% end %>
+			<% end %>
+		</div>
+		
+		<a href="<%= edit_mountain_goat_metric_url :id => @metric %>">Edit Metric</a> |
+		<a href="<%= new_mountain_goat_metric_mountain_goat_metric_variant_url :mountain_goat_metric_id => @metric.id %>">New Variant</a>
+	</div>
+</div>

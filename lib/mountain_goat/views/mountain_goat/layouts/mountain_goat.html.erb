@@ -14,6 +14,8 @@
 	<!--<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />-->
 	<meta name="viewport" content="width=device-width" />
 	
+	<link rel="stylesheet" href="/mg/public/mg_css" type="text/css" />
+	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 	<script src="/mg/public/jquery_flot_js" type="text/javascript"></script>
 		
@@ -21,31 +23,24 @@
 
 <body>
 	
-	<% if !flash[:message].blank? %>
-		<div class="ocelot-flash message">
-			<div class="message"><%= flash[:message] %></div>
+	<div class="header">
+		<div class="head">
+			<a href="/mg" class="logo">
+				<img src="/mg/public/mg_png" />
+			</a>
+			<ul class="nav">
+				<li><a href="<%= mountain_goat_converts_url %>">Goals</a></li>
+				<li><a href="<%= mountain_goat_metrics_url %>">Metrics</a></li>
+			</ul>
 		</div>
-	<% end %>
+	</div>
 	
-	<% if !flash[:model].blank? %>
-		<div class="ocelot-flash-model model">
-			<div class="jqmWindow" id="dialog">
-				<a href="#" class="jqmClose">Close</a>
-				<div class="model"><%= flash[:model] %></div>
-			</div>
+	<div class="content">
+		<div class="content-inner">
+			<%= yield %>
 		</div>
-	<% end %>
+	</div>
 	
-	<% if !flash[:notice].blank? || !flash[:error].blank? %>
-		<div class="ocelot-flash">
-			<% if !flash[:error].blank? %><div class="error"><%= flash[:error] %></div><% end %>
-			<% if !flash[:notice].blank? %><div class="notice"><%= flash[:notice] %></div><% end %>
-		</div>
-	<% end %>
-	
-	<div id="ocelot-main">
-		<%= yield %>
-
 		<div id="container-footer">
 			
 		</div>

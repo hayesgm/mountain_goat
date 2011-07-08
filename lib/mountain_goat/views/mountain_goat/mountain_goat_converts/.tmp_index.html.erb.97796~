@@ -24,7 +24,7 @@
 								<% metric.metric_variants.each do |mv| %>
 									<div class="item rate">
 										<span class="rate-holder">
-											<span class="title"><a href="<%= mountain_goat_metric_variant_url mv %>"><%=h mv.name %></a></span>
+											<span class="title"><%=h mv.name %></span>
 											<span class="rates" style="width:<%= number_to_percentage(mv.conversion_rate, :precision => 0) %>"></span>
 										</span>
 										

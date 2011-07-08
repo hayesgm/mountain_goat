@@ -1,0 +1,334 @@
+
+body {
+	color: #666666;
+	margin: 0px;
+	padding: 0px;
+	text-decoration: none;
+	background: rgb(167,207,223); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(167,207,223,1) 0%, rgba(35,83,138,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(167,207,223,1)), color-stop(100%,rgba(35,83,138,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(167,207,223,1) 0%,rgba(35,83,138,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(167,207,223,1) 0%,rgba(35,83,138,1) 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, rgba(167,207,223,1) 0%,rgba(35,83,138,1) 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a7cfdf', endColorstr='#23538a',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, rgba(167,207,223,1) 0%,rgba(35,83,138,1) 100%); /* W3C */
+}
+
+body, select, pre {
+	font: 14px/20px Calibri,Helvetica,Arial;
+}
+
+a {
+	color: #fff;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
+.header {
+	top: 0;
+	width: 100%;
+	position: fixed;
+	height: 107px;
+	background-color: rgba(2,2,2,0.7);
+}
+
+.header .head {
+	width: 900px;
+	margin: 0 auto;
+	height: 107px;
+}
+
+.header ul.nav {
+	margin: 0;
+	float: right;
+	height: 100%;
+}
+
+.header ul.nav li {
+	float: left;
+	list-style: none outside none;
+	width: 140px;
+	box-shadow: 0px 0px 3px rgba(222,222,222,0.2) inset;
+	height: 107px;
+	margin-right: -1px;
+}
+
+.header ul.nav li:hover {
+	background-color: #FF2800;
+}
+
+.header ul.nav li > a{
+	display: block;
+	font-size: 24px;
+	padding: 42px 0px;
+	width: 100%;
+	vertical-align: baseline;
+	text-align: center;
+}
+
+.content {
+	margin: 0 auto 0 auto;
+	width: 1010px;
+	padding: 117px 0 0 0;
+	background-color: rgba(50,50,50,0.2);
+}
+
+.content .content-inner {
+	margin: 15px 25px 0px 25px;
+	background: url(/mg/public/containerbg_png);
+	min-height: 520px;
+	padding: 30px;
+}
+
+h1 {
+	padding: 6px 18px;
+	width: 500px;
+	margin: 10px auto 10px auto;
+	background: url(/mg/public/dottedblack_png) repeat;
+	font-size: 30px;
+	color: white;
+}
+
+/* The Converts Page */
+
+.conversions .explanation {
+	display: block;
+	width: 33%;
+	margin: 40px;
+	padding-right: 40px;
+	border-right: 1px solid black;
+	float: left;
+	
+}
+
+.conversions .explanation .inner {
+	color: #fff;
+	font-size: 18px;
+	display: block;
+	background: url(/mg/public/dirtyred_png) repeat;
+	padding: 30px;
+	width: 80%;
+}
+
+.conversions .converts {
+	width: 40%;
+	float: left;
+	margin-top: 50px;
+}
+
+.conversions .converts h2 {
+	padding: 6px 18px;
+	width: 40%;
+	margin: 10px auto 10px auto;
+	background: url(/mg/public/dirtyred_png) repeat;
+	font-size: 30px;
+}
+
+.metric-category {
+	width: 100%;
+}
+
+.mt-metrics .metric-category {
+	padding: 50px 0; 
+}
+
+.metric-category .metric a{
+	display: block;
+	width: 70%;
+	color: #000;
+	font-size: 18px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.metric-category .item.rate {
+	width: 400px;
+	height: 40px;
+}
+
+.metric-category .item.rate  .rate-holder{
+	display: block;
+	width: 70%;
+	background: rgba(20, 20, 20, 0.2);
+	height: 30px;
+	float: left;
+	overflow: hidden;
+}
+
+.metric-category .item.rate  .title{
+	position: relative;
+	left: 0px;
+	float: left;
+	z-index: 5;
+	padding: 3px;
+}
+
+.metric-category .item.rate  .rates{
+	height: 100%;
+	display: block;
+	background: url(/mg/public/dottedblue_png) repeat;
+	z-index: 1;
+}
+
+.metric-category .item.rate  .percent-holder {
+	float: left;
+	margin-left: 30px;
+}
+
+.content ul.nav {
+	margin: 0;
+	width: 100%;
+	height: 50px;
+}
+
+.content ul.nav li {
+	color: white;
+	float: left;
+	list-style: none outside none;
+	width: 170px;
+	height: 30px;
+	font-size: 20px;
+	box-shadow: 0px 0px 3px rgba(222,222,222,0.2) inset;
+	margin-right: 6px;
+	background-color: red;
+	padding-left: 10px;
+	padding-top: 10px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+	text-shadow: 0 0 4px #333333;
+	background: -moz-linear-gradient(center top , #6699CC, #3366AA) repeat scroll 0 0 transparent;
+}
+
+.button {
+	display: block;
+	color: white;
+	width: 170px;
+	height: 30px;
+	font-size: 20px;
+	box-shadow: 0px 0px 3px rgba(222,222,222,0.2) inset;
+	margin-right: 6px;
+	background-color: red;
+	padding-left: 10px;
+	padding-top: 10px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+	text-shadow: 0 0 4px #333333;
+	background: -moz-linear-gradient(center top , #6699CC, #3366AA) repeat scroll 0 0 transparent;
+}
+
+.actions {
+	height: 50px;
+	width: 400px;
+	margin: 50px auto;
+}
+
+.actions .button {
+	float: left;
+}
+
+/* ANALYTICS */
+.statboard{
+	float: left;
+	background: rgb(30,30,30);
+	background: rgba(0,0,0,.9);
+	
+	width: 900px;
+	margin: 0px 0px 0px 40px;
+	padding: 0px 10px 10px 10px;
+	color: #D6D6D6;
+}
+.stat-header, .statpad .title, .statpad .statbody{
+	background: #222222;
+	border-top: 1px solid #333333;
+	border-bottom: 1px solid #151617;
+}
+.stat-header, .statpad, .statnote{
+	box-shadow: 2px 0 3px #0D0D0D, -2px 0 3px #0D0D0D, 0 3px 3px #0D0D0D, 0 -2px 3px #0D0D0D;
+}
+.stat-header{
+	float: left;
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	margin: 10px 0px 0px 0px;
+	font-size: 30px;
+	text-align: center;
+}
+.statpad{
+	float: left;
+	width: 445px;
+	margin-top: 10px;
+
+}
+.statpad .title{
+	float: left;
+	width: 100%;
+	padding: 3px 0px;
+	font-size: 17px;
+	text-align: center;
+}
+.statpad .statbody{
+	float: left;
+	width: 425px;
+	height: 260px;
+	padding: 10px;
+}
+.statpads >:nth-child(2n+1) {
+    margin-right: 10px;
+}
+.statbody.pie{
+	width: 345px;
+	padding-left: 90px;
+}
+.statbody.pie .legend{
+	display: none;
+}
+
+.quad.statpad{
+	box-shadow: none;
+}
+.statnote {
+    float: left;
+	width: 220px;
+}
+.statnote .statbody {
+    width: 200px;
+	height: 100px;
+	line-height: 100px;
+	text-align: center;
+	font-size: 70px;
+	font-family: Arial,Helvetica,sans-serif;
+	text-shadow: 1px 1px 1px #3F3F3F, -1px -1px 1px #3F3F3F;
+}
+.quad.statpad > *:nth-child(2n+1) {
+    margin-right: 5px;
+}
+.quad.statpad > *:nth-child(3), .quad.statpad > *:nth-child(4) {
+    margin-top: 10px;
+}
+.statbody.attendance{
+	color: #99DD66;
+}
+.statbody.views{
+	color: #DDDD66;
+}
+.statbody.interactions{
+	color: #6666DD;
+}
+.statbody.remaining{
+	color: #DD6666;
+}
+
+.legendLabel{
+	width: 150px;
+	padding-left: 3px;
+	font-size: 12px;
+}
+.asterisk{
+	font-size: 12px;
+}
+
