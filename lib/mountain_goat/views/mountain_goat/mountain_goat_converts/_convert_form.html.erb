@@ -2,11 +2,11 @@
 
 <% if f.object.new_record? %>
 	<div class="item type">
-		<%= f.label :convert_type, 'Type' %><br />
+		<%= f.label :convert_type, 'Type (this is technical)' %><br />
 		<%= f.text_field :convert_type %>
 	</div>
 <% else %>
-	<span class="convert-type"><%= f.object.convert_type %></span>
+	<h2><%= f.object.convert_type %></h2>
 <% end %>
 
 <div class="item name">

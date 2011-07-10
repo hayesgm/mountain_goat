@@ -2,7 +2,7 @@
 
 <div id="container-main" class="mt-metric-variants">
 	<div class="mountain-goat-panel cenetered">
-		<h2>New metric variant for</br> <%=h @metric.title %></h2>
+		<h1>New Variant for <%=h @metric.title %></h1>
 		
 		<% form_for :metric_variant, @metric_variant, :url => mountain_goat_metric_variants_url do |f| %>
 			<%= f.error_messages %>

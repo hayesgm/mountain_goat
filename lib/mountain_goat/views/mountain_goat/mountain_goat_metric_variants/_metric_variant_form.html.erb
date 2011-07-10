@@ -7,29 +7,33 @@
 <% end %>
 
 <div class="item name">
-	<%= f.label :name, 'Variant name' %><br />
+	<%= f.label :name, 'Name (whatever you want)' %>
 	<%= f.text_field :name %>
 </div>
 
 <% if !f.object.metric.is_switch %>
 	<div class="item value">
-		<%= f.label :value, 'Metric value' %><br />
+		<%= f.label :value, 'What\'s displayed' %>
 		<%= f.text_area :value %>
 	</div>
 	
-	<div class="item opt1">
-		<%= f.label :opt1, 'Option 1' %><br />
-		<%= f.text_area :opt1 %>
-	</div>
-	
-	<div class="item opt2">
-		<%= f.label :opt2, 'Option 2' %><br />
-		<%= f.text_area :opt2 %>
+	<input type='checkbox' id="my_slider" class='slider' data-slider='.options' />
+	<label for="my_slider">Add optional variants</label>
+	<div class="options" style="display:none;">
+		<div class="item opt1">
+			<%= f.label :opt1, 'Option 1' %>
+			<%= f.text_area :opt1 %>
+		</div>
+		
+		<div class="item opt2">
+			<%= f.label :opt2, 'Option 2' %>
+			<%= f.text_area :opt2 %>
+		</div>
 	</div>
 <% end %>
 <div class="item priority">
-	<%= f.label :priority, 'Priority' %><br />
-	<%= f.text_field :priority %>
+	<%= f.label :priority, 'Priority' %>
+	<%= f.text_field :priority, :class => 'priority' %>
 </div>
 
 <div class="item submit">

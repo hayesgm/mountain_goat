@@ -2,28 +2,14 @@
 
 <div id="container-main" class="mt-metrics">
 	<div class="mountain-goat-panel">
-		<h2>Listing metrics</h2>
+		<h1>All metrics</h1>
 	
-		<table>
-		  <tr>
-		    <th>Type</th>
-		    <th>Title</th>
-			<th>Convert</th>
-		  </tr>
-		
 		<% @metrics.each do |metric| %>
-		  <tr>
-		    <td><%=h metric.metric_type %></td>
-		    <td><%=h metric.title %></td>
-		    <td><%=h metric.convert_id %></td>
-		    <td><a href="<%= mountain_goat_metric_url metric %>">Details</a></td>
-		    <td><a href="<%= edit_mountain_goat_metric_url(metric)%>">Edit</a></td>
-		  </tr>
+			<h2><a href="<%= mountain_goat_metric_url metric %>"><%=h metric.title %> </a> for <%=h metric.convert.name %></h2>
 		<% end %>
-		</table>
 		
-		<br />
-	
-		<a href="<%= new_mountain_goat_metric_url %>">New metric</a>
+		<span class="actions">
+			<a class="button" href="<%= new_mountain_goat_metric_url %>">New metric</a>
+		</span>
 	</div>
 </div>

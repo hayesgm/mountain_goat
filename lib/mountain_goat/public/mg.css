@@ -82,6 +82,8 @@ a:hover {
 	background: url(/mg/public/containerbg_png);
 	min-height: 520px;
 	padding: 30px;
+	display: inline-block;
+	width: 900px;
 }
 
 h1 {
@@ -120,7 +122,7 @@ h1 {
 	margin-top: 50px;
 }
 
-.conversions .converts h2 {
+.conversions .converts h2, h2 {
 	padding: 6px 18px;
 	width: 40%;
 	margin: 10px auto 10px auto;
@@ -132,7 +134,8 @@ h1 {
 	width: 100%;
 }
 
-.mt-metrics .metric-category {
+.mt-metrics .metric-category, .mt-converts.show .metric-category {
+	float: left;
 	padding: 50px 0; 
 }
 
@@ -204,10 +207,19 @@ h1 {
 }
 
 .button {
+	height: 30px;
+}
+
+form input[type='submit'] {
+	width: 170px;
+	height: 40px;
+	padding-top:0px;
+}
+
+.button, input[type="submit"] {
 	display: block;
 	color: white;
 	width: 170px;
-	height: 30px;
 	font-size: 20px;
 	box-shadow: 0px 0px 3px rgba(222,222,222,0.2) inset;
 	margin-right: 6px;
@@ -332,3 +344,63 @@ h1 {
 	font-size: 12px;
 }
 
+input[type="text"], input[type="password"] {
+    background: url("/images/bg-input-shadow.jpg") repeat-x scroll left top #F7F7F7;
+    border: 1px solid #CCCCCC;
+    display: block;
+    padding: 5px 9px 0;
+	width: 280px;
+    height: 32px;
+	color: #777777;
+	font-size: 16px;
+}
+input[type="text"]:focus, input[type="password"]:focus {
+    background-color: #DDEEFF;
+    border: 1px solid #AACCFF;
+    color: #333333;
+}
+textarea {
+    background: #F7F7F7;
+    border: 1px solid #CCCCCC;
+    display: block;
+    padding: 5px 0px 0px 9px;
+	width: 289px;
+    height: 60px;
+	color: #666666;
+	font: 14px Calibri,Helvetica,Arial;
+}
+
+label {
+    color: #999999;
+    display: block;
+    font-size: 16px;
+    margin: 5px 0 2px;
+    text-transform: uppercase;
+}
+
+input[type="checkbox"]{
+	float: left;
+	margin-top: 5px;
+	margin-left:20px;
+}
+input[type="checkbox"] + label {
+    margin: 0px 0px 0px 6px;
+	float: left;
+	clear: right;
+	height: 30px;
+}
+
+.item {
+	clear: left;
+	margin: 20px;
+}
+
+.item.priority input {
+	width: 25px;
+}
+
+.mt-metrics form, .mt-metric-variants form, .mt-converts form {
+	width: 400px;
+	margin: 0 auto;
+	padding-right: 200px;
+}

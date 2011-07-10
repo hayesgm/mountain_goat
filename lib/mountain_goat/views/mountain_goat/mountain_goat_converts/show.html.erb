@@ -3,35 +3,39 @@
 	<% def chart(*args); 'Please install Flotilla plugin (http://flotilla.rubyforge.org/) for charts'; end; %>
 <% end %>
 
-<div id="container-main" class="mt-converts">
+<div id="container-main" class="mt-converts show">
 	<div class="mountain-goat-panel centered">
-		<a href="<%= mountain_goat_converts_url %>">Goals</a> > <span class="type"><%=h @convert.convert_type %></span> |
-		<a href="<%= edit_mountain_goat_convert_url :id => @convert.id %>">Edit</a>
+		<ul class="nav">
+			<li><a href="<%= mountain_goat_converts_url %>">Goals</a></li>
+			<li><a href="<%= mountain_goat_convert_url @convert.id %>"><%=h @convert.name %> Goal</a></li>
+		</ul>
 			
-		<h2><%=h @convert.name %></h2>
+		<h1><%=h @convert.name %></h1>
 		
-		<div class="graphs">
-			<div class="graph">
-				<span class="title">Conversions by day</span>
+		<div class="statpads">
+			<div class="flyer-analysis statpad">
+				<div class="title">Conversions by Day</div>
+				<div class="statbody">
 					<%= chart("analysis_graph#{@convert.id}",
 								{ "Conversions" => { :collection => @results_per_day, :x => :date, :y => :val } },
-								  { :xaxis => {:autoscaleMargin => 0.1, :mode => 'time', :timeformat => "%b %d" }, :yaxis => { :min => 0, :minTickSize => 1 }, :lines => { :show => true }, :legend => { :position => "ne" } }, :placeholder_size => "300x200") %>
+								  { :xaxis => {:mode => 'time', :timeformat => "%b %d" }, :yaxis => { :min => 0, :minTickSize => 1 }, :lines => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
+				</div>
 			</div>
-				  
+			
 			<% @convert.convert_meta_types.each do |cmt| %>
-		
-				<div class="graph">
-					<span class="title">Conversions by <%=h cmt.name %></span>
-					
-					<% if cmt.meta_type == 'ci_meta' %>
-						<%= chart("analysis_graph#{cmt.id}",
-								{ "Conversions" => { :collection => @results_by_cmt[cmt.id], :x => :name, :y => :val } },
-								  { :xaxis => {:autoscaleMargin => 1, :minTickSize => 1 }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true, :align => 'center', :barWidth => 1 }, :legend => { :position => "ne" } }, :placeholder_size => "300x200") %>
-					<% elsif cmt.meta_type == 'cs_meta' %>
-						<%= chart("analysis_graph#{cmt.id}",
-								{ "Conversions" => { :collection => @results_by_cmt[cmt.id], :x => :name, :y => :val } },
-								  { :xaxis => {:autoscaleMargin => 0.1, :ticks => @results_by_cmt_titles[cmt.id].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :position => "ne" } }, :placeholder_size => "300x200") %>
-					<% end %>
+				<div class="flyer-analysis statpad">
+					<div class="title">Conversions by <%=h cmt.name %></div>
+					<div class="statbody">					
+						<% if cmt.meta_type == 'ci_meta' %>
+							<%= chart("analysis_graph#{cmt.id}",
+									{ "Conversions" => { :collection => @results_by_cmt[cmt.id], :x => :name, :y => :val } },
+									  { :xaxis => {:autoscaleMargin => 1, :minTickSize => 1 }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true, :align => 'center', :barWidth => 1 }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
+						<% elsif cmt.meta_type == 'cs_meta' %>
+							<%= chart("analysis_graph#{cmt.id}",
+									{ "Conversions" => { :collection => @results_by_cmt[cmt.id], :x => :name, :y => :val } },
+									  { :xaxis => {:autoscaleMargin => 0.1, :ticks => @results_by_cmt_titles[cmt.id].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
+						<% end %>
+					</div>
 				</div>
 			<% end %>
 		</div>
@@ -44,16 +48,26 @@
 				<% else %>
 					<% metric.metric_variants.each do |mv| %>
 						<div class="item rate">
-							<span class="rates"><%=h mv.name %></span>:
-							<span class="conversions"><%= mv.conversions %></span> /
-							<span class="served"><%= mv.served %></span>
-							(<span class="val"><%= number_to_percentage(mv.conversion_rate, :precision => 0) %></span>)
+							<span class="rate-holder">
+								<span class="title"><a href="<%= mountain_goat_metric_variant_url mv %>"><%=h mv.name %></a></span>
+								<span class="rates" style="width:<%= number_to_percentage(mv.conversion_rate, :precision => 0) %>"></span>
+							</span>
+							
+							<span class="percent-holder">
+								<span class="val"><%= number_to_percentage(mv.conversion_rate, :precision => 0) %></span>
+								(<span class="conversions"><%= mv.conversions %></span> /
+								<span class="served"><%= mv.served %></span>)
+							</span>
 						</div>
 					<% end %>
 				<% end %>
 			</div>
 		<% end %>
 		
-		<a href="<%= new_mountain_goat_convert_mountain_goat_metric_url :mountain_goat_convert_id => @convert.id %>">New Metric</a>
+		<div class="actions">
+			<a class="button" href="<%= edit_mountain_goat_convert_url :id => @convert.id %>">Edit</a>
+			<a class="button" href="<%= new_mountain_goat_convert_mountain_goat_metric_url :mountain_goat_convert_id => @convert.id %>">New Metric</a>
+		</div>
+		
 	</div>
 </div>
