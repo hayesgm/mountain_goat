@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "mountain_goat/version"
+require "mountain-goat/version"
 
 Gem::Specification.new do |s|
   s.name        = "mountain-goat"
@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Geoffrey Hayes", "drawn.to"]
   s.email       = ["geoff@drawn.to"]
-  s.homepage    = "http://github.com/hayesgm/mountain-goat"
+  s.homepage    = "http://github.com/hayesgm/mountain_goat"
   s.summary     = "A/B Testing to the edge"
-  s.description = "A/B test everything and get awesome analytics"
+  s.description = "A/B test everything and get awesome in-house analytics"
 
   s.rubyforge_project = "mountain-goat"
 

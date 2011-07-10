@@ -50,4 +50,4 @@ class InstallMetricTrackingTables
 
 end
 
-InstallMetricTrackingTables.new
+#InstallMetricTrackingTables.new
