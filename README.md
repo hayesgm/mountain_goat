@@ -1,128 +1,89 @@
-# PDFKit
+# Mountain-Goat
 
-Create PDFs using plain old HTML+CSS. Uses [wkhtmltopdf](http://github.com/antialize/wkhtmltopdf) on the backend which renders HTML using Webkit.
+Embed a high-quality analytics platform in your application in minutes.  Gain important A/B test business insights, and view the results and analytics in real time.
 
 ## Install
 
-### PDFKit
+### Mountain Goat gem
 
-    gem install pdfkit
-
-### wkhtmltopdf
-
-1. Install by hand (recomended):
-
-        https://github.com/jdpace/PDFKit/wiki/Installing-WKHTMLTOPDF
-
-2. Try using the wkhtmltopdf-binary gem (mac + linux i386)
-
-        gem install wkhtmltopdf-binary
-
-*Note:* The automated installer has been removed.
+    gem install mountain-goat
+	
+	#Note, you'll need to install the proper migrations (currently in the migrations folder, task coming shortly)
 
 ## Usage
 
-    # PDFKit.new takes the HTML and any options for wkhtmltopdf
-    # run `wkhtmltopdf --extended-help` for a full list of options
-    kit = PDFKit.new(html, :page_size => 'Letter')
-    kit.stylesheets << '/path/to/css/file'
+	Mountain Goat hinges around three core concepts:
+	
+	  *) Conversions are what you want  E.g. "user purchases coffee"
+	  *) Metrics are how you draw people to convert  E.g. "a banner on the store-front"
+	  *) Metric variants are A/B tests for metrics  E.g. "free coffee" "chuck norris is inside"
+	
+	After you set up your database with some mountain-goat tables, the code will handle populating these tables for you.  In your code, you can start A/B testing immediately.
+	
+	<h2><%= metric_variant(:banner_on_store_front, :user_purchases_coffee, "Now arsenic and gluten-free") %></h2>
+	
+	The metric_variant function (or mv for short) takes three parameters:
+	
+	mv(metric_name, convert_name, default)
+	
+	This will automatically create a metric and conversion and populate a metric variant with the default value.  Easy, eh?
+	
+	From here, you can go into the mountain-goat admin center and add new metric variants to fit your need.
+	
+	The other important code you'll need to implement is when a goal is achieved.
+	
+	def purchase #coffees_controller.rb
+	  record_conversion(:user_purchases_coffee)
+	  ...
+	end
+	
+	This will go in and record a conversion ("rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user that relate to this goal.  For example "Chuck Norris works here" might get a point.
+	
+## Mountain Goat admin suite
 
-    # Git an inline PDF
-    pdf = kit.to_pdf
+    Navigate to /mg in your application to reach the mountain-goat admin center.  Here, you can analyze / adjust your A/B tests.
+    
+    The front page gives you a breakdown of each of your Goals, and the efficacy of each metric and metric-variant.  Select a given metric to drill into its variants.  Once you are in a specific metric, you'll be able to add new metric-variants and see what works best for your clients.
+    
+## Advanced Features
 
-    # Save the PDF to a file
-    file = kit.to_file('/path/to/save/pdf')
-
-    # PDFKit.new can optionally accept a URL or a File.
-    # Stylesheets can not be added when source is provided as a URL of File.
-    kit = PDFKit.new('http://google.com')
-    kit = PDFKit.new(File.new('/path/to/html'))
-
-    # Add any kind of option through meta tags
-    PDFKit.new('<html><head><meta name="pdfkit-page_size" content="Letter")
-
-## Configuration
-
-If you're on Windows or you installed wkhtmltopdf by hand to a location other than /usr/local/bin you will need to tell PDFKit where the binary is. You can configure PDFKit like so:
-
-    # config/initializers/pdfkit.rb
-    PDFKit.configure do |config|
-      config.wkhtmltopdf = '/path/to/wkhtmltopdf'
-      config.default_options = {
-        :page_size => 'Legal',
-        :print_media_type => true
-      }
+    ### Meta data
+    
+    You can track meta-data with any conversion.  E.g.
+    
+    rc(:user_visit, :referring_domain => request.env['HTTP_REFERER'], :user_id => session[:user_id])
+    
+    These will be stored with the rally for the conversion and can get used for complex analytics down the line.  (see Converts.meta)
+    
+    ### Switch variants
+    
+    Instead of just serving text, you can also serve flow control in Mountain Goat, like so:
+    
+    sv(:user_discount, :purchase_coffee) do |variant|
+      variant.ten_percent do
+        discount = 0.10
+      end
+      
+      variant.big_winner do
+        discount = 0.90
+      end
+      
+      variant.whomp_whomp do
+        discount = 0.0
+      end
     end
 
-## Middleware
-
-PDFKit comes with a middleware that allows users to get a PDF view of any page on your site by appending .pdf to the URL.
-
-### Middleware Setup
-
-**Non-Rails Rack apps**
-
-    # in config.ru
-    require 'pdfkit'
-    use PDFKit::Middleware
-
-**Rails apps**
-
-    # in application.rb(Rails3) or environment.rb(Rails2)
-    require 'pdfkit'
-    config.middleware.use PDFKit::Middleware
-
-**With PDFKit options**
-
-    # options will be passed to PDFKit.new
-    config.middleware.use PDFKit::Middleware, :print_media_type => true
-
-**With conditions to limit routes that can be generated in pdf**
-
-    # conditions can be regexes (either one or an array)
-    config.middleware.use PDFKit::Middleware, {}, :only => %r[^/public]
-    config.middleware.use PDFKit::Middleware, {}, :only => [%r[^/invoice], %r[^/public]]
-
-    # conditions can be strings (either one or an array)
-    config.middleware.use PDFKit::Middleware, {}, :only => '/public'
-    config.middleware.use PDFKit::Middleware, {}, :only => ['/invoice', '/public']
-
-## Troubleshooting
-
-*  **Single thread issue:** In development environments it is common to run a 
-   single server process. This can cause issues when rendering your pdf 
-   requires wkhtmltopdf to hit your server again (for images, js, css).
-   This is because the resource requests will get blocked by the initial
-   request and the initial request will be waiting on the resource
-   requests causing a deadlock.
-
-   This is usually not an issue in a production environment. To get
-   around this issue you may want to run a server with multiple workers
-   like Passenger or try to embed your resources within your HTML to
-   avoid extra HTTP requests.
-
-*  **Resources aren't included in the PDF:** Images, CSS, or Javascript
-   does not seem to be downloading correctly in the PDF. This is due
-   to the fact that wkhtmltopdf does not know where to find those files.
-   Make sure you are using absolute paths (start with forward slash) to
-   your resources. If you are using PDFKit to generate pdfs from a raw
-   HTML source make sure you use complete paths (either file paths or 
-   urls including the domain).
-
+    Mountain goat will automatically break those down into three cases (:ten_percent, :big_winner, :whomp_whomp) and serve them out at random to the user.
+    
+    ### Priorities
+    
+    You may want to test certain items with a lower serve rate (bold new slogans).  You can assign priorities to any metric variant.  The change of a given metric variant being shown is
+    
+    my priority / sum(all priorities for this metric)    
+    
 ## TODO
- - add amd64 support in --install-wkhtmltopdf
-
-## Note on Patches/Pull Requests
-
-* Fork the project.
-* Setup your development environment with: gem install bundler; bundle install
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+ - work on getting migrations better
 
 ## Copyright
 
-Copyright (c) 2010 Jared Pace. See LICENSE for details.
+Copyright (c) 2011 Geoffrey Hayes, drawn.to. See LICENSE for details.
