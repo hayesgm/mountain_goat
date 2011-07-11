@@ -32,23 +32,12 @@
 			<ul class="nav">
 				<li><a href="<%= mountain_goat_converts_url %>">Goals</a></li>
 				<li><a href="<%= mountain_goat_metrics_url %>">Metrics</a></li>
-				<li><a href="/">Exit</a></li>
 			</ul>
 		</div>
 	</div>
 	
 	<div class="content">
 		<div class="content-inner">
-			<% if !flash[:notice].blank? || !flash[:error].blank? %>
-				<div class="flash">
-					<% if !flash[:error].blank? %>
-						<div class="error"><%= flash[:error] %></div>
-					<% end %>
-					<% if !flash[:notice].blank? %>
-						<div class="notice"><%= flash[:notice] %></div>
-					<% end %>
-				</div>
-			<% end %>
 			<%= yield %>
 		</div>
 	</div>

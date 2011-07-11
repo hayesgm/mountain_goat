@@ -11,6 +11,8 @@ module MetricTracking
   #TODO: Namespace?
   ActionController::Routing::Routes.draw do |map|
     map.mg '/mg', :controller => :mountain_goat_converts, :action => :index
+    map.mg_login '/mg/login', :controller => :mountain_goat, :action => :login
+    map.mg_login_create '/mg/login/create', :controller => :mountain_goat, :action => :login_create
     map.resources :mountain_goat_metric_variants
     map.resources :mountain_goat_converts, :has_many => :mountain_goat_metrics
     map.resources :mountain_goat_metrics, :has_many => :mountain_goat_metric_variants
