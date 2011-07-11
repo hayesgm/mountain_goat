@@ -30,7 +30,12 @@ class MountainGoatController < ActionController::Base
   end
   
   def login
-    mg_yml = YAML::load(File.open("#{RAILS_ROOT}/config/mountain-goat.yml"))
+    mg_yml = nil
+    begin
+      mg_yml = YAML::load(File.open("#{RAILS_ROOT}/config/mountain-goat.yml"))
+    rescue
+    end
+  
     if mg_yml
       mg_yml_env = mg_yml.with_indifferent_access[RAILS_ENV]
       if mg_yml_env
