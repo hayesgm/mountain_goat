@@ -77,7 +77,7 @@ module MetricTracking
       options.each do |k, v|
         if k.to_s =~ /^metric_(\w+)$/i
           options.delete k
-          metrics.push $1, v
+          metrics.merge!({ $1, v })
         end
       end
       
@@ -93,10 +93,10 @@ module MetricTracking
       Rally.create!( { :convert_id => convert.id } ).set_meta_data(options)
       
       #User-defined metric tallies
-      metric.each do |metric_title, variant_id|
-        m = Metric.find_by_title(metric_title)
+      metrics.each do |metric_type, variant_id|
+        m = Metric.find_by_metric_type(metric_type)
         if m.nil?
-          logger.warn "Missing user-defined metric #{metric}"
+          logger.warn "Missing user-defined metric #{metric_type}"
           next
         end
         
