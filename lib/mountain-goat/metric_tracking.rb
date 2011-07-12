@@ -36,6 +36,10 @@ module MetricTracking
     end
     
     def mv(metric_type, convert_type, default, opts = {}, opt = nil)
+      return get_metric_variant(metric_type, convert_type, default, opts, opt)[:value]
+    end
+    
+    def mv_detailed(metric_type, convert_type, default, opts = {}, opt = nil)
       return get_metric_variant(metric_type, convert_type, default, opts, opt)
     end
   
@@ -45,6 +49,8 @@ module MetricTracking
     end
     
     def record_conversion(convert_type, options = {})
+      
+      metrics = {} #for user-defined metrics
       
       #We want some system for easy default parameter setting
       if options.include?(:refs) && options[:refs]
@@ -68,6 +74,13 @@ module MetricTracking
         options.delete(:invitees)
       end
       
+      options.each do |k, v|
+        if k.to_s =~ /^metric_(\w+)$/i
+          options.delete k
+          metrics.push $1, v
+        end
+      end
+      
       logger.warn "Recording conversion #{convert_type.to_s} with options #{options.inspect}"
       
       convert = Convert.first( :conditions => { :convert_type => convert_type.to_s } )
@@ -78,6 +91,25 @@ module MetricTracking
       #first, let's tally for the conversion itself
       #we need to see what meta information we should fill based on the conversion type
       Rally.create!( { :convert_id => convert.id } ).set_meta_data(options)
+      
+      #User-defined metric tallies
+      metric.each do |metric_title, variant_id|
+        m = Metric.find_by_title(metric_title)
+        if m.nil?
+          logger.warn "Missing user-defined metric #{metric}"
+          next
+        end
+        
+        v = m.metric_variants.first( :conditions => { :id => variant_id } ) #make sure everything matches up
+        
+        if v.nil?
+          logger.warn "Variant #{variant_id} not in metric variants for #{m.title}"
+          next
+        end
+        
+        logger.warn "Tallying conversion #{convert.name} for #{m.title} - #{v.name} (#{v.value} - #{v.id})"
+        v.tally_convert
+      end
       
       if defined?(cookies)
         #we just converted, let's tally each of our metrics (from cookies)
@@ -115,6 +147,7 @@ module MetricTracking
     
     private
     
+    #returns a map { :value => value, :variant_id => id }
     def get_metric_variant(metric_type, convert_type, default, opts = {}, opt = nil)
       metric_sym = "metric_#{metric_type}#{ opt.nil? ? "" : '_' + opt.to_s }".to_sym
       metric_variant_sym = "metric_#{metric_type}_variant".to_sym
@@ -132,7 +165,7 @@ module MetricTracking
           logger.warn "Serving metric #{metric_type} #{ opt.nil? ? "" : opt.to_s } without finding / tallying variant."
         end
         
-        return cookies[metric_sym] #it's the best we can do
+        return { :value => cookies[metric_sym], :variant_id => cookies[metric_variant_sym] } #it's the best we can do
       else
         #we don't have the cookie, let's find a value to set
         metric, convert = get_metric_convert( metric_type, convert_type, false )
@@ -159,7 +192,7 @@ module MetricTracking
           cookies[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
         end
         
-        return value
+        return { :value => value, :variant_id => metric_variant.id }
       end
     end
     
@@ -233,6 +266,10 @@ module MetricTracking
   module View
     def mv(*args, &block)
       @controller.send(:mv, *args, &block)
+    end
+    
+    def mv_detailed(*args, &block)
+      @controller.send(:mv_detailed, *args, &block)
     end
     
     def sv(*args, &block)
