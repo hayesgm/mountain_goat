@@ -29,4 +29,27 @@ class Rally < ActiveRecord::Base
     return nil if m.nil?
     return m.data
   end
+  
+  def all_metas
+    res = {}
+    self.convert_meta_types.each do |cmt|
+      r = res.count
+      begin
+        if cmt.var =~ /(\w)[_]id/i
+          if $1.classify
+            item = $1.classify.find( cmt.var )
+            if item.respond_to?(:name)
+              res.merge!({ $1 => item.name })
+            elsif item.respond_to?(:title)
+              res.merge!({ $1 => item.title })
+            end
+          end
+        end
+      rescue
+      end
+      res.merge!({ cmt.var => rally.meta( cmt.var ) }) if res.count == r
+    end
+    
+    res
+  end
 end

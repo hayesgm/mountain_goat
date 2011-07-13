@@ -9,8 +9,8 @@
 				<% @rallies.each do |rally| %>
 					<li><%= rally.convert.name %> at <%= rally.created_at.to_s %></li>
 					(
-						<% rally.convert_meta_types.each do |cmt| %>
-							<%= cmt.var %>: <%= rally.meta( cmt.var ) %>
+						<% rally.all_metas do |k,v| %>
+							<%= k %>: <%= v %>
 						<% end %>
 					)
 				<% end %>
