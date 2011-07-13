@@ -14,8 +14,9 @@ module MetricTracking
     map.mg_login '/mg/login', :controller => :mountain_goat, :action => :login
     map.mg_login_create '/mg/login/create', :controller => :mountain_goat, :action => :login_create
     map.resources :mountain_goat_metric_variants
-    map.resources :mountain_goat_converts, :has_many => :mountain_goat_metrics
+    map.resources :mountain_goat_converts, :has_many => [ :mountain_goat_metrics, :mountain_goat_rallies ]
     map.resources :mountain_goat_metrics, :has_many => :mountain_goat_metric_variants
+    map.resources :mountain_goat_rallies
     map.fresh_metrics '/fresh-metrics', :controller => :mountain_goat_metrics, :action => :fresh_metrics
     map.connect '/mg/public/:file', :controller => :mountain_goat, :action => :fetch
   end
