@@ -35,9 +35,9 @@ class Rally < ActiveRecord::Base
     self.convert_meta_types.each do |cmt|
       r = res.count
       begin
-        if cmt.var =~ /(\w)[_]id/i
-          if $1.classify
-            item = $1.classify.find( cmt.var )
+        if cmt.var =~ /(\w+)[_]id/i
+          if Kernel.const_get($1.classify)
+            item = Kernel.const_get($1.classify).find( self.meta_for( cmt.var ) )
             if item.respond_to?(:name)
               res.merge!({ $1 => item.name })
             elsif item.respond_to?(:title)
@@ -46,8 +46,9 @@ class Rally < ActiveRecord::Base
           end
         end
       rescue
-      end
-      res.merge!({ cmt.var => rally.meta( cmt.var ) }) if res.count == r
+    end
+    
+      res.merge!({ cmt.var => self.meta_for( cmt.var ) }) if res.count == r
     end
     
     res

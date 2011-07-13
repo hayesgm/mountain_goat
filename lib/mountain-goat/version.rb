@@ -1,3 +1,3 @@
 class MountainGoat
-  VERSION = "0.0.14"
+  VERSION = "0.0.16"
 end
