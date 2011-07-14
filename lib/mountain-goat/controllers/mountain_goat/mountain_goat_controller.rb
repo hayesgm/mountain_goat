@@ -26,6 +26,7 @@ class MountainGoatController < ActionController::Base
   
   def verify_access
     return if session.has_key?(:mg_access) && session[:mg_access] == true
+    store_location
     redirect_to '/mg/login' and return
   end
   

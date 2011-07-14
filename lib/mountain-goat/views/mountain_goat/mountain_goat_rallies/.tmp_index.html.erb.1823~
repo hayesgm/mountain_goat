@@ -4,13 +4,15 @@
 	<div class="mountain-goat-panel">
 		<h1>Rallies <% if @convert %>for <%=h @convert.name %><% else %>for all Goals<% end %></h1>
 	
-		<div class="recent-rally" data-reload="true" data-rally-id="<%= @rallies.first.id %>" data-convert-id="<%= @convert ? @convert.id : '' %>"></div>
-		<a href="javascript:void(0)" class="reload">Reload</a>
-		
 		<% if @rallies.count > 0 %>
-			<ul class="rally-list">
+			<ul>
 				<% @rallies.each do |rally| %>
-					<%= render 'rally', :rally => rally %>
+					<li><%= rally.convert.name %> at <%= rally.created_at.to_s %></li>
+					(
+						<% rally.all_metas.each do |k,v| %>
+							<%= k %>: <%= v %>
+						<% end %>
+					)
 				<% end %>
 			</ul>
 		<% else %>

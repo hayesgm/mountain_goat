@@ -1,0 +1,9 @@
+<%# locals => rally %>
+
+<li><%= rally.convert.name %> at <%= rally.created_at.to_s %>
+	(
+		<% rally.all_metas.each do |k,v| %>
+			<%= k %>: <%= v %>
+		<% end %>
+	)
+</li>
