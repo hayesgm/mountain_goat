@@ -30,88 +30,88 @@ The best part?  The mountain-goat admin console is located on your server and yo
 
 ### Mountain Goat gem
 
-    gem install mountain-goat
+     gem install mountain-goat
 
 ### Mountain Goat configration
     
-    #Next run generator to create config file and necessary database migration (optionally pass in --password=my_mg_password)
+Next run generator to create config file and necessary database migration (optionally pass in --password=my_mg_password)
      
-    ./script/generate mg
+     ./script/generate mg
     
-    #This will generate
-    #  /config/mountain-goat.yml (for storing a password to access mountain-goat)
-    #  /db/migrate/xxx_create_mountain_goat_tables.rb (necessary databae migrations to store mg data)
+This will generate
+
+     /config/mountain-goat.yml (for storing a password to access mountain-goat)
+     /db/migrate/xxx_create_mountain_goat_tables.rb (necessary databae migrations to store mg data)
 
 ## Usage
 
-	Mountain Goat hinges around three core concepts:
+Mountain Goat hinges around three core concepts:
 	
-	  *) Conversions are what you want  E.g. "user purchases coffee"
-	  *) Metrics are how you draw people to convert  E.g. "a banner on the store-front"
-	  *) Metric variants are A/B tests for metrics  E.g. "free coffee" "chuck norris is inside"
+- Conversions are what you want  E.g. "user purchases coffee"
+- Metrics are how you draw people to convert  E.g. "a banner on the store-front"
+- Metric variants are A/B tests for metrics  E.g. "free coffee" "chuck norris is inside"
 	
-	After you set up your database with some mountain-goat tables, the code will handle populating these tables for you.  In your code, you can start A/B testing immediately.
+After you set up your database with some mountain-goat tables, the code will handle populating these tables for you.  In your code, you can start A/B testing immediately.
 	
-	<h2><%= metric_variant(:banner_on_store_front, :user_purchases_coffee, "Now arsenic and gluten-free") %></h2>
+     <h2><%= metric_variant(:banner_on_store_front, :user_purchases_coffee, "Now arsenic and gluten-free") %></h2>
 	
-	The metric_variant function (or mv for short) takes three parameters:
+The metric_variant function (or, mv for short) takes three parameters:
 	
-	mv(metric_name, convert_name, default)
+     mv(metric_name, convert_name, default)
 	
-	This will automatically create a metric and conversion and populate a metric variant with the default value.  Easy, eh?
+This will automatically create a metric and conversion and populate a metric variant with the default value.  Easy, eh?
 	
-	From here, you can go into the mountain-goat admin center and add new metric variants to fit your need.
+From here, you can go into the mountain-goat admin center and add new metric variants to fit your need.  The other important code you'll need to implement is when a goal is achieved.
 	
-	The other important code you'll need to implement is when a goal is achieved.
+     def purchase #coffees_controller.rb
+       record_conversion(:user_purchases_coffee)
+       ...
+     end
 	
-	def purchase #coffees_controller.rb
-	  record_conversion(:user_purchases_coffee)
-	  ...
-	end
-	
-	This will go in and record a conversion ("rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user that relate to this goal.  For example "Chuck Norris works here" might get a point.
+This will go in and record a conversion ("rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user that relate to this goal.  For example "Chuck Norris works here" might get a point.
 	
 ## Mountain Goat admin suite
 
-    Navigate to /mg in your application to reach the mountain-goat admin center.  Here, you can analyze / adjust your A/B tests.
+Navigate to /mg in your application to reach the mountain-goat admin center.  Here, you can analyze / adjust your A/B tests.
     
-    The front page gives you a breakdown of each of your Goals, and the efficacy of each metric and metric-variant.  Select a given metric to drill into its variants.  Once you are in a specific metric, you'll be able to add new metric-variants and see what works best for your clients.
+The front page gives you a breakdown of each of your Goals, and the efficacy of each metric and metric-variant.  Select a given metric to drill into its variants.  Once you are in a specific metric, you'll be able to add new metric-variants and see what works best for your clients.
     
 ## Advanced Features
 
-    ### Meta data
+### Meta data
     
-    You can track meta-data with any conversion.  E.g.
+You can track meta-data with any conversion.  E.g.
     
-    rc(:user_visit, :referring_domain => request.env['HTTP_REFERER'], :user_id => session[:user_id])
+     rc(:user_visit, :referring_domain => request.env['HTTP_REFERER'], :user_id => session[:user_id])
     
-    These will be stored with the rally for the conversion and can get used for complex analytics down the line.  (see Converts.meta)
+These will be stored with the rally for the conversion and can get used for complex analytics down the line.  (see Converts.meta)
     
-    ### Switch variants
+### Switch variants
     
-    Instead of just serving text, you can also serve flow control in Mountain Goat, like so:
+Instead of just serving text, you can also serve flow control in Mountain Goat, like so:
     
-    sv(:user_discount, :purchase_coffee) do |variant|
-      variant.ten_percent do
-        discount = 0.10
-      end
+      sv(:user_discount, :purchase_coffee) do |variant|
       
-      variant.big_winner do
-        discount = 0.90
-      end
+        variant.ten_percent do # "ten_percent" is the variant-name
+          discount = 0.10
+        end
       
-      variant.whomp_whomp do
-        discount = 0.0
+        variant.big_winner do
+          discount = 0.90
+        end
+      
+        variant.whomp_whomp(0.5) do #reduce priority to 0.5 (default 1.0)
+          discount = 0.0
+        end
       end
-    end
 
-    Mountain goat will automatically break those down into three cases (:ten_percent, :big_winner, :whomp_whomp) and serve them out at random to the user.
+Mountain goat will automatically break those down into three cases (:ten_percent, :big_winner, :whomp_whomp) and serve them out at random to the user (with whomp_whomp half as likely to be served as the others).
     
-    ### Priorities
+### Priorities
     
-    You may want to test certain items with a lower serve rate (bold new slogans).  You can assign priorities to any metric variant.  The change of a given metric variant being shown is
+You may want to test certain items with a lower serve rate (bold new slogans).  You can assign priorities to any metric variant.  The change of a given metric variant being shown is
     
-    my priority / sum(all priorities for this metric)    
+     my priority / sum(all priorities for this metric)    
     
 ## TODO
  - Better documentation (rdocs)
