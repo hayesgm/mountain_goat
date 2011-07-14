@@ -18,6 +18,7 @@ This will track a conversion not only for the goal, but for the variant of "home
 The best part?  The mountain-goat admin console is located on your server and you can view and analyze your data in real time.
 
  - See which metric variants are working and not working ("Cowabunga!" did 120% better than "Enter here", but 10% worse than "Do it rockapella!")
+ - A/B testing?  How about A/B/C/D/E testing?
  - Visually analyze the your metric variants; change them on the fly, adding new ones.
  - Watch goal conversions in real-time with live-action console (grab the popcorn and watch how your users "sign up" and "view items" and ...)
  - You can do more than change text, "switch variants" let you enter arbitrary ruby code, change the control of your site ("Do my users have to sign-in before commenting?  Let's test!")
@@ -44,6 +45,10 @@ This will generate
      /config/mountain-goat.yml (for storing a password to access mountain-goat)
      /db/migrate/xxx_create_mountain_goat_tables.rb (necessary databae migrations to store mg data)
 
+Run your new migration
+
+    db:migrate
+    
 ## Usage
 
 Mountain Goat hinges around three core concepts:
@@ -62,20 +67,42 @@ The metric_variant function (or, mv for short) takes three parameters:
 	
 This will automatically create a metric and conversion and populate a metric variant with the default value.  Easy, eh?
 	
-From here, you can go into the mountain-goat admin center and add new metric variants to fit your need.  The other important code you'll need to implement is when a goal is achieved.
+From here, you can go into the mountain goat admin center and add new metric variants to fit your need.  It's all built-in to *your* application, in house.  
+
+     http://{your_rails_app}/mg  (e.g. if you're at railsrocks.com, then visit http://railsrocks.com/mg)
+
+The other important code you'll need to implement is to tell the system when a goal is achieved.
 	
-     def purchase #coffees_controller.rb
+     def purchase #in coffees_controller.rb
        record_conversion(:user_purchases_coffee)
        ...
      end
 	
-This will go in and record a conversion ("rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user that relate to this goal.  For example "Chuck Norris works here" might get a point.
+This will go in and record a conversion (a "rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user that relate to this goal.  For example "Chuck Norris works here" might get one point.  You will see which metrics lead to a conversion; this is the core of A/B testing.
 	
 ## Mountain Goat admin suite
 
-Navigate to /mg in your application to reach the mountain-goat admin center.  Here, you can analyze / adjust your A/B tests.
-    
+Navigate to /mg in your rails application (on your actual server instance) to reach the mountain-goat admin center.  Here, you can analyze / adjust your A/B tests.
+
 The front page gives you a breakdown of each of your Goals, and the efficacy of each metric and metric-variant.  Select a given metric to drill into its variants.  Once you are in a specific metric, you'll be able to add new metric-variants and see what works best for your clients.
+
+###Goals
+
+Goals show you what users are doing.  Are they purchasing coffee?  Are they logging in?  Are they posting flames on your message board?  You can measure all of these things!
+
+In the Goals section, you'll get a break down of your goals and what metrics are leading in conversions.  Don't see anything here?  Add some metrics / goals / metric-variants from the code above.  Hint: Add meta data (see below) to see meta data associated with your conversions
+
+###Metrics
+
+Go to "Metrics" and visit a specific metric.  You'll see which metric variants are getting the highest conversion rates.  Does having the font on the homescreen large draw more people into signing up, or does it turn people away?  This is where you can check and see.  Click 'New variant' below to add additional variants for testing.
+
+* Click into a metric to explore (see above on how to create metrics from within your code-base)
+* Charts show you visually which variants are doing better than others
+* "Add variant" to add new variants for this metric
+
+###Rallies
+
+Rallies shows you what's going on, in real time.  You will see conversions (goals) being hit by your clients in real time.  Grab a bag of pop-corn and watch users struggle (or glide) across your site.  Add meta data to get further information.   This page automatically updates as new rallies come in.
     
 ## Advanced Features
 
