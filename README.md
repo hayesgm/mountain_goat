@@ -7,8 +7,16 @@ Embed a high-quality analytics platform in your application in minutes.  Gain im
 ### Mountain Goat gem
 
     gem install mountain-goat
-	
-	#Note, you'll need to install the proper migrations (currently in the migrations folder, task coming shortly)
+
+### Mountain Goat configration
+    
+    #Next run generator to create config file and necessary database migration (optionally pass in --password=my_mg_password)
+     
+    ./script/generate mg
+    
+    #This will generate
+    #  /config/mountain-goat.yml (for storing a password to access mountain-goat)
+    #  /db/migrate/xxx_create_mountain_goat_tables.rb (necessary databae migrations to store mg data)
 
 ## Usage
 
@@ -82,7 +90,8 @@ Embed a high-quality analytics platform in your application in minutes.  Gain im
     my priority / sum(all priorities for this metric)    
     
 ## TODO
- - work on getting migrations better
+ - Better documentation
+ - Add namespacing to avoid conflicts
 
 ## Copyright
 
