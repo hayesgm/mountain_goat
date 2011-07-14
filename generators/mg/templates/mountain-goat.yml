@@ -1,0 +1,15 @@
+
+#################
+# Mountain Goat #
+#################
+
+# Add your access passwords for each environment
+# 
+test:
+  password: <%= password %> 
+development:
+  password: <%= password %>
+staging:
+  password: <%= password %>
+production:
+  password: <%= password %>
