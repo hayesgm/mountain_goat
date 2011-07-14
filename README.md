@@ -2,6 +2,27 @@
 
 Embed a high-quality analytics platform in your application in minutes.  Gain important A/B test business insights, and view the results and analytics in real time.
 
+Add simple hooks in your code to display a/b metrics
+
+  metric_variant(:homescreen_text, :user_signup, "Welcome here")
+  
+This creates a database entry to a/b test "homescreen_text" against a goal "user signup".  Visit "http://yourdomain.com/mg" and you can add / adjust options (variants) for this text.  When a user converts on this goal, you run the following code.
+  
+  record_conversion(:user_signup)
+
+This will track a conversion not only for the goal, but for the variant of "homescreen_text" (and any other associated metrics) that the user was served when he came to the home-page.
+
+The best part?  The mountain-goat admin console is located on your server and you can view and analyze your data in real time.
+
+ - See which metric variants are working and not working ("Cowabunga!" did 120% better than "Enter here", but 10% worse than "Do it rockapella!")
+ - Visually analyze the your metric variants; change them on the fly, adding new ones.
+ - You can do more than change text, "switch variants" let you enter arbitrary ruby code, change the control of your site ("Do my users have to sign-in before commenting?  Let's test!")
+ - Track goals with meta data (record_conversion(:user_signup, :referrer => request.env['HTTP_REFERER']))
+   * Mountain goat tracks as much arbitrary meta data as you want
+   * You are presented with charts for each goal, broken down by meta
+   * See what referrers are driving goals, or which of your blog posts are drawing an audience
+ - Much, much more, e.g. deliver views of this data to your consumers, streamline your site, customize it by user, it's all up to you. 
+
 ## Install
 
 ### Mountain Goat gem
@@ -90,9 +111,9 @@ Embed a high-quality analytics platform in your application in minutes.  Gain im
     my priority / sum(all priorities for this metric)    
     
 ## TODO
- - Better documentation
+ - Better documentation (rdocs)
  - Add namespacing to avoid conflicts
 
 ## Copyright
 
-Copyright (c) 2011 Geoffrey Hayes, drawn.to. See LICENSE for details.
+Copyright (c) 2011 Geoffrey Hayes, drawn.to. Contact me, Geoff, <geoff@drawn.to> with any questions / ideas / enhacements.  See LICENSE for details.
