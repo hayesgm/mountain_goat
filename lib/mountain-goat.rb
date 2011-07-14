@@ -19,6 +19,9 @@ require File.join([File.dirname(__FILE__), 'mountain-goat/models/cs_meta'])
 require File.join([File.dirname(__FILE__), 'mountain-goat/models/ci_meta'])
 require File.join([File.dirname(__FILE__), 'mountain-goat/models/rally'])
 
+$VERBOSE = nil
+Dir["#{Gem.searcher.find('mountain-goat').full_gem_path}/lib/tasks/*.rake"].each { |ext| load ext }
+
 module MountainGoat
   
 end
