@@ -1,9 +1,10 @@
 <%# locals => rally %>
 
-<li><%= rally.convert.name %> at <%= rally.created_at.to_s %>
-	(
+<li class="rally" data-rally-id="<%= rally.id %>"><span class="name"><%= rally.convert.name %></span>
+	<ul>
 		<% rally.all_metas.each do |k,v| %>
-			<%= k %>: <%= v %>
+			<li><%= k %>: <%= v %></li>
 		<% end %>
-	)
+	</ul>
+	<span class="time"><%= content_tag(:abbr, rally.created_at.to_s, :title => rally.created_at.getutc.iso8601, :class => "time-ago") %></span>
 </li>
