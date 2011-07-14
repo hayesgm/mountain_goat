@@ -19,6 +19,7 @@ The best part?  The mountain-goat admin console is located on your server and yo
 
  - See which metric variants are working and not working ("Cowabunga!" did 120% better than "Enter here", but 10% worse than "Do it rockapella!")
  - Visually analyze the your metric variants; change them on the fly, adding new ones.
+ - Watch goal conversions in real-time with live-action console (grab the popcorn and watch how your users "sign up" and "view items" and ...)
  - You can do more than change text, "switch variants" let you enter arbitrary ruby code, change the control of your site ("Do my users have to sign-in before commenting?  Let's test!")
  - Track goals with meta data (record_conversion(:user_signup, :referrer => request.env['HTTP_REFERER']))
    * Mountain goat tracks as much arbitrary meta data as you want
