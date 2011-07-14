@@ -4,11 +4,14 @@ Embed a high-quality analytics platform in your application in minutes.  Gain im
 
 Add simple hooks in your code to display a/b metrics
 
-  metric_variant(:homescreen_text, :user_signup, "Welcome here")
+     <%= metric_variant(:homescreen_text, :user_signup, "Welcome here") %>
   
 This creates a database entry to a/b test "homescreen_text" against a goal "user signup".  Visit "http://yourdomain.com/mg" and you can add / adjust options (variants) for this text.  When a user converts on this goal, you run the following code.
   
-  record_conversion(:user_signup)
+     def create
+       record_conversion(:user_signup)
+       ...
+     end
 
 This will track a conversion not only for the goal, but for the variant of "homescreen_text" (and any other associated metrics) that the user was served when he came to the home-page.
 
