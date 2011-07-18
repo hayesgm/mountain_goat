@@ -47,6 +47,11 @@ This will generate
      /config/mountain-goat.yml (for storing a password to access mountain-goat)
      /db/migrate/xxx_create_mountain_goat_tables.rb (necessary databae migrations to store mg data)
 
+Modify /config/mountain-goat.yml to setup a password for each environment of your product
+
+     development:
+       password: my-mountain-goat-password
+
 Run your new migration
 
     db:migrate
