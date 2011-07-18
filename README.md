@@ -1,6 +1,6 @@
 # Mountain-Goat
 
-Embed a high-quality analytics platform in your application in minutes.  Gain important A/B test business insights, and view the results and analytics in real time.
+Embed a high-quality analytics platform in your application in minutes.  Gain important A/B test business insights, and view the results and analytics in real time.  Read my blog post on how mountain goat quickly accomplishes a/b testing: http://blog.drawn.to/how-we-do-ab-testing 
 
 Add simple hooks in your code to display a/b metrics
 
