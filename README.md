@@ -1,6 +1,6 @@
 # Mountain-Goat
 
-Embed a high-quality analytics platform in your application in minutes.  Gain important A/B test business insights, and view the results and analytics in real time.  Read my blog post on how mountain goat quickly accomplishes a/b testing: http://blog.drawn.to/how-we-do-ab-testing 
+Embed a high-quality analytics platform in your application in minutes.  Gain important A/B test business insights, and view the results and analytics in real time. 
 
 Add simple hooks in your code to display a/b metrics
 
@@ -27,6 +27,8 @@ The best part?  The mountain-goat admin console is located on your server and yo
    * You are presented with charts for each goal, broken down by meta
    * See what referrers are driving goals, or which of your blog posts are drawing an audience
  - Much, much more, e.g. deliver views of this data to your consumers, streamline your site, customize it by user, it's all up to you. 
+
+For more information, read my blog post on how mountain goat quickly accomplishes a/b testing: http://blog.drawn.to/how-we-do-ab-testing
 
 ## Install
 
