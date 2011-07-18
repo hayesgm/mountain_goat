@@ -140,6 +140,31 @@ Mountain goat will automatically break those down into three cases (:ten_percent
 You may want to test certain items with a lower serve rate (bold new slogans).  You can assign priorities to any metric variant.  The change of a given metric variant being shown is
     
      my priority / sum(all priorities for this metric)    
+
+## Technical
+
+As mountain goat is a suite that is added into your project dynamically, the following routes and tables are added during setup:
+
+- Tables
+  * ci_metas (indexes: ci_metas_cmt_data_index, ci_metas_cmt_index, ci_metas_rally_index)
+  * convert_meta_types
+  * converts
+  * cs_metas (indexes: cs_metas_cmt_data_index, cs_metas_cmt_index, cs_metas_rally_index)
+  * metric_variants
+  * metrics
+  * rallies
+
+- Routes
+  * map.mg '/mg', :controller => :mountain_goat_converts, :action => :index
+  * map.mg_login '/mg/login', :controller => :mountain_goat, :action => :login
+  * map.mg_login_create '/mg/login/create', :controller => :mountain_goat, :action => :login_create
+  * map.resources :mountain_goat_metric_variants
+  * map.resources :mountain_goat_converts, :has_many => [ :mountain_goat_metrics, :mountain_goat_rallies ]
+  * map.resources :mountain_goat_metrics, :has_many => :mountain_goat_metric_variants
+  * map.resources :mountain_goat_rallies
+  * map.new_rallies '/mg/rallies/new', :controller => :mountain_goat_rallies, :action => :new_rallies 
+  * map.fresh_metrics '/fresh-metrics', :controller => :mountain_goat_metrics, :action => :fresh_metrics
+  * map.connect '/mg/public/:file', :controller => :mountain_goat, :action => :fetch
     
 ## TODO
  - Better documentation (rdocs)

@@ -2,7 +2,6 @@ require File.join([File.dirname(__FILE__), 'switch_variant'])
 
 module MetricTracking
   
-  #def rand = 
   #Metric Tracking routes
   class << ActionController::Routing::Routes;self;end.class_eval do
     define_method :clear!, lambda {}
