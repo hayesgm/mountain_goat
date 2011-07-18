@@ -290,3 +290,7 @@ end
 class ActionMailer::Base
   include MetricTracking::Controller  
 end
+
+class ActiveRecord::Base
+  include MetricTracking::Controller  
+end
