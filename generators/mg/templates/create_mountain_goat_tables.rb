@@ -1,4 +1,4 @@
-class CreateMetricTrackingTables < ActiveRecord::Migration
+class CreateMountainGoatTables < ActiveRecord::Migration
 
   def self.up
     create_table "ci_metas", :force => true do |t|

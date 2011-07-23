@@ -219,13 +219,16 @@ form input[type='submit'] {
 .button, input[type="submit"] {
 	display: block;
 	color: white;
-	width: 170px;
+	!width: 170px;
 	font-size: 20px;
 	box-shadow: 0px 0px 3px rgba(222,222,222,0.2) inset;
 	margin-right: 6px;
 	background-color: red;
 	padding-left: 10px;
 	padding-top: 10px;
+	padding-right: 10px;
+	min-width: 70px;
+	text-align:center;		
 	border-radius: 5px;
 	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
 	text-shadow: 0 0 4px #333333;
@@ -403,4 +406,24 @@ input[type="checkbox"] + label {
 	width: 400px;
 	margin: 0 auto;
 	padding-right: 200px;
+}
+
+a.reload {
+	color: black;
+}
+
+ul.rally-list li.rally {
+	list-style: none outside none;
+	width: 60%;
+	!box-shadow: 0px 0px 3px rgba(222,222,222,0.2) inset;
+	margin-right: -1px;
+	margin-bottom: 10px;
+	background-color: rgba(200, 20, 20, 0.7);
+	padding: 4px;
+	color: white;
+}
+
+ul.rally-list li.rally .time {
+	float: right;
+	margin-top: -20px;
 }

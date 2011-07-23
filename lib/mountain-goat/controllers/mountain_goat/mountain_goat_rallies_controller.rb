@@ -35,4 +35,31 @@ class MountainGoatRalliesController < MountainGoatController
     end
     
   end
+  
+  def show
+    @rally = Rally.find(params[:id])
+  end
+  
+  def new
+    if params[:convert_id]
+      @rally = Rally.new(:convert_id => params[:convert_id])
+    else
+      @rally = Rally.new
+    end
+    
+  end
+  
+  def create
+    
+  end
+  
+  def edit
+    @rally = Rally.find(params[:id])  
+  end
+  
+  def update
+    
+  end
+  
+  
 end

@@ -1,0 +1,21 @@
+<%# locals => f %>
+
+<% if f.object.new_record? %>
+	<div class="item metric-type">
+		<%= f.label :convert_type, 'Type (this is technical)' %>
+		<%= f.text_field :convert_type %>
+	</div>
+<% else %>
+	<%= f.hidden_field(:convert_id) %>
+	<h2><%= f.object.convert.name %></h2>
+	<span class="item created_at">
+		<%= f.label :created_at %>
+		<%= f.text_field :created_at %>
+	</span>
+<% end %>
+
+<%# TODO: Metas %>
+
+<div class="item submit">
+	<%= f.submit 'Submit' %>
+</div>
