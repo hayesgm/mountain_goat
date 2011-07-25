@@ -43,7 +43,7 @@ module MetricTracking
     def mv_detailed(metric_type, convert_type, default, opts = {}, opt = nil)
       return get_metric_variant(metric_type, convert_type, default, opts, opt)
     end
-  
+    
     #shorthand
     def rc(convert_type, options = {})
       self.record_conversion(convert_type, options)
@@ -52,27 +52,14 @@ module MetricTracking
     def record_conversion(convert_type, options = {})
       
       metrics = {} #for user-defined metrics
+      options = options.with_indifferent_access
       
-      #We want some system for easy default parameter setting
-      if options.include?(:refs) && options[:refs]
-        options = options.merge( :ref_domain => session[:ref_domain], :ref_flyer => session[:ref_flyer], :ref_user => session[:ref_user] )
-        options.delete(:refs)
-      end
-      
-      if options.include?(:user) && options[:user]
-        options = options.merge( :user_id => current_user.id ) if signed_in?
-        options.delete(:user)
-      end
-      
-      if options.include?(:invitees) && options[:invitees]
-        invitee_meta = {}
-        if session[:invitee_id]
-          invitee = Invitee.find_by_id(session[:invitee_id])
-          if invitee.mailer.clique == @clique
-            options.merge!( { :mailer_id => invitee.mailer.id } )
-          end
+      MountainGoat.get_meta_options.each do |k, v|
+        if options.include?(k) && options[k]
+          options.delete(k)
+          res = v.call(self)
+          options.merge!( res ) if !res.nil? && res.instance_of?(Hash)
         end
-        options.delete(:invitees)
       end
       
       options.each do |k, v|

@@ -148,6 +148,20 @@ You may want to test certain items with a lower serve rate (bold new slogans).  
     
      my priority / sum(all priorities for this metric)    
 
+### Meta Options
+
+There is certain meta data that you may wish to collect for a number of different conversions.  For example, you may want to track ip-address so you can later pivot this column to find new / returning users.  To do this, add an initializer that calls MountainGoat.add_meta_option().
+
+     MountainGoat.add_meta_option(:stats) do |c|
+       { :ip => c.request.remote_ip }
+     end
+     
+Then, simply add ':stats => true' to your record_conversion call.  This will call into your block and replace the key-pair with the map returned from the block.  E.g.
+
+     record_conversion(:user_login, :login => @user.login, :stats => true)
+     
+Then, when we track the conversion, you'll get meta-data for the user's ip-address.  You can add any number of "meta-options" that you would like.
+
 ## Technical
 
 As mountain goat is a suite that is added into your project dynamically, the following routes and tables are added during setup:

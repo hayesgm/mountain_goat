@@ -21,9 +21,9 @@ class MountainGoatRalliesController < MountainGoatController
     convert = Convert.find(params[:convert_id].to_i) unless params[:convert_id].blank?
     
     if convert
-      @rallies = convert.rallies.find(:all, :conditions => [ 'id > ?', recent_rally ], :order => "created_at DESC" )
+      @rallies = convert.rallies.find(:all, :conditions => [ 'id > ?', recent_rally ], :order => "id DESC" )
     else
-      @rallies = Rally.find(:all, :conditions => [ 'id > ?', recent_rally ], :order => "created_at DESC" )
+      @rallies = Rally.find(:all, :conditions => [ 'id > ?', recent_rally ], :order => "id DESC" )
     end
     
     if @rallies.count > 0

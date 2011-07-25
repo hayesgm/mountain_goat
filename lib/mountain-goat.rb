@@ -22,6 +22,13 @@ require File.join([File.dirname(__FILE__), 'mountain-goat/models/rally'])
 #$VERBOSE = nil
 #Dir["#{Gem.searcher.find('mountain-goat').full_gem_path}/lib/tasks/*.rake"].each { |ext| load ext }
 
-module MountainGoat
+class MountainGoat
+  def self.add_meta_option(option, &block)
+    @@meta_options ||= {}
+    @@meta_options.merge!({ option => block })
+  end
   
+  def self.get_meta_options
+    @@meta_options
+  end 
 end
