@@ -27,9 +27,9 @@ module MGFlotilla
     def mg_chart(placeholder, series, options = {}, html_options = {})
       html_options.reverse_merge!({ :js_includes => true, :js_tags => true, :placeholder_tag => true, :placeholder_size => "800x300", :pie_hover => false, :pie_hover_absolute => false })
       width, height = html_options[:placeholder_size].split("x") if html_options[:placeholder_size].respond_to?(:split)
-      additional_js = get_additional_js(placeholder, html_options)
+      additional_js = mg_get_additional_js(placeholder, html_options)
       
-      data, x_is_date, y_is_date = series_to_json(series)
+      data, x_is_date, y_is_date = mg_series_to_json(series)
       if x_is_date
         options[:xaxis] ||= {}
         options[:xaxis].merge!({ :mode => 'time' })
@@ -79,7 +79,7 @@ module MGFlotilla
     end
 
     private
-    def series_to_json(series)
+    def mg_series_to_json(series)
       data_sets = []
       x_is_date, y_is_date = false, false
       series.each do |name, values|
@@ -116,7 +116,7 @@ module MGFlotilla
       return data_sets.to_json, x_is_date, y_is_date
     end
 
-    def get_additional_js(placeholder, options)
+    def mg_get_additional_js(placeholder, options)
       res = ""
       if options[:pie_hover]
         res << <<-EOF
