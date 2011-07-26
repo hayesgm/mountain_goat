@@ -17,7 +17,7 @@
 					<div class="flyer-analysis statpad">
 						<div class="title">Conversions</div>
 						<div class="statbody">
-							<%= mg_chart("analysis_graph#{@metric.id}",
+							<%= chart("analysis_graph#{@metric.id}",
 												{ "Served" => { :collection => @rates[:served], :x => :variant_type, :y => :value },
 													"Conversions" => { :collection => @rates[:conversions], :x => :variant_type, :y => :value } },
 													{ :xaxis => { :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :show => false, :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
@@ -27,7 +27,7 @@
 					<div class="flyer-analysis statpad">
 						<div class="title">Conversion Rates</div>
 						<div class="statbody">
-							<%= mg_chart("analysis_conv_graph#{@metric.id}",
+							<%= chart("analysis_conv_graph#{@metric.id}",
 												{ "Conversion Rate (%)" => { :collection => @rates[:conversion_rates], :x => :variant_type, :y => :value } },
 													{ :xaxis => { :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :show => false, :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "%") %>
 						

@@ -1,10 +1,10 @@
-begin
-  require 'json'
-rescue LoadError
-  p "Flotilla will not work without the 'json' gem"
-end
+#begin
+#  require 'json'
+#rescue LoadError
+#  p "Flotilla will not work without the 'json' gem"
+#end
 
-module Flotilla
+module MGFlotilla
   module Helpers
       
     # Insert a flot chart into the page.  <tt>placeholder</tt> should be the 
@@ -24,7 +24,7 @@ module Flotilla
     #   :js_tags - wraps resulting javascript in javascript tags if true.  Defaults to true.
     #   :placeholder_tag - appends a placeholder div for graph
     #   :placeholder_size - specifys the size of the placeholder div
-    def chart(placeholder, series, options = {}, html_options = {})
+    def mg_chart(placeholder, series, options = {}, html_options = {})
       html_options.reverse_merge!({ :js_includes => true, :js_tags => true, :placeholder_tag => true, :placeholder_size => "800x300", :pie_hover => false, :pie_hover_absolute => false })
       width, height = html_options[:placeholder_size].split("x") if html_options[:placeholder_size].respond_to?(:split)
       additional_js = get_additional_js(placeholder, html_options)
@@ -166,5 +166,5 @@ module Flotilla
 end
 
 class ActionView::Base
-  include Flotilla::Helpers
+  include MGFlotilla::Helpers
 end
