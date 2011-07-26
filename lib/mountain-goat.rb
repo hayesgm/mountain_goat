@@ -4,6 +4,8 @@ require 'active_support'
 require 'action_controller'
 require 'action_controller/routing'
 
+require File.join([File.dirname(__FILE__), 'mgflotilla'])
+
 require File.join([File.dirname(__FILE__), 'mountain-goat/controllers/mountain_goat/mountain_goat_controller'])
 require File.join([File.dirname(__FILE__), 'mountain-goat/controllers/mountain_goat/mountain_goat_metrics_controller'])
 require File.join([File.dirname(__FILE__), 'mountain-goat/controllers/mountain_goat/mountain_goat_metric_variants_controller'])
