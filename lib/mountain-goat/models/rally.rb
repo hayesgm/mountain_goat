@@ -18,7 +18,9 @@ class Rally < ActiveRecord::Base
         cmt = convert.convert_meta_types.create!(:name => option[0].to_s, :var => option[0].to_s, :meta_type => meta_type)
       end
       
-      cmt.meta.create!(:rally_id => self.id, :data => option[1]) if !option[1].nil?
+      if !cmt.nil? #only if we can do it
+        cmt.meta.create!(:rally_id => self.id, :data => option[1]) if !option[1].nil?
+      end
     end
   end
   
