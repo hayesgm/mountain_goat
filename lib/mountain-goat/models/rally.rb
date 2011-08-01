@@ -11,7 +11,7 @@ class Rally < ActiveRecord::Base
       cmt = convert_meta_types.find_by_var(option[0].to_s)
 
       #Create cmt if it doesn't current exist (unless nil)
-      if cmt.nil? && !option[1].nil?
+      if cmt.nil? && !option[1].nil? && ( option[1].is_a?(Integer) || option[1].is_a?(String) )
         #infer type
         meta_type = "ci_meta" if option[1].is_a?(Integer)
         meta_type = "cs_meta" if option[1].is_a?(String)
