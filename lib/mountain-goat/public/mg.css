@@ -423,6 +423,10 @@ ul.rally-list li.rally {
 	color: white;
 }
 
+ul.rally-list li.rally ul {
+	width: 70%;
+}
+
 ul.rally-list li.rally .time {
 	float: right;
 	margin-top: -20px;
