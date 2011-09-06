@@ -26,7 +26,7 @@ class Mg::ReportItemsController < Mg
       render :json => { :success => true,
                         :close_dialog => true,
                         :result => "<span>Successfully added report item</span>",
-                        :also => [ { :item => ".report-report-items", :result => render_to_string( :partial => "mg/reports/report_report_items", :locals => { :report => @report } ) } ] }
+                        :also => [ { :item => ".report-report-items", :result => render_to_string( :partial => "mg/reports/report_report_items", :locals => { :report => @report_item.report } ) } ] }
     else
       render :json => { :success => true,
                         :result => render_to_string(:action => :new, :layout => 'xhr') }

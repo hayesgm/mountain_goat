@@ -1,7 +1,21 @@
-<h2><%=h @report.title %></h2>
 
-<h4><%=h @report.description %></h4>
-
-<% @report.report_items.each do |report_item| %>
-	<%= render 'mg/report_items/chart', :report_item => report_item %>
-<% end %>
+<div id="container-main" class="mt-reports show">
+	<div class="mountain-goat-panel centered">
+		<ul class="nav">
+			<li><a href="<%= mg_reports_url %>">Reports</a></li>
+			<li><a href="<%= mg_report_url @report.id %>"><%=h @report.title %></a></li>
+		</ul>
+		
+		<h2><%=h @report.title %></h2>
+		
+		<h4><%=h @report.description %></h4>
+		
+		<% @report.report_items.each do |report_item| %>
+			<%= render 'mg/report_items/chart', :report_item => report_item %>
+		<% end %>
+		
+		<div class="actions">
+			<a class="button" href="<%= edit_mg_report_url @report %>">Edit</a>
+		</div>
+	</div>
+</div>

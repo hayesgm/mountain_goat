@@ -6,7 +6,7 @@
 begin
   require 'pdfkit'
 rescue LoadError
-  p "Mountain Goat Reports will not work without the 'pdfkit' gem"
+  raise "Mountain Goat Reports will not work without the 'pdfkit' gem (please run `gem install pdfkit`)"
 end
 
 ######################
@@ -16,7 +16,7 @@ end
 begin
   require 'SVG/Graph/TimeSeries'
 rescue LoadError
-  p "Mountain Goat Reports will not work without the 'svg-graph' gem"
+  raise "Mountain Goat Reports will not work without the 'svg-graph' gem (please run `gem install svg-graph`)"
 end
 
 ############################

@@ -464,3 +464,79 @@ a.jqmClose{
 	top: 5px;
 	color: #EEEEFF;
 }
+
+input[type="submit"], .smallbutton, .mediumbutton, .bigbutton{
+    border: 0px solid #CCCCCC;
+	border-radius: 5px;
+	color: #FFFFFF;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: 1px 1px 1px #666666;
+}
+
+.smallbutton, input[type="submit"].smallbutton{
+	width: 90px;
+	height: 22px;
+	margin: 0px;
+	font-size: 15px;
+}
+.bluebutton{
+    background: #6699CC;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6699CC', endColorstr='#3366AA');
+		background: -webkit-gradient(linear, left top, left bottom, from(#6699CC), to(#3366AA));
+		background: -moz-linear-gradient(top,  #6699CC,  #3366AA);
+	box-shadow: 2px 2px 4px rgba(0,0,0,.2), 0px 1px 0px #77AAEE inset, 0px -1px 0px #225599 inset;
+}
+.bluebutton:hover, .bluebutton:active{
+    background: #88BBEE;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#88BBEE', endColorstr='#5588CC');
+		background: -webkit-gradient(linear, left top, left bottom, from(#8BE), to(#58C));
+		background: -moz-linear-gradient(top,  #8BE,  #58C);
+	box-shadow: 2px 2px 4px rgba(0,0,0,.2), 0px 1px 0px #99CCFF inset, 0px -1px 0px #4477BB inset;
+}
+.greenbutton{
+    background: #66CC66;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66CC66', endColorstr='#339933');
+		background: -webkit-gradient(linear, left top, left bottom, from(#66CC66), to(#339933));
+		background: -moz-linear-gradient(top,  #66CC66,  #339933);
+	box-shadow: 2px 2px 4px rgba(0,0,0,.2), 0px -1px 0px #99FF99;
+	text-shadow: 1px 1px 0px #336633;
+}
+.greenbutton.active, .greenbutton:active, .greenbutton:hover{
+    background: #22AA22;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#22AA22', endColorstr='#339933');
+		background: -webkit-gradient(linear, left top, left bottom, from(#22AA22), to(#339933));
+	background: -moz-linear-gradient(top,  #228822,  #339933);
+	box-shadow: 2px 2px 4px rgba(0,0,0,.2), 0px 0px 1px 0px #004400 inset, 0px -1px 0px #66AA66;
+}
+.redbutton{
+    background: #EE7777;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EE7777', endColorstr='#CC4F4F');
+		background: -webkit-gradient(linear, left top, left bottom, from(#EE7777), to(#CC4F4F));
+		background: -moz-linear-gradient(top,  #EE7777,  #CC4F4F);
+	box-shadow: 2px 2px 4px rgba(0,0,0,.2), 0px -1px 0px #FF9999;
+	text-shadow: 1px 1px 0px #993333;
+}
+.redbutton.active, .redbutton:active, .redbutton:hover{
+    background: #EE7777;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EE7777', endColorstr='#CC4F4F');
+		background: -webkit-gradient(linear, left top, left bottom, from(#EE7777), to(#CC4F4F));
+		background: -moz-linear-gradient(top,  #BB4444,  #CC4F4F);
+	box-shadow: 2px 2px 4px rgba(0,0,0,.2), 0px 0px 2px 0px #663333 inset, 0px -1px 0px #AA6666;
+}
+.smallbutton.redbutton{
+	width: auto;
+	padding: 0px 7px;
+}
+
+.report-item {
+	padding: 8px;
+}
+.report-info .report {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.report-item-actions > span {
+	padding-left: 10px;
+}

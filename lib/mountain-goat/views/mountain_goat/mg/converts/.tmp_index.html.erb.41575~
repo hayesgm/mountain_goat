@@ -1,0 +1,25 @@
+
+<div id="container-main" class="mt-converts">
+	<div class="mountain-goat-panel centered">
+	
+		<h1>Conversion Goals</h1>
+		
+		<div class="conversions">
+			<div class="explanation">
+				<span class="inner">
+					Below are a list of conversion goals.  Each goal has a set of metrics designed to achieve that goal.  For each metric, there is a list of variants, each coupled with its conversation rate.</span>
+				</span>
+			</div>
+			
+			<div class="converts">
+				<% @converts.each do |convert| %>
+					<h2><a href="<%= mg_convert_url :id => convert.id %>"><%=h convert.name %></a></h2>
+				<% end %>
+			</div>
+		</div>
+	
+		<div class="actions">
+			<a class="button" href="<%= new_mg_convert_url %>">New Goal</a>
+		</div>
+	</div>
+</div>

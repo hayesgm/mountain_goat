@@ -1,7 +1,7 @@
 <%# locals => report_item %>
 
 <div class="report-item">
-	<div class="report-info">
+	<span class="report-info">
 		<span class="report">
 			<% if report_item.reportable.nil? || !report_item.reportable.respond_to?(:name) %>
 				&lt;Undefined&gt;
@@ -9,17 +9,14 @@
 				<%= report_item.reportable.name %>
 			<% end %>
 		</span>
-		<span class="order">
-			<%= report_item.order %>
-		</span>
-	</div>
-	<div class="report-item-actions">
+	</span>
+	<span class="report-item-actions">
 		<span class="edit">
-			<a href="javascript:void(0)" class="remote-link" data-path="<%= edit_mg_report_item_url(:id => report_item.id) %>" data-res=".report-items-model .model">Edit</a>
+			<a href="javascript:void(0)" class="remote-link smallbutton" data-path="<%= edit_mg_report_item_url(:id => report_item.id) %>" data-res=".report-items-model .model">Edit</a>
 		</span>
 		
 		<span class="remove">
-			<a href="javascript:void(0)" class="remote-link" data-path="<%= destroy_mg_report_item_url(:id => report_item.id) %>" data-res=".report-items-model .model">Remove</a>
+			<a href="javascript:void(0)" class="remote-link smallbutton" data-path="<%= destroy_mg_report_item_url(:id => report_item.id) %>" data-res=".report-items-model .model">Remove</a>
 		</span>
-	</div>
+	</span>
 </div>
