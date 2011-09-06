@@ -37,13 +37,18 @@ class UpdateMountainGoatTables < ActiveRecord::Migration
       t.string   "delivery_set"
       t.string   "recipients"
     end
+    
+    add_column :mg_converts, :deleted_at, :datetime
+    add_column :mg_metrics, :deleted_at, :datetime
+    add_column :mg_metric_variants, :deleted_at, :datetime
+    add_column :mg_reports, :deleted_at, :datetime
   end
 
   def self.down
-    add_column :metric_variants, :priority, :float
-    add_column :metrics, :convert_id, :integer
-    remove_column :metric_variants, :reward
-    remove_column :converts, :reward
+    remove_column :mg_converts, :deleted_at, :datetime
+    remove_column :mg_metrics, :deleted_at, :datetime
+    remove_column :mg_metric_variants, :deleted_at, :datetime
+    remove_column :mg_reports, :deleted_at, :datetime
     
     rename_table :mg_rallies, :rallies
     rename_table :mg_metrics, :metrics
@@ -52,6 +57,11 @@ class UpdateMountainGoatTables < ActiveRecord::Migration
     rename_table :mg_cs_metas, :cs_metas
     rename_table :mg_ci_metas, :ci_metas
     rename_table :mg_convert_meta_types, :convert_meta_types
+    
+    add_column :metric_variants, :priority, :float
+    add_column :metrics, :convert_id, :integer
+    remove_column :metric_variants, :reward
+    remove_column :converts, :reward
     
     drop_table :mg_reports
     drop_table :mg_report_items

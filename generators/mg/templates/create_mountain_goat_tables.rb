@@ -28,6 +28,7 @@ class CreateMountainGoatTables < ActiveRecord::Migration
       t.datetime "updated_at"
       t.string   "name"
       t.float    "reward",       :default => 1.0
+      t.datetime "deleted_at"
     end
   
     create_table "mg_cs_metas", :force => true do |t|
@@ -54,6 +55,7 @@ class CreateMountainGoatTables < ActiveRecord::Migration
       t.string   "name"
       t.string   "switch_type"
       t.float    "reward"
+      t.datetime "deleted_at"
     end
   
     create_table "mg_metrics", :force => true do |t|
@@ -63,6 +65,7 @@ class CreateMountainGoatTables < ActiveRecord::Migration
       t.datetime "updated_at"
       t.boolean  "tally_each_serve", :default => true
       t.boolean  "is_switch",        :default => false
+      t.datetime "deleted_at"
     end
   
     create_table "mg_rallies", :force => true do |t|
@@ -87,6 +90,7 @@ class CreateMountainGoatTables < ActiveRecord::Migration
       t.datetime "updated_at"
       t.string   "delivery_set"
       t.string   "recipients"
+      t.datetime "deleted_at"
     end
   end
 
