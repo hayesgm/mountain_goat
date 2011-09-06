@@ -40,7 +40,7 @@ For more information, read my blog post on how mountain goat quickly accomplishe
 
 If you are upgrading from Mountain Goat < 1.0.0, please run the following command (please overwrite mountain-goat.yml when prompted):
 
-     ./script/generate mg --update
+     ./script/generate mg --update=yes
      
      rake db:migrate
      
