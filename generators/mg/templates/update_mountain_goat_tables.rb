@@ -4,8 +4,10 @@ class UpdateMountainGoatTables < ActiveRecord::Migration
     add_column :converts, :reward, :float, :default => 1.0
     add_column :metric_variants, :reward, :float
     
-    MetricVariant.all.each do |mv|
-      mv.update_attribute(:reward, mv.metric.convert.reward * mv.conversions.to_f / mv.served.to_f ) if !mv.served.nil? && !mv.conversions.nil? && mv.served > 0
+    rename_table :metric_variants, :mg_metric_variants
+    
+    Mg::MetricVariant.all.each do |mv|
+      mv.update_attribute(:reward, mv.conversions.to_f )
     end
     
     remove_column :metrics, :convert_id
@@ -13,7 +15,6 @@ class UpdateMountainGoatTables < ActiveRecord::Migration
     
     rename_table :rallies, :mg_rallies
     rename_table :metrics, :mg_metrics
-    rename_table :metric_variants, :mg_metric_variants
     rename_table :converts, :mg_converts
     rename_table :cs_metas, :mg_cs_metas
     rename_table :ci_metas, :mg_ci_metas
