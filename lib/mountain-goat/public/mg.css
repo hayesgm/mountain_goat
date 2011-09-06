@@ -19,7 +19,7 @@ body, select, pre {
 }
 
 a {
-	color: #fff;
+	color: #bbb;
 	text-decoration: none;
 }
 
@@ -28,7 +28,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-.header {
+.main-header {
 	top: 0;
 	width: 100%;
 	position: fixed;
@@ -36,19 +36,19 @@ a:hover {
 	background-color: rgba(2,2,2,0.7);
 }
 
-.header .head {
-	width: 900px;
+.main-header .head {
+	width: 930px;
 	margin: 0 auto;
 	height: 107px;
 }
 
-.header ul.nav {
+.main-header ul.nav {
 	margin: 0;
 	float: right;
 	height: 100%;
 }
 
-.header ul.nav li {
+.main-header ul.nav li {
 	float: left;
 	list-style: none outside none;
 	width: 140px;
@@ -57,11 +57,11 @@ a:hover {
 	margin-right: -1px;
 }
 
-.header ul.nav li:hover {
+.main-header ul.nav li:hover {
 	background-color: #FF2800;
 }
 
-.header ul.nav li > a{
+.main-header ul.nav li > a{
 	display: block;
 	font-size: 24px;
 	padding: 42px 0px;
@@ -250,33 +250,25 @@ form input[type='submit'] {
 	float: left;
 	background: rgb(30,30,30);
 	background: rgba(0,0,0,.9);
-	
 	width: 900px;
-	margin: 0px 0px 0px 40px;
-	padding: 0px 10px 10px 10px;
+	margin: 0px 0px 0px 20px;
+	padding: 0px 10px;
 	color: #D6D6D6;
+	text-align: center;
 }
-.stat-header, .statpad .title, .statpad .statbody{
+.statpad .title, .statpad .statbody{
 	background: #222222;
 	border-top: 1px solid #333333;
 	border-bottom: 1px solid #151617;
 }
-.stat-header, .statpad, .statnote{
+.statpad, .statnote{
 	box-shadow: 2px 0 3px #0D0D0D, -2px 0 3px #0D0D0D, 0 3px 3px #0D0D0D, 0 -2px 3px #0D0D0D;
 }
-.stat-header{
-	float: left;
-	width: 100%;
-	height: 50px;
-	line-height: 50px;
-	margin: 10px 0px 0px 0px;
-	font-size: 30px;
-	text-align: center;
-}
+
 .statpad{
 	float: left;
 	width: 445px;
-	margin-top: 10px;
+	margin-bottom: 10px;
 
 }
 .statpad .title{
@@ -296,13 +288,13 @@ form input[type='submit'] {
     margin-right: 10px;
 }
 .statbody.pie{
-	width: 345px;
-	padding-left: 90px;
 }
 .statbody.pie .legend{
 	display: none;
 }
-
+.statbody.pie .chart{
+	margin: 0px auto;
+}
 .quad.statpad{
 	box-shadow: none;
 }
@@ -343,6 +335,8 @@ form input[type='submit'] {
 	padding-left: 3px;
 	font-size: 12px;
 }
+
+
 .asterisk{
 	font-size: 12px;
 }
@@ -430,4 +424,43 @@ ul.rally-list li.rally ul {
 ul.rally-list li.rally .time {
 	float: right;
 	margin-top: -20px;
+}
+
+.model .header, .model .body {
+	float: left;
+}
+
+.flash-model .jqmWindow {
+	background: #FFFFFF;
+	border-radius: 10px;
+	border: 5px solid #DDDDDD;
+	padding: 0px;
+}
+.flash-model .header{
+	border-radius: 6px 6px 0px 0px;
+	width: 100%;
+	line-height: 30px;
+	padding: 0px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.flash-model .header .title{
+	padding-left: 10px;
+}
+.flash-model .body{
+	padding: 10px 20px 20px 20px;
+}
+
+.flash-model .header {
+	background: #88BBEE;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#88BBEE', endColorstr='#5588CC');
+		background: -webkit-gradient(linear, left top, left bottom, from(#8BE), to(#58C));
+		background: -moz-linear-gradient(top,  #8BE,  #58C);
+}
+
+a.jqmClose{
+	position: absolute;
+	right: 20px;
+	top: 5px;
+	color: #EEEEFF;
 }

@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  convert_id: 1
+  name: MyString
+  var: MyString
+  meta_type: MyString
+
+two:
+  convert_id: 1
+  name: MyString
+  var: MyString
+  meta_type: MyString

@@ -1,0 +1,1 @@
+#Dir["#{Gem.searcher.find('facebooker').full_gem_path}/lib/tasks/*.rake"].each { |ext| load ext }

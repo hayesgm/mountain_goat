@@ -1,0 +1,26 @@
+<%# locals => f %>
+
+<% if f.object.new_record? %>
+	<div class="item type">
+		<%= f.label :convert_type, 'Type (this is technical)' %><br />
+		<%= f.text_field :convert_type %>
+	</div>
+<% else %>
+	<h2><%= f.object.convert_type %></h2>
+<% end %>
+
+<div class="item name">
+	<%= f.label :name, 'Goal title' %><br />
+	<%= f.text_field :name %>
+</div>
+
+<div class="metas">
+	<% f.fields_for :convert_meta_types do |builder| %>
+		<%= render "convert_meta_type_form", :cmt_f => builder %>
+	<% end %>
+</div>
+
+<div class="item submit">
+	<%= f.submit 'Submit' %>
+</div>
+

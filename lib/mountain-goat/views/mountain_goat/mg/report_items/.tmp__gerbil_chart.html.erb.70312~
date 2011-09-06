@@ -1,0 +1,15 @@
+<%# locals => report_item %>
+
+<% mychart = GerbilCharts::Charts::LineChart.new( :width => 350, :height => 200, :style => 'brushmetal.css', :circle_data_points => true ) %>
+
+<% mychart.modelgroup = GerbilCharts::Models::SimpleTimeSeriesModelGroup.new(
+       :title => "Sales figures",
+       :timeseries  =>  (1..6).collect { |month| Time.local(2008,month) },
+       :models =>       [ ["Bruce", 1,  10, 18, 28, 80,  122],
+                          ["Rex"  , 112,22, 45, 70, 218, 309],
+                           ["Buzo" , 0,  23, 25, 40, 18,  59]
+                        ]
+     )
+%>
+
+<%= mychart.render_string %>

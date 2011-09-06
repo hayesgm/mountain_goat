@@ -1,0 +1,17 @@
+
+<div id="container-main" class="mt-reports">
+	<div class="mountain-goat-panel cenetered">
+		<h1>New Report</h1>
+		
+		<% form_for :report, @report, :url => mg_reports_url do |f| %>
+			<%= f.error_messages %>
+		
+			<%= render :partial => 'mg/reports/report_form', :locals => { :f => f } %>
+					
+			<div class="item submit">
+				<%= f.submit 'Submit' %>
+			</div>
+			
+		<% end %>
+	</div>
+</div>

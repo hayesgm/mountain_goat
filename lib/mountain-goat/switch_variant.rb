@@ -1,14 +1,14 @@
 
 class SwitchVariant    
-    def initialize(logger, metric, convert, chosen_variant)
+    def initialize(logger, metric, chosen_variant)
       @chosen_variant = chosen_variant  
-      @metric, @convert = metric, convert
+      @metric = metric
       @logger = logger
       raise ArgumentError, "Metric type must be switch-type" if !@metric.is_switch
     end
     
     def method_missing(sym, *args, &block)
-      priority = ( args.first || 1.0 ).to_f
+      #priority = ( args.first || 1.0 ).to_f
       
       if @chosen_variant.nil?
         #If we have not chosen a variant, we are going to look through
@@ -17,7 +17,7 @@ class SwitchVariant
         @logger.warn "Looking at option #{sym.to_s}"
         if @metric.metric_variants.find( :first, :conditions => { :switch_type => sym.to_s } ).nil?
           @logger.warn "Creating switch-type metric-variant #{sym.to_s}"
-          @metric.metric_variants.create!( :name => sym.to_s, :switch_type => sym.to_s, :priority => priority, :value => nil )
+          @metric.metric_variants.create!( :name => sym.to_s, :switch_type => sym.to_s, :value => nil )
         end
       else
         if @chosen_variant.switch_type.to_s == sym.to_s

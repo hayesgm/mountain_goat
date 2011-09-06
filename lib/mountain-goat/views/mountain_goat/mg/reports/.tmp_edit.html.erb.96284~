@@ -1,0 +1,30 @@
+
+<div id="container-main" class="mt-reports">
+	<div class="mountain-goat-panel centered">
+		<h1>Edit <%= @report.title %></h1>
+	
+		<% form_for :report, @report, :url => mg_report_url(:id => @report.id), :html => { :method => :put } do |f| %>
+	 		<%= f.error_messages %>
+	
+			<%= render :partial => 'mg/reports/report_form', :locals => { :f => f } %>
+			
+			<div class="report-report-items">
+				<%= render :partial => "mg/reports/report_report_items", :locals => { :report => @report } %>
+			</div>
+			
+			<a href="javascript:void(0)" class="smallbutton redbutton remote-link" data-path="<%= new_mg_report_report_item_url(:report_id => @report.id) %>" data-res=".report-items-model .model">+ Add Item</a>
+			
+			<div class="item submit">
+				<%= f.submit 'Submit' %>
+			</div>
+
+			<div class="report-items-model flash-model model">
+				<div class="jqmWindow">
+					<a href="#" class="jqmClose">Close</a>
+					<div class="model" data-model=".jqmWindow"></div>
+				</div>
+			</div>
+		<% end %>
+	</div>
+</div>
+

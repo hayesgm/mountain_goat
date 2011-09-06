@@ -7,49 +7,161 @@ module MetricTracking
     define_method :clear!, lambda {}
   end
   
+  Mime::Type.register "application/xhtml+xml", :xhtml
+  
   #TODO: Namespace?
   ActionController::Routing::Routes.draw do |map|
-    map.mg '/mg', :controller => :mountain_goat_converts, :action => :index
-    map.mg_login '/mg/login', :controller => :mountain_goat, :action => :login
-    map.mg_login_create '/mg/login/create', :controller => :mountain_goat, :action => :login_create
-    map.resources :mountain_goat_metric_variants
-    map.resources :mountain_goat_converts, :has_many => [ :mountain_goat_metrics, :mountain_goat_rallies ]
-    map.resources :mountain_goat_metrics, :has_many => :mountain_goat_metric_variants
-    map.resources :mountain_goat_rallies
-    map.new_rallies '/mg/rallies/new', :controller => :mountain_goat_rallies, :action => :new_rallies 
-    map.fresh_metrics '/fresh-metrics', :controller => :mountain_goat_metrics, :action => :fresh_metrics
-    map.connect '/mg/public/:file', :controller => :mountain_goat, :action => :fetch
+    map.namespace :mg do |mg|
+      mg.mg '/mg', :controller => :converts, :action => :index, :path_prefix => ""
+      mg.login '/login', :controller => :mountain_goat, :action => :login
+      mg.login_create '/login/create', :controller => :mountain_goat, :action => :login_create
+      mg.resources :metric_variants
+      mg.resources :converts, :has_many => [ :rallies ]
+      mg.resources :metrics, :has_many => :metric_variants
+      mg.resources :rallies, :collection => { :new_rallies => :get }
+      mg.resources :reports, :has_many => :report_items, :member => { :show_svg => :get }
+      mg.resources :report_items, :member => { :destroy => :get, :update => :post }
+      mg.resources :playground, :collection => { :test => :get }
+      mg.new_rallies '/rallies/new', :controller => :rallies, :action => :new_rallies 
+      mg.fresh_metrics '/fresh-metrics', :controller => :metrics, :action => :fresh_metrics
+      mg.connect '/public/:file', :controller => :mountain_goat, :action => :fetch
+    end
   end
   
   module Controller
   
+    #This is just for testing
+    def mg_rand
+      return "(SELECT #{@mg_i.nil? ? 1 : @mg_i.to_f})" if defined?(MOUNTAIN_GOAT_TEST) && MOUNTAIN_GOAT_TEST
+      "RAND()"
+    end
+    
+    def mg_epsilon
+      if @mg_epsilon.nil?
+        @mg_epsilon = 0.1 #default
+        mg_yml = nil
+        begin
+          mg_yml = YAML::load(File.open("#{RAILS_ROOT}/config/mountain-goat.yml"))
+        rescue
+        end
+        if mg_yml
+          if mg_yml.has_key?(RAILS_ENV) && mg_yml[RAILS_ENV].has_key?('epsilon')
+            @mg_epsilon = mg_yml[RAILS_ENV]['epsilon'].to_f
+          elsif mg_yml.has_key?('settings') && mg_yml['settings'].has_key?('epsilon')
+            @mg_epsilon = mg_yml['settings']['epsilon'].to_f
+          end
+        end
+      end
+      return @mg_epsilon
+    end
+    
+    def mg_strategy 
+      if @mg_strategy.nil?
+        @mg_strategy = 'e-greedy' #default
+        mg_yml = nil
+        begin
+          mg_yml = YAML::load(File.open("#{RAILS_ROOT}/config/mountain-goat.yml"))
+        rescue
+        end
+        if mg_yml
+          if mg_yml.has_key?(RAILS_ENV) && mg_yml[RAILS_ENV].has_key?('strategy')
+            @mg_strategy = mg_yml[RAILS_ENV]['strategy']
+          elsif mg_yml.has_key?('settings') && mg_yml['settings'].has_key?('strategy')
+            @mg_strategy = mg_yml['settings']['strategy']
+          end
+        end
+      end
+      return @mg_strategy
+    end
+    
+    def mg_apply_strategy(metric)
+      case mg_strategy.downcase
+        when 'e-greedy'
+          return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE reward END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
+        when 'e-greedy-decreasing'
+          return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC,
+                                                    CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} / ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) THEN #{mg_rand} ELSE reward END DESC,
+                                                    #{mg_rand} DESC", :conditions => { :metric_id => metric.id } ) # * log( ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) )
+        when 'a/b'
+          return Mg::MetricVariant.first(:order => "#{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
+        else
+          raise "Invalid strategy #{mg_strategy}"
+      end
+    end
+    
+    def mg_storage
+      return @fake_session if defined?(MOUNTAIN_GOAT_TEST) && MOUNTAIN_GOAT_TEST 
+      
+      if @use_cookies.nil?
+        @use_cookies = true #default
+        mg_yml = nil
+        begin
+          mg_yml = YAML::load(File.open("#{RAILS_ROOT}/config/mountain-goat.yml"))
+        rescue
+        end
+        if mg_yml
+          if mg_yml.has_key?(RAILS_ENV) && mg_yml[RAILS_ENV].has_key?('use_cookies')
+            uc = mg_yml[RAILS_ENV]['use_cookies']
+            @use_cookies = uc == true || uc == "true" || uc.to_i == 1
+          elsif mg_yml.has_key?('settings') && mg_yml['settings'].has_key?('use_cookies')
+            uc = mg_yml['settings']['use_cookies']
+            @use_cookies = uc == true || uc == "true" || uc.to_i == 1
+          end
+        end
+      end
+
+      return defined?(cookies) ? cookies : nil if @use_cookies
+      return defined?(session) ? session : nil
+    end
+    
     ######################
     #   Metric Tracking  #
     ######################
   
-    def sv(metric_type, convert_type, &block)
+    def bds(metric_type, &block)
       raise ArgumentError, "Switch variant needs block" if !block_given?
-      metric, convert = get_metric_convert( metric_type, convert_type, true )
-      block.call(SwitchVariant.new( logger, metric, convert, nil ) )
+      metric = get_metric( metric_type, true )
+      block.call(SwitchVariant.new( logger, metric, nil ) )
       
-      var = get_switch_metric_variant(metric_type, convert_type)
-      block.call(SwitchVariant.new( logger, metric, convert, var ) )
+      var = get_switch_metric_variant( metric_type )
+      block.call(SwitchVariant.new( logger, metric, var ) )
+    end
+    
+    def bd(metric_type, default, opts = {}, opt = nil)
+      return get_metric_variant(metric_type, default, opts, opt)[:value]
+    end
+    
+    def bdd(metric_type, default, opts = {}, opt = nil)
+      return get_metric_variant(metric_type, default, opts, opt)
+    end
+    
+    #Legacy
+    def sv(metric_type, convert_type, &block)
+      bds(metric_type, &block)
     end
     
     def mv(metric_type, convert_type, default, opts = {}, opt = nil)
-      return get_metric_variant(metric_type, convert_type, default, opts, opt)[:value]
+      bd(metric_type, default, opts, opt)
     end
     
     def mv_detailed(metric_type, convert_type, default, opts = {}, opt = nil)
-      return get_metric_variant(metric_type, convert_type, default, opts, opt)
+      bdd(metric_type, default, opts, opt)  
     end
     
     #shorthand
+    def rw(convert_type, reward, options = {})
+      self.bandit_reward(convert_type, reward, options)
+    end
+    
     def rc(convert_type, options = {})
-      self.record_conversion(convert_type, options)
+      self.bandit_reward(convert_type, 1, options)
     end
     
     def record_conversion(convert_type, options = {})
+      self.bandit_reward(convert_type, 1, options)
+    end
+    
+    def bandit_reward(convert_type, reward, options = {})
       
       metrics = {} #for user-defined metrics
       options = options.with_indifferent_access
@@ -71,18 +183,18 @@ module MetricTracking
       
       logger.warn "Recording conversion #{convert_type.to_s} with options #{options.inspect}"
       
-      convert = Convert.first( :conditions => { :convert_type => convert_type.to_s } )
+      convert = Mg::Convert.first( :conditions => { :convert_type => convert_type.to_s } )
       
       #now, we just create the convert if we don't have one
-      convert = Convert.create!( :convert_type => convert_type.to_s, :name => convert_type.to_s ) if convert.nil?
-      
+      convert = Mg::Convert.create!( :convert_type => convert_type.to_s, :name => convert_type.to_s, :reward => reward ) if convert.nil?
+        
       #first, let's tally for the conversion itself
       #we need to see what meta information we should fill based on the conversion type
-      Rally.create!( { :convert_id => convert.id } ).set_meta_data(options)
+      Mg::Rally.create!( { :convert_id => convert.id } ).set_meta_data(options)
       
       #User-defined metric tallies
       metrics.each do |metric_type, variant_id|
-        m = Metric.find_by_metric_type(metric_type)
+        m = Mg::Metric.find_by_metric_type(metric_type)
         if m.nil?
           logger.warn "Missing user-defined metric #{metric_type}"
           next
@@ -96,27 +208,27 @@ module MetricTracking
         end
         
         logger.warn "Tallying conversion #{convert.name} for #{m.title} - #{v.name} (#{v.value} - #{v.id})"
-        v.tally_convert
+        v.tally_convert(convert, reward)
       end
       
-      if defined?(cookies)
-        #we just converted, let's tally each of our metrics (from cookies)
-        convert.metrics.each do |metric|
+      if !mg_storage.nil?
+        #we just converted, let's tally each of our metrics (from cookies or session)
+        Mg::Metric.all.each do |metric|
           metric_sym = "metric_#{metric.metric_type}".to_sym
           metric_variant_sym = "metric_#{metric.metric_type}_variant".to_sym
           
-          value = cookies[metric_sym]
-          variant_id = cookies[metric_variant_sym]
+          value = mg_storage[metric_sym]
+          variant_id = mg_storage[metric_variant_sym]
           
           #logger.warn "Value: #{metric_sym} - #{value}"
           #logger.warn "Value: #{metric_variant_sym} - #{variant_id}"
           
           if variant_id.blank? #the user just doesn't have this set
-            logger.error "No variant found for #{metric.title}"
+            #This is now common-case
             next
           end
           
-          variant = MetricVariant.first(:conditions => { :id => variant_id.to_i } )
+          variant = Mg::MetricVariant.first(:conditions => { :id => variant_id.to_i } )
           
           if variant.nil?
             logger.error "Variant #{variant_id} not in metric variants for #{metric.title}"
@@ -128,7 +240,7 @@ module MetricTracking
           end
           
           logger.warn "Tallying conversion #{convert.name} for #{metric.title} - #{variant.name} (#{variant.value} - #{variant.id})"
-          variant.tally_convert
+          variant.tally_convert(convert, reward)
         end
       end
     end
@@ -136,15 +248,15 @@ module MetricTracking
     private
     
     #returns a map { :value => value, :variant_id => id }
-    def get_metric_variant(metric_type, convert_type, default, opts = {}, opt = nil)
+    def get_metric_variant(metric_type, default, opts = {}, opt = nil)
       metric_sym = "metric_#{metric_type}#{ opt.nil? ? "" : '_' + opt.to_s }".to_sym
       metric_variant_sym = "metric_#{metric_type}_variant".to_sym
       
       #first, we'll check for a cookie value
-      if defined?(cookies) && cookies[metric_sym] && !cookies[metric_sym].blank?
+      if !mg_storage.nil? && mg_storage[metric_sym] && !mg_storage[metric_sym].blank?
         #we have the cookie  
-        variant_id = cookies[metric_variant_sym]
-        variant = MetricVariant.first(:conditions => { :id => variant_id.to_i } )
+        variant_id = mg_storage[metric_variant_sym]
+        variant = Mg::MetricVariant.first(:conditions => { :id => variant_id.to_i } )
         if !variant.nil?
           if variant.metric.tally_each_serve
             variant.tally_serve
@@ -153,46 +265,46 @@ module MetricTracking
           logger.warn "Serving metric #{metric_type} #{ opt.nil? ? "" : opt.to_s } without finding / tallying variant."
         end
         
-        return { :value => cookies[metric_sym], :variant_id => cookies[metric_variant_sym] } #it's the best we can do
+        return { :value => mg_storage[metric_sym], :variant_id => mg_storage[metric_variant_sym] } #it's the best we can do
       else
         #we don't have the cookie, let's find a value to set
-        metric, convert = get_metric_convert( metric_type, convert_type, false )
+        metric = get_metric( metric_type, false )
         
-        #to use RAND(), let's not use metrics.metric_variants
-        sum_priority = MetricVariant.first(:select => "SUM(priority) as sum_priority", :conditions => { :metric_id => metric.id } ).sum_priority.to_f
-        
-        if sum_priority > 0.0
-          metric_variant = MetricVariant.first(:order => "RAND() * ( priority / #{sum_priority.to_f} ) DESC", :conditions => { :metric_id => metric.id } )
-        end
+        metric_variant = mg_apply_strategy(metric)
         
         if metric_variant.nil?
           logger.warn "Missing metric variants for #{metric_type}"
-          metric_variant = MetricVariant.create!( { :metric_id => metric.id, :value => default, :name => default }.merge(opts) )
+          metric_variant = Mg::MetricVariant.create!( { :metric_id => metric.id, :value => default, :name => default }.merge(opts) )
         end
         
-        metric_variant.tally_serve #donate we served this to a user
+        if metric_variant.metric.tally_each_serve
+          metric_variant.tally_serve #donate we served this to a user
+        end
+        
         value = metric_variant.read_attribute( opt.nil? ? :value : opt )
         logger.debug "Serving #{metric_variant.name} (#{value}) for #{metric_sym}"
         #good, we have a variant, let's store it in session
         
-        if defined?(cookies)
-          cookies[metric_sym] = { :value => value } #, :domain => WILD_DOMAIN
-          cookies[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
+        if !mg_storage.nil?
+          mg_storage[metric_sym] = { :value => value } #, :domain => WILD_DOMAIN
+          mg_storage[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
         end
         
         return { :value => value, :variant_id => metric_variant.id }
       end
     end
     
-    def get_switch_metric_variant(metric_type, convert_type)
+    def get_switch_metric_variant(metric_type)
       metric_variant_sym = "metric_#{metric_type}_variant".to_sym
       
+      logger.warn "GHYYY - a"
       #first, we'll check for a cookie selection
-      if defined?(cookies) && cookies[metric_variant_sym] && !cookies[metric_variant_sym].blank?
+      if !mg_storage.nil? && mg_storage[metric_variant_sym] && !mg_storage[metric_variant_sym].blank?
+        logger.warn "GHYYY - b"
         #we have the cookie
         
-        variant_id = cookies[metric_variant_sym]
-        variant = MetricVariant.first(:conditions => { :id => variant_id.to_i } )
+        variant_id = mg_storage[metric_variant_sym]
+        variant = Mg::MetricVariant.first(:conditions => { :id => variant_id.to_i } )
         if !variant.nil?
         
           if variant.metric.tally_each_serve
@@ -208,46 +320,38 @@ module MetricTracking
       end
         
       #we don't have the cookie, let's find a value to set
-      metric, convert = get_metric_convert( metric_type, convert_type, true )
+      metric = get_metric( metric_type, true )
       
-      #to use RAND(), let's not use metrics.metric_variants
-      sum_priority = MetricVariant.first(:select => "SUM(priority) as sum_priority", :conditions => { :metric_id => metric.id } ).sum_priority.to_f
-      
-      if sum_priority > 0.0
-        metric_variant = MetricVariant.first(:order => "RAND() * ( priority / #{sum_priority.to_f} ) DESC", :conditions => { :metric_id => metric.id } )
-      end
+      metric_variant = mg_apply_strategy(metric)
       
       if metric_variant.nil?
         logger.warn "Missing metric variants for #{metric_type}"
         raise ArgumentError, "Missing variants for switch-type #{metric_type}"
       end
       
-      metric_variant.tally_serve #donate we served this to a user
+      if metric_variant.metric.tally_each_serve
+        metric_variant.tally_serve #donate we served this to a user
+      end
+      
       logger.debug "Serving #{metric_variant.name} (#{metric_variant.switch_type}) for #{metric.title} (switch-type)"
       #good, we have a variant, let's store it in session (not the value, just the selection)
-      if defined?(cookies)
-        cookies[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
+      if !mg_storage.nil?
+        mg_storage[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
       end
       
       return metric_variant
     end
     
-    def get_metric_convert(metric_type, convert_type, is_switch = false)
+    def get_metric(metric_type, is_switch = false)
       
-      metric = Metric.first(:conditions => { :metric_type => metric_type.to_s } )
+      metric = Mg::Metric.first(:conditions => { :metric_type => metric_type.to_s } )
       
-      conv = Convert.find_by_convert_type( convert_type.to_s )
-      if conv.nil?
-        logger.warn "Missing convert type #{convert_type.to_s} -- creating"  
-        conv = Convert.create( :convert_type => convert_type.to_s, :name => convert_type.to_s ) if conv.nil?
-      end
-        
       if metric.nil? #we don't have a metric of this type
         logger.warn "Missing metric type #{metric_type.to_s} -- creating"
-        metric = Metric.create( :metric_type => metric_type.to_s, :title => metric_type.to_s, :convert_id => conv.id, :is_switch => is_switch )
+        metric = Mg::Metric.create( :metric_type => metric_type.to_s, :title => metric_type.to_s, :is_switch => is_switch )
       end
       
-      return metric, conv
+      return metric
     end
   end
   
@@ -262,6 +366,18 @@ module MetricTracking
     
     def sv(*args, &block)
       @controller.send(:sv, *args, &block)
+    end
+    
+    def bd(*args, &block)
+      @controller.send(:bd, *args, &block)
+    end
+    
+    def bdd(*args, &block)
+      @controller.send(:bdd, *args, &block)
+    end
+    
+    def bds(*args, &block)
+      @controller.send(:bds, *args, &block)
     end
   end
 end

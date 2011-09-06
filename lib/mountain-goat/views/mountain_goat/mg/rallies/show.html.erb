@@ -1,0 +1,14 @@
+
+<div id="container-main" class="mt-rallies">
+	<div class="mountain-goat-panel cenetered">
+		<h2>Rally for <%=h @rally.convert.name %></h2>
+	
+		<div class="rally">
+			<span class="occured"><%= @rally.created_at.to_s %></span>
+		</div>
+		
+		<div class="actions">
+			<a class="button" href="<%= edit_mg_rally_url @rally.id %>">Edit</a>
+		</div>
+	</div>
+</div>

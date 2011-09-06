@@ -1,0 +1,16 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 123
+  name: my convert
+  convert_type: convert_1
+
+two:
+  id: 234
+  name: my second convert
+  convert_type: convert_2
+
+open_mail:
+  id: 345
+  name: open mail
+  convert_type: open_mail

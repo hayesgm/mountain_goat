@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 123
+  title: MyString
+  description: MyText
+  delivery_set: daily
+  recipients: gg@ggg.com
+
+two:
+  id: 234
+  title: MyString
+  description: MyText
+  delivery_set: weekly
+  recipients: gg@ggg.com

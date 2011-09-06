@@ -1,0 +1,17 @@
+
+<div class="header">
+	<span class="title">Add a new Report Item</span>
+</div>
+<div class="body">
+	<% form_for :report_item, @report_item, :url => mg_report_report_items_url(:report_id => @report.id), :html => { :method => :post, :class => "remote-form report-item", :'data-res' => ".report-items-model .model" } do |f| %>
+
+		<div>
+			<%= f.error_messages %>
+			<%= render :partial => 'mg/report_items/report_item_form', :locals => { :f => f } %>
+		</div>
+		
+		<div class="submit">
+			<%= f.submit 'Save', :class => 'bluebutton' %>
+		</div>
+	<% end %>
+</div>

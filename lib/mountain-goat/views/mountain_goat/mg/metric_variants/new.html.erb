@@ -1,0 +1,15 @@
+
+
+<div id="container-main" class="mt-metric-variants">
+	<div class="mountain-goat-panel cenetered">
+		<h1>New Variant for <%=h @metric.title %></h1>
+		
+		<% form_for :metric_variant, @metric_variant, :url => mg_metric_variants_url do |f| %>
+			<%= f.error_messages %>
+		
+			<%= render :partial => 'mg/metric_variants/metric_variant_form', :locals => { :f => f } %>
+		<% end %>
+		
+		<a href="<%= mg_metric_url :id => @metric.id %>">Back to <%=h @metric.title %></a>
+	</div>
+</div>

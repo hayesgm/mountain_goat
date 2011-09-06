@@ -1,0 +1,24 @@
+<h1>Listing reports</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Delivery</th>
+  </tr>
+
+<% @reports.each do |report| %>
+  <tr>
+    <td><%=h report.title %></td>
+    <td><%=h report.description %></td>
+    <td><%=h report.delivery_id %></td>
+    <td><%= link_to 'Show', report %></td>
+    <td><%= link_to 'Edit', edit_mg_report_path(report) %></td>
+    <td><%= link_to 'Destroy', report, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New report', new_mg_report_path %>

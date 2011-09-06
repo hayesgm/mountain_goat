@@ -1,0 +1,44 @@
+
+<div id="container-main" class="mt-converts show">
+	<div class="mountain-goat-panel centered">
+		<ul class="nav">
+			<li><a href="<%= mg_converts_url %>">Goals</a></li>
+			<li><a href="<%= mg_convert_url @convert.id %>"><%=h @convert.name %> Goal</a></li>
+		</ul>
+			
+		<h1><%=h @convert.name %></h1>
+		
+		<div class="statpads">
+			<div class="flyer-analysis statpad">
+				<div class="title">Conversions by Day</div>
+				<div class="statbody">
+					<%= mg_chart("analysis_graph#{@convert.id}",
+								{ "Conversions" => { :collection => @results_per_day, :x => :date, :y => :val } },
+								  { :xaxis => {:mode => 'time', :timeformat => "%b %d" }, :yaxis => { :min => 0, :minTickSize => 1 }, :lines => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
+				</div>
+			</div>
+			
+			<% @convert.convert_meta_types.each do |cmt| %>
+				<div class="flyer-analysis statpad">
+					<div class="title">Conversions by <%=h cmt.name %></div>
+					<div class="statbody">					
+						<% if cmt.meta_type == 'ci_meta' %>
+							<%= mg_chart("analysis_graph#{cmt.id}",
+									{ "Conversions" => { :collection => @results_by_cmt[cmt.id], :x => :name, :y => :val } },
+									  { :xaxis => {:autoscaleMargin => 1, :minTickSize => 1 }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true, :align => 'center', :barWidth => 1 }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
+						<% elsif cmt.meta_type == 'cs_meta' %>
+							<%= mg_chart("analysis_graph#{cmt.id}",
+									{ "Conversions" => { :collection => @results_by_cmt[cmt.id], :x => :name, :y => :val } },
+									  { :xaxis => {:autoscaleMargin => 0.1, :ticks => @results_by_cmt_titles[cmt.id].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
+						<% end %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+		
+		<div class="actions">
+			<a class="button" href="<%= edit_mg_convert_url :id => @convert.id %>">Edit</a>
+		</div>
+		
+	</div>
+</div>

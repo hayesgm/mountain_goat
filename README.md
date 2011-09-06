@@ -1,25 +1,31 @@
 # Mountain-Goat
 
-Embed a high-quality analytics platform in your application in minutes.  Gain important A/B test business insights, and view the results and analytics in real time. 
+Embed a professional analytics platform into your application in minutes.  Gain important business insights through bandit (automated a/b) testing, view the results and analytics in real time, and get delivered daily or weekly usage reports. 
 
 Add simple hooks in your code to display a/b metrics
 
-     <%= metric_variant(:homescreen_text, :user_signup, "Welcome here") %>
+     <%= bd(:homescreen_text, "Welcome here") %>
   
-This creates a database entry to a/b test "homescreen_text" against a goal "user signup".  Visit "http://yourdomain.com/mg" and you can add / adjust options (variants) for this text.  When a user converts on this goal, you run the following code.
+This creates a database entry for your a/b test "homescreen_text".  Visit "http://yourdomain.com/mg" and you can add / adjust options (variants) for this text.  When a user converts on a goal, you run the following code.
   
+  	 #e.g. users_controller.rb
      def create
        record_conversion(:user_signup)
        ...
      end
 
-This will track a conversion not only for the goal, but for the variant of "homescreen_text" (and any other associated metrics) that the user was served when he came to the home-page.
+This will track a conversion not only for the goal, but for the variant of "homescreen_text" that the user was served when your user came to the home-page.
 
-The best part?  The mountain-goat admin console is located on your server and you can view and analyze your data in real time.
+Bandit testing (see [Wikipedia - Multi-armed Bandit](http://en.wikipedia.org/wiki/Multi-armed_bandit) automatically converges on the variant that achieves the highest success through exploration each variant.  You essentially get a Bayesian solution with no hassle! 
+
+The best part?  The Mountain-Goat Administrative console is located on your server and you can view and analyze your data in real time (or through setting up usage report emails).
 
  - See which metric variants are working and not working ("Cowabunga!" did 120% better than "Enter here", but 10% worse than "Do it rockapella!")
- - A/B testing?  How about A/B/C/D/E testing?
- - Visually analyze the your metric variants; change them on the fly, adding new ones.
+ - Get daily / weekly / whenever emails delivered to your inbox, full of the data you crave (e.g. Signs up by day / comments by referring domain )
+ - Similar to Bayesian learning, Multi-armed bandit solutions will automatically deliver the highest performing variants
+ - This is done while still achieving minimal (logarithmically decreasing) regret (showing of poorer performing variants)
+ - A/B testing?  How about A/B/C/D/E testing?  Add as many variants as you like.
+ - Visually analyze the your metric variants; change them on the fly, adding new ones or kicking out poor performers.
  - Watch goal conversions in real-time with live-action console (grab the popcorn and watch how your users "sign up" and "view items" and ...)
  - You can do more than change text, "switch variants" let you enter arbitrary ruby code, change the control of your site ("Do my users have to sign-in before commenting?  Let's test!")
  - Track goals with meta data (record_conversion(:user_signup, :referrer => request.env['HTTP_REFERER']))
@@ -30,6 +36,16 @@ The best part?  The mountain-goat admin console is located on your server and yo
 
 For more information, read my blog post on how mountain goat quickly accomplishes a/b testing: http://blog.drawn.to/how-we-do-ab-testing
 
+## Upgrade from < 1.0.0
+
+If you are upgrading from Mountain Goat < 1.0.0, please run the following command (please overwrite mountain-goat.yml when prompted):
+
+     ./script/generate mg --update
+     
+     rake db:migrate
+     
+This will install new migrations necessary for version 1.0.0.
+ 
 ## Install
 
 ### Mountain Goat gem
@@ -45,7 +61,8 @@ Next run generator to create config file and necessary database migration (optio
 This will generate
 
      /config/mountain-goat.yml (for storing a password to access mountain-goat)
-     /db/migrate/xxx_create_mountain_goat_tables.rb (necessary databae migrations to store mg data)
+     /db/migrate/xxx_create_mountain_goat_tables.rb (necessary database migrations to store mg data)
+     /lib/tasks/mountain_goat_reports.rake (add tasks for report delivery)
 
 Modify /config/mountain-goat.yml to setup a password for each environment of your product
 
@@ -66,27 +83,51 @@ Mountain Goat hinges around three core concepts:
 	
 After you set up your database with some mountain-goat tables, the code will handle populating these tables for you.  In your code, you can start A/B testing immediately.
 	
-     <h2><%= metric_variant(:banner_on_store_front, :user_purchases_coffee, "Now arsenic and gluten-free") %></h2>
+     <h2><%= bd(:banner_on_store_front, "Now arsenic and gluten-free") %></h2>
 	
-The metric_variant function (or, mv for short) takes three parameters:
+The bandit (bd) function takes two parameters:
 	
-     mv(metric_name, convert_name, default)
+     bd(metric_name, default)
 	
-This will automatically create a metric and conversion and populate a metric variant with the default value.  Easy, eh?
-	
-From here, you can go into the mountain goat admin center and add new metric variants to fit your need.  It's all built-in to *your* application, in house.  
+This will automatically create a metric and populate a metric variant with the default value.  Easy, eh?
+
+From here, you can go into the mountain goat admin center and add new metric variants to fit your need.  It's all built into *your* application, in house. 
 
      http://{your_rails_app}/mg  (e.g. if you're at railsrocks.com, then visit http://railsrocks.com/mg)
 
 The other important code you'll need to implement is to tell the system when a goal is achieved.
 	
      def purchase #in coffees_controller.rb
-       record_conversion(:user_purchases_coffee)
+       rw(:user_purchases_coffee, 10) #10 "points"
        ...
      end
 	
-This will go in and record a conversion (a "rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user that relate to this goal.  For example "Chuck Norris works here" might get one point.  You will see which metrics lead to a conversion; this is the core of A/B testing.
-	
+This will go in and record a conversion (a "rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user.  For example "Chuck Norris works here" might get reward points.  You will see which metrics lead to a conversion; this is the core of A/B and bandit testing.
+
+## Bandit Testing
+
+Why points?  Bandit testing is about maximizing a return.  The original idea is if I have a slot machine with 30 handles each with different payouts, how do I maximize my return?  You pull the arm that has given you the best pay out so far, but occasionally pull other arms to make sure there's not something better.  Mountain-Goat's Bandit system will do the same for you.
+
+The most common solution to the multi-armed bandit solution is epsilon-greedy (documented [here](http://www.cs.nyu.edu/~mohri/pub/bandit.pdf)).
+
+     Given epsilon in [0, 1] #commonly 0.05 - 0.15
+     
+     If any variant has never been pulled
+       Pull that variant
+     Otherwise
+     
+       If random(0..1) < epsilon
+         Pull random arm
+       Else
+         Pull winning arm #highest "reward"
+	   End
+
+This way, we most commonly explore the best arm (e.g. your best slogan) while occasionally trying other arms.
+
+A small variant on this is called epsilon-greedy-decreasing, which reduces epsilon each pull by 1/total_pulls.  Thus, after 100 pulls, epsilon = epsilon_0 / 100.  This is shown to have an optimal minimal expectation of regret.
+
+You can configure these options in `mountain-goat.yml`.
+
 ## Mountain Goat admin suite
 
 Navigate to /mg in your rails application (on your actual server instance) to reach the mountain-goat admin center.  Here, you can analyze / adjust your A/B tests.
@@ -110,7 +151,21 @@ Go to "Metrics" and visit a specific metric.  You'll see which metric variants a
 ###Rallies
 
 Rallies shows you what's going on, in real time.  You will see conversions (goals) being hit by your clients in real time.  Grab a bag of pop-corn and watch users struggle (or glide) across your site.  Add meta data to get further information.   This page automatically updates as new rallies come in.
-    
+
+###Reports
+
+In the Mountain Goat Administrative suite, you can add reports.  Reports will be delivered as emails with an attached pdf showing statistics about your product.  You'll need the following installed to use Mountain Goat Reports.
+
+     gem install pdfkit
+     gem install svg-graph
+
+You'll need [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/) installed.  Please configure the location of the executable in `mountain-goat.yml`.
+
+Finally, simply set up a cron task on your system when you would like your reports delivered.  E.g.
+
+     crontab -l | { cat; echo "45 6 * * * cd /path/to/project && /usr/bin/rake RAILS_ENV=production mg:deliver[daily] >> /path/to/project/log/cron.log 2>&1"; } | crontab -
+     crontab -l | { cat; echo "10 6 1 * * cd /path/to/project && /usr/bin/rake RAILS_ENV=production mg:deliver[monthly]  >> $app_root/current/log/cron.log 2>&1"; } | crontab -     
+     
 ## Advanced Features
 
 ### Meta data
@@ -135,19 +190,13 @@ Instead of just serving text, you can also serve flow control in Mountain Goat, 
           discount = 0.90
         end
       
-        variant.whomp_whomp(0.5) do #reduce priority to 0.5 (default 1.0)
+        variant.whomp_whomp do
           discount = 0.0
         end
       end
 
-Mountain goat will automatically break those down into three cases (:ten_percent, :big_winner, :whomp_whomp) and serve them out at random to the user (with whomp_whomp half as likely to be served as the others).
+Mountain goat will automatically break those down into three cases (:ten_percent, :big_winner, :whomp_whomp) and serve them out at random to the user.
     
-### Priorities
-    
-You may want to test certain items with a lower serve rate (bold new slogans).  You can assign priorities to any metric variant.  The change of a given metric variant being shown is
-    
-     my priority / sum(all priorities for this metric)    
-
 ### Meta Options
 
 There is certain meta data that you may wish to collect for a number of different conversions.  For example, you may want to track ip-address so you can later pivot this column to find new / returning users.  To do this, add an initializer that calls MountainGoat.add_meta_option().

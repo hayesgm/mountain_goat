@@ -1,0 +1,24 @@
+<%# locals => f %>
+
+<% if f.object.new_record? %>
+	<div class="item metric-type">
+		<%= f.label :metric_type, 'Type (this is technical)' %>
+		<%= f.text_field :metric_type %>
+	</div>
+<% else %>
+	<h2><%= f.object.metric_type %></h2>
+<% end %>
+
+<div class="item title">
+	<%= f.label :title %>
+	<%= f.text_field :title %>
+</div>
+
+<div class="item tally-each-serve">
+	<%= f.check_box :tally_each_serve %>
+	<%= f.label :tally_each_serve, "Tally every hit (or just once per user)" %>
+</div>
+ 
+<div class="item submit">
+	<%= f.submit 'Submit' %>
+</div>

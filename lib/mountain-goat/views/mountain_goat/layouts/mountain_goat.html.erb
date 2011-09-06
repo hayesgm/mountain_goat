@@ -15,25 +15,37 @@
 	<meta name="viewport" content="width=device-width" />
 	
 	<link rel="stylesheet" href="/mg/public/mg_css" type="text/css" />
+	<link rel="stylesheet" href="/mg/public/jqModel_css" type="text/css" />
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="/mg/public/jqModel_js" type="text/javascript"></script>
+	<script src="/mg/public/raphael-min_js" type="text/javascript"></script>
+	<script src="/mg/public/g-raphael-min_js" type="text/javascript"></script>
+	<script src="/mg/public/g-bar-min_js" type="text/javascript"></script>
+	<script src="/mg/public/g-dot-min_js" type="text/javascript"></script>
+	<script src="/mg/public/g-line-min_js" type="text/javascript"></script>
+	<script src="/mg/public/g-pie-min_js" type="text/javascript"></script>
 	<script src="/mg/public/jquery_flot_js" type="text/javascript"></script>
 	<script src="/mg/public/jquery_timeago_js" type="text/javascript"></script>
+	<script src="/mg/public/jquery_raphael_js" type="text/javascript"></script>
 	<script src="/mg/public/mg_js" type="text/javascript"></script>
-
+	<script src="/mg/public/utils_js" type="text/javascript"></script>
+	
 </head>
 
 <body>
 	
-	<div class="header">
+	<div class="main-header">
 		<div class="head">
 			<a href="/mg" class="logo">
 				<img src="/mg/public/mg_png" />
 			</a>
 			<ul class="nav">
-				<li><a href="<%= mountain_goat_converts_url %>">Goals</a></li>
-				<li><a href="<%= mountain_goat_metrics_url %>">Metrics</a></li>
-				<li><a href="<%= mountain_goat_rallies_url %>">Rallies</a></li>
+				<li><a href="<%= mg_converts_url %>">Goals</a></li>
+				<li><a href="<%= mg_metrics_url %>">Metrics</a></li>
+				<li><a href="<%= mg_rallies_url %>">Rallies</a></li>
+				<li><a href="<%= mg_reports_url %>">Reports</a></li>
 				<li><a href="/">Exit</a></li>
 			</ul>
 		</div>

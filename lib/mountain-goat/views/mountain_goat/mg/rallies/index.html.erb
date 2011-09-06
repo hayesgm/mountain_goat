@@ -1,0 +1,19 @@
+
+<div id="container-main" class="mt-rallies">
+	<div class="mountain-goat-panel">
+		<h1>Rallies <% if @convert %>for <%=h @convert.name %><% else %>for all Goals<% end %></h1>
+	
+		<div class="recent-rally" data-reload="true" data-rally-id="<%= @rallies.first.id %>" data-convert-id="<%= @convert ? @convert.id : '' %>"></div>
+		<a href="javascript:void(0)" class="reload">Reload</a>
+		
+		<% if @rallies.count > 0 %>
+			<ul class="rally-list">
+				<% @rallies.each do |rally| %>
+					<%= render 'rally', :rally => rally %>
+				<% end %>
+			</ul>
+		<% else %>
+			<h2>No rallies for yet this goal.</h2>
+		<% end %>
+	</div>
+</div>

@@ -1,0 +1,67 @@
+
+<div id="container-main" class="mt-metrics">
+	<div class="mountain-goat-panel cenetered">
+		<ul class="nav">
+			<li><a href="<%= mg_converts_url %>">Goals</a></li>
+			<li><a href="<%= mg_metric_url :id => @metric.id %>"><%=h @metric.title %></a></li>
+		</ul>
+		
+		<h1><%=h @metric.title %> Metric</h1>
+		
+		<div class="variants">
+			<% if @metric.metric_variants.count == 0 %>
+				<span class="none">No metric variants</span>
+			<% else %>
+				<div class="statpads">
+					<div class="flyer-analysis statpad">
+						<div class="title">Conversions</div>
+						<div class="statbody">
+							<%= mg_chart("analysis_graph#{@metric.id}",
+												{ "Served" => { :collection => @rates[:served], :x => :variant_type, :y => :value },
+													"Conversions" => { :collection => @rates[:conversions], :x => :variant_type, :y => :value } },
+													{ :xaxis => { :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :show => false, :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "view(s)") %>
+						
+						</div>
+					</div>
+					<div class="flyer-analysis statpad">
+						<div class="title">Conversion Rates</div>
+						<div class="statbody">
+							<%= mg_chart("analysis_conv_graph#{@metric.id}",
+												{ "Conversion Rate (%)" => { :collection => @rates[:conversion_rates], :x => :variant_type, :y => :value } },
+													{ :xaxis => { :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :show => false, :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "%") %>
+						
+						</div>
+					</div>
+				</div>
+		
+						
+				<div class="metric-category">
+					<span class="metric"><a href="<%= mg_metric_url :id => @metric.id %>"><%= @metric.title %></a></span>
+					<% if @metric.metric_variants.count == 0 %>
+						<span class="none">No metric variants [<a href="<%= new_mg_metric_metric_variant_url :metric_id => @metric.id %>">Add one</a>]</span>
+					<% else %>
+						<% @metric.metric_variants.each do |mv| %>
+							<div class="item rate">
+								<span class="rate-holder">
+									<span class="title"><a href="<%= mg_metric_variant_url mv %>"><%=h mv.name %></a></span>
+									<span class="rates" style="width:<%= number_to_percentage(mv.conversion_rate, :precision => 0) %>"></span>
+								</span>
+								
+								<span class="percent-holder">
+									<span class="val"><%= number_to_percentage(mv.conversion_rate, :precision => 0) %></span>
+									(<span class="conversions"><%= mv.conversions %></span> /
+									<span class="served"><%= mv.served %></span>)
+								</span>
+							</div>
+						<% end %>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+		
+		<div class="actions">
+			<a class="button" href="<%= edit_mg_metric_url :id => @metric %>">Edit Metric</a>
+			<a class="button" href="<%= new_mg_metric_metric_variant_url :metric_id => @metric.id %>">New Variant</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,14 @@
+
+<h2> This is a test page </h2>
+
+<p>
+	<%= mv(:homies, :jump, 'default') %>
+	<%= mv_detailed(:homies, :click, 'Rock on')[:value] %>
+	<%= @controller.rc(:click, :geoff => 'a') %>
+	<%= @controller.rc(:click, :geoff => 'b') %>
+	<%= @controller.rc(:click, :geoff => 'b') %>
+	<%= bd(:jim, 'jim') %>
+	<%= bd(:beam, 'beam') %>
+	<%= bd(:beam, 'beam') %>
+	<%# @controller.rc(:click, :metric_homies => 1, :drum_id => 2, :user => true, :invitees => true) %>
+</p>
