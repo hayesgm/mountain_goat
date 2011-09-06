@@ -11,7 +11,7 @@ class UpdateMountainGoatTables < ActiveRecord::Migration
     end
     
     remove_column :metrics, :convert_id
-    remove_column :metric_variants, :priority
+    remove_column :mg_metric_variants, :priority
     
     rename_table :rallies, :mg_rallies
     rename_table :metrics, :mg_metrics
