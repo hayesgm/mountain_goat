@@ -1,6 +1,8 @@
 # Mountain-Goat
 
-Embed a professional analytics platform into your application in minutes.  Gain important business insights through bandit (automated a/b) testing, view the results and analytics in real time, and get delivered daily or weekly usage reports. 
+Embed a professional analytics and reporting platform into your application in minutes.  Gain important business insights through bandit (automated a/b) testing, view the results and analytics in real time, and get delivered daily or weekly usage reports. 
+
+Note: For updating from version < 1.0.0, please read the **Upgrade** section below.
 
 Add simple hooks in your code to display a/b metrics
 
@@ -40,7 +42,7 @@ For more information, read my blog post on how mountain goat quickly accomplishe
 
 If you are upgrading from Mountain Goat < 1.0.0, please run the following command (please overwrite mountain-goat.yml when prompted):
 
-     ./script/generate mg --update=yes
+     ./script/generate mg --update=1.0.0
      
      rake db:migrate
      
@@ -52,7 +54,7 @@ This will install new migrations necessary for version 1.0.0.
 
      gem install mountain-goat
 
-### Mountain Goat configration
+### Mountain Goat configuration
     
 Next run generator to create config file and necessary database migration (optionally pass in --password=my_mg_password)
      
@@ -216,30 +218,45 @@ Then, when we track the conversion, you'll get meta-data for the user's ip-addre
 As mountain goat is a suite that is added into your project dynamically, the following routes and tables are added during setup:
 
 - Tables
-  * ci_metas (indexes: ci_metas_cmt_data_index, ci_metas_cmt_index, ci_metas_rally_index)
-  * convert_meta_types
-  * converts
-  * cs_metas (indexes: cs_metas_cmt_data_index, cs_metas_cmt_index, cs_metas_rally_index)
-  * metric_variants
-  * metrics
-  * rallies
+  * mg_ci_metas (indexes: ci_metas_cmt_data_index, ci_metas_cmt_index, ci_metas_rally_index)
+  * mg_convert_meta_types
+  * mg_converts
+  * mg_cs_metas (indexes: cs_metas_cmt_data_index, cs_metas_cmt_index, cs_metas_rally_index)
+  * mg_metric_variants
+  * mg_metrics
+  * mg_rallies
+  * mg_report_items
+  * mg_reports
 
-- Routes
-  * map.mg '/mg', :controller => :mountain_goat_converts, :action => :index
-  * map.mg_login '/mg/login', :controller => :mountain_goat, :action => :login
-  * map.mg_login_create '/mg/login/create', :controller => :mountain_goat, :action => :login_create
-  * map.resources :mountain_goat_metric_variants
-  * map.resources :mountain_goat_converts, :has_many => [ :mountain_goat_metrics, :mountain_goat_rallies ]
-  * map.resources :mountain_goat_metrics, :has_many => :mountain_goat_metric_variants
-  * map.resources :mountain_goat_rallies
-  * map.new_rallies '/mg/rallies/new', :controller => :mountain_goat_rallies, :action => :new_rallies 
-  * map.fresh_metrics '/fresh-metrics', :controller => :mountain_goat_metrics, :action => :fresh_metrics
-  * map.connect '/mg/public/:file', :controller => :mountain_goat, :action => :fetch
+- Routes (all namespaced mg)
+  * mg.mg '/mg', :controller => :converts, :action => :index, :path_prefix => ""
+  * mg.login '/login', :controller => :mountain_goat, :action => :login
+  * mg.login_create '/login/create', :controller => :mountain_goat, :action => :login_create
+  * mg.resources :metric_variants
+  * mg.resources :converts, :has_many => [ :rallies ]
+  * mg.resources :metrics, :has_many => :metric_variants
+  * mg.resources :rallies, :collection => { :new_rallies => :get }
+  * mg.resources :reports, :has_many => :report_items, :member => { :show_svg => :get }
+  * mg.resources :report_items, :member => { :destroy => :get, :update => :post }, :collection => { :get_extra => :get }
+  * mg.resources :playground, :collection => { :test => :get }
+  * mg.new_rallies '/rallies/new', :controller => :rallies, :action => :new_rallies 
+  * mg.fresh_metrics '/fresh-metrics', :controller => :metrics, :action => :fresh_metrics
+  * mg.connect '/public/:file', :controller => :mountain_goat, :action => :fetch
     
+- Models
+  * Mg::CiMeta - Integer-typed meta data for Rallies (e.g. 'Click Count')
+  * Mg::ConvertMetaType - Meta-types for Rallies
+  * Mg::Convert - Goals (e.g. 'Page View', 'User Sign-up')
+  * Mg::CsMeta - String-typed meta data for Rallies (e.g. 'Referring domain')
+  * Mg::MetricVariant - Variant for a/b testing (e.g. 'Come see our store!')
+  * Mg::Metric - Type to vary for a/b testing (e.g. 'Homescreen Text')
+  * Mg::Rally - Instance of a goal conversion (e.g. when a user clicks sign up)
+  * Mg::ReportItem - Item to show in a report (e.g. Sign ups by day)
+  * Mg::Report - Report to deliver (e.g. collection of user report items)
+  
 ## TODO
  - Better documentation (rdocs)
- - Add namespacing to avoid conflicts
 
 ## Copyright
 
-Copyright (c) 2011 Geoffrey Hayes, drawn.to. Contact me, Geoff, <geoff@drawn.to> with any questions / ideas / enhacements.  See LICENSE for details.
+Copyright (c) 2011 Geoffrey Hayes, meloncard.com. Contact me, Geoff, <geoff@meloncard.com> with any questions / ideas / enhancements.  See LICENSE for details.
