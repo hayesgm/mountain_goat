@@ -11,7 +11,7 @@ class Mg::ReportItem < ActiveRecord::Base
   validates_presence_of :order
   
   def chart_title
-    return self.reportable.reportable_title
+    return self.reportable.reportable_title(pivot)
   end
   
   def chart_items

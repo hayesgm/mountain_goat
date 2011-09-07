@@ -87,8 +87,12 @@ class Mg::Convert < ActiveRecord::Base
   
   #For Reportable
   
-  def reportable_title
-    self.name
+  def reportable_title(pivot)
+    if pivot.nil?
+      return self.name
+    elsif pivot.instance_of?(Mg::ConvertMetaType)
+      return "#{self.name} by #{pivot.name}"
+    end
   end
   
   def reportable_chart_items(pivot)
@@ -128,7 +132,7 @@ class Mg::Convert < ActiveRecord::Base
     #fields = { }
     #fields_simple = []
     #fields.merge!({ d[:x].to_time.to_i => d[:x].to_s } ); fields_simple.push(d[:x])
-    graph = SVG::Graph::TimeSeries.new( :height => 350, :width => 700, :show_data_labels => false, :x_label_format => "%m/%d/%y", :graph_title => self.reportable_title, :show_graph_title => true, :show_data_values => false, :show_data_points => false, :area_fill => true )
+    graph = SVG::Graph::TimeSeries.new( :height => 350, :width => 700, :show_data_labels => false, :x_label_format => "%m/%d/%y", :graph_title => self.reportable_title(pivot), :show_graph_title => true, :show_data_values => false, :show_data_points => false, :area_fill => true )
     data.each do |line|
       res = []
       line[1].each { |d| res.push(d[:x].strftime('%m/%d/%y')).push(d[:y]) }

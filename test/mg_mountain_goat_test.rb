@@ -7,7 +7,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     
     def []=(key, value)
       @data = {}.with_indifferent_access if @data.nil?
-      @data[key] = value[:value]
+      @data[key] = value.is_a?(Hash) ? value[:value] : value
     end
     
     def [](key)
