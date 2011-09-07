@@ -29,6 +29,22 @@ class Mg::Convert < ActiveRecord::Base
     cmt.meta.find(:all, :conditions => { :data => data } ).map { |m| m.rally }
   end
   
+  def rallies_pivot(pivot)
+    res = {}
+    cmt_pivot = self.convert_meta_types.find_by_var( pivot.to_s )
+    return {} if cmt_pivot.nil?
+    cmt_pivot.meta.map { |c| { :created_at => c.created_at, :pivot => c.data } }.each do |c|
+      if !res.include?(c[:pivot])
+        res[c[:pivot]] = []
+      end
+      
+      res[c[:pivot]].push c[:created_at]
+    end
+    
+    res.each { |k,v| v.sort! }
+    res
+  end
+  
   def rallies_for_meta_val_pivot(var, data, pivot)
     res = {}
     cmt = self.convert_meta_types.find_by_var( var.to_s )
@@ -75,7 +91,7 @@ class Mg::Convert < ActiveRecord::Base
     self.name
   end
   
-  def reportable_chart_items
+  def reportable_chart_items(pivot)
     #let's look for pageviews by day by source
     #rallies_for_meta_val( :clique_id, @clique.id )
     #logger.debug "sources: #{sources.inspect}"
@@ -83,12 +99,24 @@ class Mg::Convert < ActiveRecord::Base
     
     #Now, we just need to insert missing data (and group)
     #Let's transpose that into { source => [ :x => day0, y => count ] }
-    Analytics.pivot_by_date( { :"Rallies" => self.rallies.map { |r| r.created_at } }, self.created_at )
+    if pivot.nil?
+      return Analytics.pivot_by_date( { :"Rallies" => self.rallies.map { |r| r.created_at } }, self.created_at )
+    elsif pivot.instance_of?(Mg::ConvertMetaType)
+      sources = self.rallies_pivot( pivot.var )
+      logger.warn "sources: #{sources}"
+      return Analytics.pivot_by_date(sources, self.created_at)
+    end
   end
   
-  def reportable_gerbil_chart
+  def reportable_gerbil_chart(pivot)
     #chart = GerbilCharts::Charts::LineChart.new( :width => 350, :height => 200, :style => 'brushmetal.css', :circle_data_points => true )
-    data = Analytics.pivot_by_date( { :"Rallies" => self.rallies.map { |r| r.created_at } }, self.created_at )
+    
+    if pivot.nil?
+      data = Analytics.pivot_by_date( { :"Rallies" => self.rallies.map { |r| r.created_at } }, self.created_at )
+    elsif pivot.instance_of?(Mg::ConvertMetaType)
+      sources = self.rallies_pivot( pivot.var )
+      data = Analytics.pivot_by_date(sources, self.created_at)
+    end
     #logger.warn "data: #{data.inspect}"
     #logger.warn "ts: #{data.map { |line| line[1].map { |d| d[:x] }.to_a }[0].inspect}"
     #logger.warn "val: #{data.map { |line| [ line[0] ] + line[1].map { |d| d[:y] }.to_a }[0].inspect}"

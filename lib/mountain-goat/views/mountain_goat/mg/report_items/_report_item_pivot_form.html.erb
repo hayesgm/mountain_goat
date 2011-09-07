@@ -1,0 +1,14 @@
+<%# locals => reportable, optional => pivot %>
+
+<% pivot = nil if !local_assigns.has_key?(:pivot) %>
+
+<% if reportable.instance_of?(Mg::Convert) %>
+	<% cmts = reportable.convert_meta_types %>
+<% end %>
+
+<% if !cmts.nil? %>
+	<div class="item pivot">
+		<%= label_tag :'report_item[pivot]', "Pivot" %>
+		<%= select_tag :'report_item[pivot]', options_for_select( [[ "None", "" ]] + cmts.map { |cmt| [ cmt.name, "#{cmt.id}-#{cmt.class}" ] }, pivot.nil? ? "" : "#{pivot.id}-#{pivot.type}" ) %>
+	</div>
+<% end %>

@@ -42,13 +42,29 @@ class UpdateMountainGoatTables < ActiveRecord::Migration
     add_column :mg_metrics, :deleted_at, :datetime
     add_column :mg_metric_variants, :deleted_at, :datetime
     add_column :mg_reports, :deleted_at, :datetime
+    
+    add_column :mg_report_items, :pivot_type, :string
+    add_column :mg_report_items, :pivot_id, :integer
+    
+    add_column :mg_report_items, :filter, :string
+    
+    add_column :mg_report_items, :meta_type, :string
+    add_column :mg_report_items, :meta_id, :integer
   end
 
   def self.down
-    remove_column :mg_converts, :deleted_at, :datetime
-    remove_column :mg_metrics, :deleted_at, :datetime
-    remove_column :mg_metric_variants, :deleted_at, :datetime
-    remove_column :mg_reports, :deleted_at, :datetime
+    remove_column :mg_report_items, :meta_type
+    remove_column :mg_report_items, :meta_id
+    
+    remove_column :mg_report_items, :filter
+    
+    remove_column :mg_report_items, :pivot_type
+    remove_column :mg_report_items, :pivot_id
+    
+    remove_column :mg_converts, :deleted_at
+    remove_column :mg_metrics, :deleted_at
+    remove_column :mg_metric_variants, :deleted_at
+    remove_column :mg_reports, :deleted_at
     
     rename_table :mg_rallies, :rallies
     rename_table :mg_metrics, :metrics

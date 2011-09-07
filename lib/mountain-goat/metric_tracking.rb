@@ -20,7 +20,7 @@ module MetricTracking
       mg.resources :metrics, :has_many => :metric_variants
       mg.resources :rallies, :collection => { :new_rallies => :get }
       mg.resources :reports, :has_many => :report_items, :member => { :show_svg => :get }
-      mg.resources :report_items, :member => { :destroy => :get, :update => :post }
+      mg.resources :report_items, :member => { :destroy => :get, :update => :post }, :collection => { :get_extra => :get }
       mg.resources :playground, :collection => { :test => :get }
       mg.new_rallies '/rallies/new', :controller => :rallies, :action => :new_rallies 
       mg.fresh_metrics '/fresh-metrics', :controller => :metrics, :action => :fresh_metrics
@@ -102,10 +102,10 @@ module MetricTracking
         if mg_yml
           if mg_yml.has_key?(RAILS_ENV) && mg_yml[RAILS_ENV].has_key?('use_cookies')
             uc = mg_yml[RAILS_ENV]['use_cookies']
-            @use_cookies = uc == true || uc == "true" || uc.to_i == 1
+            @use_cookies = uc == true || uc == "true"
           elsif mg_yml.has_key?('settings') && mg_yml['settings'].has_key?('use_cookies')
             uc = mg_yml['settings']['use_cookies']
-            @use_cookies = uc == true || uc == "true" || uc.to_i == 1
+            @use_cookies = uc == true || uc == "true"
           end
         end
       end
@@ -292,8 +292,8 @@ module MetricTracking
         #good, we have a variant, let's store it in session
         
         if !mg_storage.nil?
-          mg_storage[metric_sym] = { :value => value } #, :domain => WILD_DOMAIN
-          mg_storage[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
+          mg_storage[metric_sym] = value #, :domain => WILD_DOMAIN
+          mg_storage[metric_variant_sym] = metric_variant.id #, :domain => WILD_DOMAIN
         end
         
         return { :value => value, :variant_id => metric_variant.id }
@@ -303,10 +303,8 @@ module MetricTracking
     def get_switch_metric_variant(metric_type)
       metric_variant_sym = "metric_#{metric_type}_variant".to_sym
       
-      logger.warn "GHYYY - a"
       #first, we'll check for a cookie selection
       if !mg_storage.nil? && mg_storage[metric_variant_sym] && !mg_storage[metric_variant_sym].blank?
-        logger.warn "GHYYY - b"
         #we have the cookie
         
         variant_id = mg_storage[metric_variant_sym]
@@ -342,7 +340,7 @@ module MetricTracking
       logger.debug "Serving #{metric_variant.name} (#{metric_variant.switch_type}) for #{metric.title} (switch-type)"
       #good, we have a variant, let's store it in session (not the value, just the selection)
       if !mg_storage.nil?
-        mg_storage[metric_variant_sym] = { :value => metric_variant.id } #, :domain => WILD_DOMAIN
+        mg_storage[metric_variant_sym] = metric_variant.id #, :domain => WILD_DOMAIN
       end
       
       return metric_variant

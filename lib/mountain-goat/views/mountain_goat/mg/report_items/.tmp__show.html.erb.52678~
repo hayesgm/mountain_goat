@@ -9,13 +9,6 @@
 				<%= report_item.reportable.name %>
 			<% end %>
 		</span>
-		<span class="pivot">
-			<% if report_item.pivot.nil? || !report_item.pivot.respond_to?(:name) %>
-				[None]
-			<% else %>
-				<%= report_item.pivot.name %>
-			<% end %>
-		</span>
 	</span>
 	<span class="report-item-actions">
 		<span class="edit">

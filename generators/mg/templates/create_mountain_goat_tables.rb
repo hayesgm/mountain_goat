@@ -81,6 +81,11 @@ class CreateMountainGoatTables < ActiveRecord::Migration
       t.integer  "order"
       t.datetime "created_at"
       t.datetime "updated_at"
+      t.string   "pivot_type"
+      t.integer  "pivot_id"
+      t.string   "filter"
+      t.string   "meta_type"
+      t.integer  "meta_id"
     end
   
     create_table "mg_reports", :force => true do |t|

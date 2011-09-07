@@ -3,6 +3,7 @@ class Mg::ReportItem < ActiveRecord::Base
   
   belongs_to :report, :class_name => "Mg::Report"
   belongs_to :reportable, :polymorphic => true
+  belongs_to :pivot, :polymorphic => true
   
   validates_presence_of :report_id
   validates_presence_of :reportable_id
@@ -14,10 +15,10 @@ class Mg::ReportItem < ActiveRecord::Base
   end
   
   def chart_items
-    return self.reportable.reportable_chart_items
+    return self.reportable.reportable_chart_items(self.pivot)
   end
   
   def gerbil_chart
-    return self.reportable.reportable_gerbil_chart
+    return self.reportable.reportable_gerbil_chart(self.pivot)
   end
 end

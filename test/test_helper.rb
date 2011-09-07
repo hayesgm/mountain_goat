@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "updated_at"
     t.string   "name"
     t.float    "reward",       :default => 1.0
+    t.datetime "deleted_at"
   end
 
   create_table "mg_cs_metas", :force => true do |t|
@@ -89,6 +90,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string   "name"
     t.string   "switch_type"
     t.float    "reward"
+    t.datetime "deleted_at"
   end
 
   create_table "mg_metrics", :force => true do |t|
@@ -98,6 +100,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "updated_at"
     t.boolean  "tally_each_serve", :default => true
     t.boolean  "is_switch",        :default => false
+    t.datetime "deleted_at"
   end
   
   create_table "mg_rallies", :force => true do |t|
@@ -113,6 +116,11 @@ ActiveRecord::Schema.define(:version => 1) do
       t.integer  "order"
       t.datetime "created_at"
       t.datetime "updated_at"
+      t.string   "pivot_type"
+      t.integer  "pivot_id"
+      t.string   "filter"
+      t.string   "meta_type"
+      t.integer  "meta_id"
     end
   
     create_table "mg_reports", :force => true do |t|
@@ -122,6 +130,7 @@ ActiveRecord::Schema.define(:version => 1) do
       t.datetime "updated_at"
       t.string   "delivery_set"
       t.string   "recipients"
+      t.datetime "deleted_at"
     end
 end
 
