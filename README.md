@@ -254,6 +254,11 @@ As mountain goat is a suite that is added into your project dynamically, the fol
   * Mg::ReportItem - Item to show in a report (e.g. Sign ups by day)
   * Mg::Report - Report to deliver (e.g. collection of user report items)
   
+## Change log
+  1.0.0 - Changed from a/b testing to multi-armed bandit
+        - Added Mountain Goat Reporting
+        - Added extensive test cases for stability
+        
 ## TODO
  - Better documentation (rdocs)
 
