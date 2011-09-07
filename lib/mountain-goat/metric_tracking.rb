@@ -9,7 +9,6 @@ module MetricTracking
   
   Mime::Type.register "application/xhtml+xml", :xhtml
   
-  #TODO: Namespace?
   ActionController::Routing::Routes.draw do |map|
     map.namespace :mg do |mg|
       mg.mg '/mg', :controller => :converts, :action => :index, :path_prefix => ""
@@ -77,10 +76,11 @@ module MetricTracking
     def mg_apply_strategy(metric)
       case mg_strategy.downcase
         when 'e-greedy'
-          return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE reward END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
+          logger.warn Mg::MetricVariant.all(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
+          return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
         when 'e-greedy-decreasing'
           return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC,
-                                                    CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} / ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) THEN #{mg_rand} ELSE reward END DESC,
+                                                    CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} / ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC,
                                                     #{mg_rand} DESC", :conditions => { :metric_id => metric.id } ) # * log( ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) )
         when 'a/b'
           return Mg::MetricVariant.first(:order => "#{mg_rand} DESC", :conditions => { :metric_id => metric.id } )

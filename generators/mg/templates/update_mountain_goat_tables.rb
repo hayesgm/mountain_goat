@@ -50,9 +50,27 @@ class UpdateMountainGoatTables < ActiveRecord::Migration
     
     add_column :mg_report_items, :meta_type, :string
     add_column :mg_report_items, :meta_id, :integer
+    
+    add_column :mg_report_items, :extra, :string
+    add_column :mg_report_items, :variant, :integer
+    add_column :mg_report_items, :subvariant, :integer
+    add_column :mg_report_items, :start, :datetime
+    add_column :mg_report_items, :end, :datetime
+    add_column :mg_report_items, :size, :integer
+    
+    add_column :mg_reports, :theme, :string
   end
 
   def self.down
+    remove_column :mg_reports, :theme
+    
+    remove_column :mg_report_items, :extra
+    remove_column :mg_report_items, :variant
+    remove_column :mg_report_items, :subvariant
+    remove_column :mg_report_items, :start
+    remove_column :mg_report_items, :end
+    remove_column :mg_report_items, :size
+    
     remove_column :mg_report_items, :meta_type
     remove_column :mg_report_items, :meta_id
     

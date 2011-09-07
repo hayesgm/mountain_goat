@@ -171,6 +171,31 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     assert_equal 70, c.reward
     assert_equal 15, j.reward
     assert_equal 15, k.reward
+    
+    #c = 70 / 6 = ~12, a = 30 / 6 = 5.. 70 / 14 = 5
+    #let's make sure winners aren't winners if they are over-served
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a') # / 6
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 7
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 8
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 9
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 10
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 11
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 12
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 13
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# / 14
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'a', bd(:test, 'a')# / 15 !!
+    @fake_session = FakeSession.new #clear "session"
+    assert_equal 'c', bd(:test, 'a')# 70 / 15 ~ 30 / 7
   end
 
   test "mountain goat tests - bandit switch" do

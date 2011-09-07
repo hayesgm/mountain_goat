@@ -121,6 +121,12 @@ ActiveRecord::Schema.define(:version => 1) do
       t.string   "filter"
       t.string   "meta_type"
       t.integer  "meta_id"
+      t.string   "extra"
+      t.integer  "variant"
+      t.integer  "subvariant"
+      t.datetime "start"
+      t.datetime "end"
+      t.integer  "size"
     end
   
     create_table "mg_reports", :force => true do |t|
@@ -131,6 +137,7 @@ ActiveRecord::Schema.define(:version => 1) do
       t.string   "delivery_set"
       t.string   "recipients"
       t.datetime "deleted_at"
+      t.string   "theme"
     end
 end
 
