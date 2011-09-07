@@ -161,7 +161,13 @@ module MetricTracking
       self.bandit_reward(convert_type, 1, options)
     end
     
+    #allows bandit_reward(convert, options)
     def bandit_reward(convert_type, reward, options = {})
+      
+      if reward.is_a?(Hash) #allow arguments bandit_reward(convert, options)
+        options = reward
+        reward = 0
+      end
       
       metrics = {} #for user-defined metrics
       options = options.with_indifferent_access

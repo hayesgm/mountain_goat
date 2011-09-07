@@ -51,7 +51,7 @@ class Mg::ReportsController < Mg
 
     respond_to do |format|
       if @report.save
-        format.html { redirect_to(edit_mg_report_url @report, :notice => 'Your report was successfully created, now add some report items.') }
+        format.html { flash[:notice] = 'Your report was successfully created, now add some report items.'; redirect_to(edit_mg_report_url @report) }
         format.xml  { render :xml => @report, :status => :created, :location => @report }
       else
         format.html { render :action => "new" }

@@ -14,7 +14,7 @@ class Mg::Convert < ActiveRecord::Base
   accepts_nested_attributes_for :convert_meta_types, :reject_if => lambda { |a| a[:name].blank? || a[:var].blank? || a[:meta_type].blank? }, :allow_destroy => true
   
   def self.by_type(s)
-    Convert.find( :first, :conditions => { :convert_type => s.to_s } )
+    Mg::Convert.find( :first, :conditions => { :convert_type => s.to_s } )
   end
   
   def rallies_for_meta(var)

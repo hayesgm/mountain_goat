@@ -17,7 +17,7 @@ class Mg::ReportsControllerTest < ActionController::TestCase
       post :create, { :report => { :title => 'abc', :delivery_set => "hi", :recipients => "aaa@bbb.com" } }, logged_in
     end
 
-    assert_redirected_to mg_report_path(assigns(:report))
+    assert_redirected_to edit_mg_report_path(assigns(:report))
   end
 
   test "should show report" do

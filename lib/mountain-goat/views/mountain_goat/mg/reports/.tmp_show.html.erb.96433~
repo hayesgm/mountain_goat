@@ -1,7 +1,0 @@
-<h2><%=h @report.title %></h2>
-
-<h4><%=h @report.description %></h4>
-
-<% @report.report_items.each do |report_item| %>
-	<%= render 'mg/report_items/chart', :report_item => report_item %>
-<% end %>
