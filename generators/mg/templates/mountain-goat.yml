@@ -7,7 +7,7 @@
 #
 # Settings: epsilon for e-greedy strategy
 #           strategy: one of [ 'e-greedy', 'e-greedy-decreasing', 'a/b' ] 
-#           use_cookies: true => cookies, false => session for storing lever pulls
+#           storage: ['cookies','session','none']
 
 # wkhtmltopdf must be installed to use Mountain Goat Reporting
   # Please specify the executable for wkhtmltopdf below
@@ -18,7 +18,7 @@
 settings:
   epsilon: 0.1
   strategy: e-greedy
-  use_cookies: true
+  storage: cookies
    
 test:
   password: <%= password %>

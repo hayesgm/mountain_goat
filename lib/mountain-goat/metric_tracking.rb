@@ -89,29 +89,27 @@ module MetricTracking
       end
     end
     
-    def mg_storage
-      return @fake_session if defined?(MOUNTAIN_GOAT_TEST) && MOUNTAIN_GOAT_TEST 
-      
-      if @use_cookies.nil?
-        @use_cookies = true #default
+    def mg_storage 
+      if @mg_storage.nil?
+        @mg_storage = defined?(cookies) ? cookies : nil
+        
         mg_yml = nil
         begin
           mg_yml = YAML::load(File.open("#{RAILS_ROOT}/config/mountain-goat.yml"))
         rescue
         end
         if mg_yml
-          if mg_yml.has_key?(RAILS_ENV) && mg_yml[RAILS_ENV].has_key?('use_cookies')
-            uc = mg_yml[RAILS_ENV]['use_cookies']
-            @use_cookies = uc == true || uc == "true"
-          elsif mg_yml.has_key?('settings') && mg_yml['settings'].has_key?('use_cookies')
-            uc = mg_yml['settings']['use_cookies']
-            @use_cookies = uc == true || uc == "true"
+          if mg_yml.has_key?(RAILS_ENV) && mg_yml[RAILS_ENV].has_key?('storage')
+            uc = mg_yml[RAILS_ENV]['storage'].strip
+            @mg_storage = ( uc == "cookies" && defined?(cookies) ) ? cookies : ( uc == "session" && defined?(session) ) ? session : nil
+          elsif mg_yml.has_key?('settings') && mg_yml['settings'].has_key?('storage')
+            uc = mg_yml['settings']['storage'].strip
+            @mg_storage = ( uc == "cookies" && defined?(cookies) ) ? cookies : ( uc == "session" && defined?(session) ) ? session : nil
           end
         end
       end
-
-      return defined?(cookies) ? cookies : nil if @use_cookies
-      return defined?(session) ? session : nil
+      @mg_storage = {} if @mg_storage.nil? #'none'
+      return @mg_storage
     end
     
     ######################

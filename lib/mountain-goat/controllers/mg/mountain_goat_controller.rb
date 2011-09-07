@@ -6,7 +6,7 @@ class Mg::MountainGoatController < Mg
   def fetch
     ct = { :png => 'image/png', :css => 'text/css', :html => 'text/html', :js => 'text/javascript' }
     
-    raise ArgumentError, "Invalid fetch file" if params[:file].match(/[_][_]/ix) #extra security
+    raise ArgumentError, "Invalid fetch file" if params[:file].match(/(([_][_])|([^a-z0-9_]))/ix) #extra security
     
     #We will only serve files located in the public directory for security reasons
     Dir.open(File.join([File.dirname(__FILE__), '../../public/'])).each do |file|

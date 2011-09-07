@@ -18,7 +18,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
   
   test "mountain goat tests" do
     @mg_strategy = 'e-greedy'
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     
     #Let's start by adding a few tests, checking to see if storage is correct
     assert_equal 'a', bd(:test, 'a')
@@ -27,7 +27,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     a = metric.metric_variants.find_by_name('a')
     assert_equal 1, metric.metric_variants.count
     assert_equal 2, a.served
-    assert_equal a.id, @fake_session[:metric_test_variant]
+    assert_equal a.id, @mg_storage[:metric_test_variant]
     assert_equal 0, a.reward
     
     rw(:jimbo, 10) #score a reward
@@ -61,7 +61,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     
     assert_equal 3, a.served
     assert_equal 30, a.reward
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     
     b.reload
     assert_equal 0, b.served #Let's see if b gets served since it has zero
@@ -80,7 +80,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     assert_equal 0, b.reward
     assert_equal 0, b.conversions
     
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     
     #We should still get a since it's the winner
     assert_equal 'a', bd(:test, 'a')
@@ -100,7 +100,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     assert_equal 30, a.reward
     assert_equal 2, a.conversions
     
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')
     c.reload
     assert_equal 1, c.served
@@ -114,7 +114,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     assert_equal 1, c.conversions
     
     #Now, let's see if he peaks his head out
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')
     c.reload
     assert_equal 2, c.served
@@ -125,20 +125,20 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     #We need to test serving "random"-- this is going to be hard even with fake random
     #The end-all-be-all should be 'id'.. maybe
     @mg_i = 0
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'a', bd(:test, 'a')
     a.reload
     assert_equal 6, a.served
     
     #Now, back to the winner
     @mg_i = 1
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')
     c.reload
     assert_equal 3, c.served
     
     #Deeper reward tests
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     rw(:jimbo, 15) #should go to nothing
     a.reload; b.reload; c.reload;
     assert_equal 30, a.reward
@@ -160,7 +160,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     metric2.metric_variants.create!( :value => 'k', :name => 'k' )
     k = metric2.metric_variants.find_by_name('k')
     
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')
     assert_equal 'k', bd(:test2, 'j') #this should be 'unexplored'
     
@@ -174,33 +174,33 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     
     #c = 70 / 6 = ~12, a = 30 / 6 = 5.. 70 / 14 = 5
     #let's make sure winners aren't winners if they are over-served
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a') # / 6
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 7
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 8
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 9
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 10
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 11
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 12
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 13
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# / 14
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'a', bd(:test, 'a')# / 15 !!
-    @fake_session = FakeSession.new #clear "session"
+    @mg_storage = FakeSession.new #clear "session"
     assert_equal 'c', bd(:test, 'a')# 70 / 15 ~ 30 / 7
   end
 
   test "mountain goat tests - bandit switch" do
     @mg_strategy = 'e-greedy'
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     
     #Let's start by adding a few tests, checking to see if storage is correct
     @var = 0
@@ -222,7 +222,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     a = metric.metric_variants.find_by_name('a')
     b = metric.metric_variants.find_by_name('b')
     
-    assert_equal a.id, @fake_session[:metric_test_variant]
+    assert_equal a.id, @mg_storage[:metric_test_variant]
     
     assert_equal 1, @var
     assert_equal 1, a.served
@@ -254,7 +254,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     assert_equal 2, a.served
     
     #should serve b since it has no serves
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     assert_no_difference('Mg::MetricVariant.count') do 
       bds(:test) do |variant|
         variant.a do
@@ -278,7 +278,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     assert_equal 15, b.reward
     
     #should serve c since it has no serves
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     assert_difference('Mg::MetricVariant.count') do 
       bds(:test) do |variant|
         variant.a do
@@ -300,7 +300,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
   
   test "mountain goat tests - e-greedy-decreasing" do
     @mg_strategy = 'e-greedy-decreasing'
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     
     #Let's start by adding a few tests, checking to see if storage is correct
     assert_equal 'a', bd(:test, 'a')
@@ -309,7 +309,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     a = metric.metric_variants.find_by_name('a')
     assert_equal 1, metric.metric_variants.count
     assert_equal 2, a.served
-    assert_equal a.id, @fake_session[:metric_test_variant]
+    assert_equal a.id, @mg_storage[:metric_test_variant]
     assert_equal 0, a.reward
     
     rw(:jimbo, 10) #score a reward
@@ -328,35 +328,35 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     assert_nil b.reward
     
     #Should serve 'b' for exploration of 0-serves
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     assert_equal 'b', bd(:test, 'a')
     rw(:jimbo, 100) #a is still the winner
     
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     #So far 3 serves, should serve random "a" when random < 0.1 / 3, "b" the winner otherwise
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     @mg_i = 0.032
     assert_equal 'a', bd(:test, 'a')
     
     #So far 4 serves, should serve random "a" when random < 0.1 / 4, "b" the winner otherwise
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     @mg_i = 0.025
     assert_equal 'b', bd(:test, 'a') #strictly less than
     
     #So far 5 serves, should serve random "a" when random < 0.1 / 5, "b" the winner otherwise
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     @mg_i = 0.019
     assert_equal 'a', bd(:test, 'a')
     
     #So far 6 serves, should serve random "a" when random < 0.1 / 6, "b" the winner otherwise
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     @mg_i = 0.017
     assert_equal 'b', bd(:test, 'a')
   end
 
   test "mountain goat tests - a/b" do
     @mg_strategy = 'a/b'
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     
     #Let's start by adding a few tests, checking to see if storage is correct
     assert_equal 'a', bd(:test, 'a')
@@ -365,7 +365,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     a = metric.metric_variants.find_by_name('a')
     assert_equal 1, metric.metric_variants.count
     assert_equal 2, a.served
-    assert_equal a.id, @fake_session[:metric_test_variant]
+    assert_equal a.id, @mg_storage[:metric_test_variant]
     assert_equal 0, a.reward
     
     rw(:jimbo, 10) #score a reward
@@ -386,7 +386,7 @@ class Mg::MountainGoatTest < ActiveRecord::TestCase
     #Since we aren't using rand.. we'll not likely be able to bypass 'a' in our 'randomness'
     assert_equal 'a', bd(:test, 'a')
     
-    @fake_session = FakeSession.new
+    @mg_storage = FakeSession.new
     assert_equal 'a', bd(:test, 'a')
   end
 end

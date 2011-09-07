@@ -11,6 +11,14 @@ class Mg::MountainGoatControllerTest < ActionController::TestCase
     end
     
     assert_raise ArgumentError do
+      get :fetch, { :file => 'hi/png' }
+    end
+    
+    assert_raise ArgumentError do
+      get :fetch, { :file => 'hi.png' }
+    end
+    
+    assert_raise ArgumentError do
       get :fetch, { :file => '__/analytics_rb' }
     end
     
