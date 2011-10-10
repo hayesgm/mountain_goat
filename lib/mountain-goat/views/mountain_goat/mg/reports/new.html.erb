@@ -1,17 +1,18 @@
-
-<div id="container-main" class="mt-reports">
-	<div class="mountain-goat-panel cenetered">
-		<h1>New Report</h1>
+<div id="container-main" class="mg-report-new">
+	<h1>Create New Report</h1>
+	<div class="container-content">
+		<div class="edit-form">
 		
-		<% form_for :report, @report, :url => mg_reports_url do |f| %>
-			<%= f.error_messages %>
-		
-			<%= render :partial => 'mg/reports/report_form', :locals => { :f => f } %>
-					
-			<div class="item submit">
-				<%= f.submit 'Submit' %>
-			</div>
+			<% form_for :report, @report, :url => mg_reports_url do |f| %>
+				<%= f.error_messages %>
 			
-		<% end %>
+				<%= render :partial => 'mg/reports/report_form', :locals => { :f => f } %>
+						
+				<div class="item submit">
+					<%= f.submit 'Submit' %>
+				</div>
+				
+			<% end %>
+		</div>
 	</div>
 </div>

@@ -1,26 +1,30 @@
-
-<div id="container-main" class="mt-reports show">
-	<div class="mountain-goat-panel centered">
-		<ul class="nav">
-			<li><a href="<%= mg_reports_url %>">Reports</a></li>
-		</ul>		
+<div id="container-main" class="mg-reports">
+	<h1>Your Reports</h1>
+	<div class="container-content">
+		<div class="title-bar">
+			<span class="category name">Report</span>
+			<span class="category frequency">Frequency</span>
+			<span class="category actions">Actions</span>
+		</div>
+		<ul class="listed">
+			<% @reports.each do |report| %>
+				<li class="report">
+					<span class="category name"><%=h report.title %></span>
+					<span class="category frequency"><%=h report.delivery_set.capitalize %></span>
+					<span class="category actions"><a href="<%= mg_report_url report %>">View</a><a href="<%= edit_mg_report_url :id => report.id %>">Edit</a> <a href="<%= hide_mg_report_url :id => report.id %>">Hide</a></span>
+				</li>
+			<% end %>
+		</ul>
 		
-		<div class="reports">
-			<div class="explanation">
-				<span class="inner">
-					All of your reports are listed here.  Reports will be delivered to all recipients on the schedule indicated.
-				</span>
-			</div>
-			
-			<div class="reports">
-				<% @reports.each do |report| %>
-					<h2><a href="<%= mg_report_url :id => report.id %>"><%=h report.title %></a> [<a href="<%= edit_mg_report_url :id => report.id %>">edit</a>]</h2>
-				<% end %>
-			</div>
+		<div class="action-bar">
+			<a class="button" href="<%= new_mg_report_url %>">New Report</a>
 		</div>
 		
-		<div class="actions">
-			<a class="button" href="<%= new_mg_report_url %>">New Report</a>
+		<div class="hidden-reports">
+			<% @hidden_reports.each do |report| %>
+				<span class="name"><%=h report.title %></span>
+				<span class="unhide"><a href="<%= unhide_mg_report_url :id => report.id %>">Restore</a></span>
+			<% end %>
 		</div>
 	</div>
 </div>

@@ -76,14 +76,14 @@ module MetricTracking
     def mg_apply_strategy(metric)
       case mg_strategy.downcase
         when 'e-greedy'
-          logger.warn Mg::MetricVariant.all(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
-          return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
+          logger.warn Mg::MetricVariant.all(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{rand.to_f} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
+          return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC, CASE WHEN #{rand.to_f} < #{mg_epsilon.to_f} THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC, #{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
         when 'e-greedy-decreasing'
           return Mg::MetricVariant.first(:order => "CASE WHEN served = 0 THEN 1 ELSE 0 END DESC,
-                                                    CASE WHEN #{mg_rand} < #{mg_epsilon.to_f} / ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC,
+                                                    CASE WHEN #{rand.to_f} < #{mg_epsilon.to_f} / ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) THEN #{mg_rand} ELSE CASE WHEN served = 0 THEN -1 ELSE reward / served END END DESC,
                                                     #{mg_rand} DESC", :conditions => { :metric_id => metric.id } ) # * log( ( select sum(served) from mg_metric_variants where metric_id = #{ metric.id.to_i } ) )
         when 'a/b'
-          return Mg::MetricVariant.first(:order => "#{mg_rand} DESC", :conditions => { :metric_id => metric.id } )
+          return Mg::MetricVariant.first(:order => "#{rand.to_f} DESC", :conditions => { :metric_id => metric.id } )
         else
           raise "Invalid strategy #{mg_strategy}"
       end

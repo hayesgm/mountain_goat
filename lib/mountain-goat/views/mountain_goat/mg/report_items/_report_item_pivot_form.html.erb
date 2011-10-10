@@ -2,13 +2,13 @@
 
 <% pivot = nil if !local_assigns.has_key?(:pivot) %>
 
-<% if reportable.instance_of?(Mg::Convert) %>
-	<% cmts = reportable.convert_meta_types %>
+<% if reportable.instance_of?(Mg::Goal) %>
+	<% gmts = reportable.mg_goal_meta_types %>
 <% end %>
 
-<% if !cmts.nil? %>
+<% if !gmts.nil? %>
 	<div class="item pivot">
 		<%= label_tag :'report_item[pivot]', "Pivot" %>
-		<%= select_tag :'report_item[pivot]', options_for_select( [[ "None", "" ]] + cmts.map { |cmt| [ cmt.name, "#{cmt.id}-#{cmt.class}" ] }, pivot.nil? ? "" : "#{pivot.id}-#{pivot.type}" ) %>
+		<%= select_tag :'report_item[pivot]', options_for_select( [[ "None", "" ]] + gmts.map { |gmt| [ gmt.name, "#{gmt.id}-#{gmt.class}" ] }, pivot.nil? ? "" : "#{pivot.id}-#{pivot.type}" ) %>
 	</div>
 <% end %>

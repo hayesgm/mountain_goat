@@ -103,6 +103,10 @@ class CreateMountainGoatTables < ActiveRecord::Migration
       t.string   "recipients"
       t.datetime "deleted_at"
       t.string   "theme"
+      t.string   "report_type",  :default => "graph"
+      t.text     "report_opts"
+      t.string   "meta"
+      t.string   "meta2"
     end
   end
 

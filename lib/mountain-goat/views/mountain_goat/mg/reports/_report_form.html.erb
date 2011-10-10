@@ -7,12 +7,17 @@
 
 <div class="item description">
 	<%= f.label :description %>
-	<%= f.text_area :description %>
+	<%= f.text_field :description %>
+</div>
+
+<div class="item report_type">
+	<%= f.label :report_type, 'Report Type' %>
+	<%= f.select :report_type, options_for_select( [ [ 'Graph', 'graph' ], [ 'Funnel', 'funnel' ] ] ) %>
 </div>
 
 <div class="item delivert_set">
 	<%= f.label :delivery_set, 'Frequency' %>
-	<%= f.select :delivery_set, options_for_select( [ [ 'daily', 'daily' ], [ 'weekly', 'weekly' ], [ 'monthly', 'monthly' ] ] ) %>
+	<%= f.select :delivery_set, options_for_select( [ [ 'Daily', 'daily' ], [ 'Weekly', 'weekly' ], [ 'Monthly', 'monthly' ], ['Never', 'never'] ] ) %>
 </div>
 
 <div class="item recipients">

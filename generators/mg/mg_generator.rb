@@ -2,7 +2,7 @@ class MgGenerator < Rails::Generator::Base
   def add_options!(opt)
     opt.on('-p', '--password=password', String, "Your password to access Mountain Goat") { |v| options[:password] = v}
     opt.on('-w', '--wkhtmltopdf=/path/to/dir', String, "Path to installation of wkhtmltopdf (optional)") { |v| options[:wkhtmltopdf] = v}
-    opt.on('-u', '--update=1.0.0', String, "If you have previously installed Mountain Goat, use to generate *update* tables.") { |v| options[:update] = v}
+    opt.on('-u', '--update=1.0.0,1.0.1', String, "If you have previously installed Mountain Goat, use to generate *update* tables.") { |v| options[:update] = v}
     puts <<-HELPFUL_INSTRUCTIONS
 
       Mountain Goat is your home for in-house bandit testing.
@@ -34,10 +34,16 @@ class MgGenerator < Rails::Generator::Base
       m.template 'mountain_goat_reports.rake', 'lib/tasks/mountain_goat_reports.rake'
       m.template 'mountain-goat.yml', 'config/mountain-goat.yml', :assigns => { :password => password, :wkhtmltopdf => wkhtmltopdf }
       
-      if !update.blank?
+      if update.blank?
         m.migration_template 'create_mountain_goat_tables.rb', 'db/migrate', { :migration_file_name => "create_mountain_goat_tables" }
-      elsif update == "1.0.0"
+      end
+      
+      if update.include?("1.0.0")
         m.migration_template 'update_mountain_goat_tables.rb', 'db/migrate', { :migration_file_name => "update_mountain_goat_tables" }
+      end
+      
+      if update.include?("1.0.1")
+        m.migration_template 'update_mountain_goat_tables_v2.rb', 'db/migrate', { :migration_file_name => "update_mountain_goat_tables_v2" }
       end
       
     end

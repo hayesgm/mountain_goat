@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.name        = "mountain-goat"
   s.version     = MountainGoat::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Geoffrey Hayes", "drawn.to"]
-  s.email       = ["geoff@drawn.to"]
+  s.authors     = ["Geoffrey Hayes", "meloncard.com"]
+  s.email       = ["geoff@meloncard.com"]
   s.homepage    = "http://github.com/hayesgm/mountain_goat"
   s.summary     = "A/B Testing to the edge"
   s.description = "A/B test everything and get awesome in-house analytics"

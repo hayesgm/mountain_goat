@@ -2,7 +2,8 @@ class Mg::ReportsController < Mg
   # GET /mg_reports
   # GET /mg_reports.xml
   def index
-    @reports = Mg::Report.all
+    @reports = Mg::Report.find( :all, :conditions => { :deleted_at => nil } )
+    @hidden_reports = Mg::Report.find( :all, :conditions => "deleted_at IS NOT NULL" )
 
     respond_to do |format|
       format.html # index.html.erb
@@ -76,6 +77,32 @@ class Mg::ReportsController < Mg
     end
   end
 
+  # GET /mg/reports/1/hide
+  # GET /mg/reports/1/hide.xml
+  def hide
+    @report = Mg::Report.find(params[:id])
+    @report.update_attribute(:deleted_at, Time.new)
+    flash[:notice] = "Report #{@report.title} has been hidden."
+    
+    respond_to do |format|
+      format.html { redirect_to mg_reports_url }
+      format.xml  { head :ok }
+    end
+  end
+  
+  # GET /mg/reports/1/unhide
+  # GET /mg/reports/1/unhide.xml
+  def unhide
+    @report = Mg::Report.find(params[:id])
+    @report.update_attribute(:deleted_at, nil)
+    flash[:notice] = "Report #{@report.title} has been restored."
+    
+    respond_to do |format|
+      format.html { redirect_to mg_reports_url }
+      format.xml  { head :ok }
+    end
+  end
+  
   # DELETE /mg_reports/1
   # DELETE /mg_reports/1.xml
   def destroy

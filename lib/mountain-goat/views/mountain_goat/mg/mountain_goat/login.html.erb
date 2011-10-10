@@ -1,23 +1,15 @@
-
-<div id="container-main" class="mt-login">
-	<div class="mountain-goat-panel">
-	
-		<h1>Please login to Mountain Goat</h1>
-		
-		<div class="login">
-			<div class="explanation">
-				<span class="inner">
-					Below are a list of conversion goals.  Each goal has a set of metrics designed to achieve that goal.  For each metric, there is a list of variants, each coupled with its conversation rate.</span>
-				</span>
-			</div>
-			
-			<div class="login-form">
-				
-				<% form_tag mg_login_create_url do %>
-					<%= password_field_tag :password %>
+<div id="container-main" class="mg-login">
+	<h1>Please login to Mountain Goat</h1>
+	<h3>Mountain Goat is your in-house analytics department.  Track metrics, run tests, and monitor your site in real-time.</h3>
+	<div class="container-content">
+		<div class="login-form">
+			<% form_tag mg_login_create_url do %>
+				<%= password_field_tag :password %>
+				<label>Admin Password</label>
+				<div class="submit">
 					<%= submit_tag :Enter %>
-				<% end %>
-			</div>
+				</div>
+			<% end %>
 		</div>
 	</div>
 </div>

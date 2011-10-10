@@ -8,15 +8,15 @@ Add simple hooks in your code to display a/b metrics
 
      <%= bd(:homescreen_text, "Welcome here") %>
   
-This creates a database entry for your a/b test "homescreen_text".  Visit "http://yourdomain.com/mg" and you can add / adjust options (variants) for this text.  When a user converts on a goal, you run the following code.
+This creates a database entry for your a/b test "homescreen_text".  Visit "http://yourdomain.com/mg" and you can add / adjust choices for this text.  When a user completes a goal, you run the following code.
   
   	 #e.g. users_controller.rb
      def create
-       record_conversion(:user_signup)
+       rw(:user_signup, 10) # Reward 10 points
        ...
      end
 
-This will track a conversion not only for the goal, but for the variant of "homescreen_text" that the user was served when your user came to the home-page.
+This will track a record not only for the goal, but for the choice of "homescreen_text" that the user was served when he or she came to the home-page.
 
 Bandit testing (see [Wikipedia - Multi-armed Bandit](http://en.wikipedia.org/wiki/Multi-armed_bandit) automatically converges on the variant that achieves the highest success through exploration each variant.  You essentially get a Bayesian solution with no hassle! 
 
@@ -27,10 +27,10 @@ The best part?  The Mountain-Goat Administrative console is located on your serv
  - Similar to Bayesian learning, Multi-armed bandit solutions will automatically deliver the highest performing variants
  - This is done while still achieving minimal (logarithmically decreasing) regret (showing of poorer performing variants)
  - A/B testing?  How about A/B/C/D/E testing?  Add as many variants as you like.
- - Visually analyze the your metric variants; change them on the fly, adding new ones or kicking out poor performers.
- - Watch goal conversions in real-time with live-action console (grab the popcorn and watch how your users "sign up" and "view items" and ...)
+ - Visually analyze the your choices; change them on the fly, adding new ones or kicking out poor performers.
+ - Watch goals complete in real-time with live-action console (grab the popcorn and watch how your users "sign up" and "view items" and ...)
  - You can do more than change text, "switch variants" let you enter arbitrary ruby code, change the control of your site ("Do my users have to sign-in before commenting?  Let's test!")
- - Track goals with meta data (record_conversion(:user_signup, :referrer => request.env['HTTP_REFERER']))
+ - Track goals with meta data (rw(:user_signup, 10, :referrer => request.env['HTTP_REFERER']))
    * Mountain goat tracks as much arbitrary meta data as you want
    * You are presented with charts for each goal, broken down by meta
    * See what referrers are driving goals, or which of your blog posts are drawing an audience
@@ -40,13 +40,13 @@ For more information, read my blog post on how mountain goat quickly accomplishe
 
 ## Upgrade from < 1.0.0
 
-If you are upgrading from Mountain Goat < 1.0.0, please run the following command (please overwrite mountain-goat.yml when prompted):
+If you are upgrading from Mountain Goat < 1.0.1, please run the following command (please overwrite mountain-goat.yml when prompted):
 
-     ./script/generate mg --update=1.0.0
-     
+     ./script/generate mg --update=1.0.0,1.0.1
+
      rake db:migrate
      
-This will install new migrations necessary for version 1.0.0.
+This will install new migrations necessary for version 1.0.1.  Leave out the 1.0.0 from the command if you are upgrading from version 1.0.0.
  
 ## Install
 
@@ -79,9 +79,9 @@ Run your new migration
 
 Mountain Goat hinges around three core concepts:
 	
-- Conversions are what you want  E.g. "user purchases coffee"
-- Metrics are how you draw people to convert  E.g. "a banner on the store-front"
-- Metric variants are A/B tests for metrics  E.g. "free coffee" "chuck norris is inside"
+- Goals are what you want  E.g. "user purchases coffee"
+- Tests are how you draw people to complete a goal  E.g. "a banner on the store-front"
+- Choices are A/B tests for tests  E.g. "free coffee" "chuck norris inside"
 	
 After you set up your database with some mountain-goat tables, the code will handle populating these tables for you.  In your code, you can start A/B testing immediately.
 	
@@ -91,9 +91,9 @@ The bandit (bd) function takes two parameters:
 	
      bd(metric_name, default)
 	
-This will automatically create a metric and populate a metric variant with the default value.  Easy, eh?
+This will automatically create a `test` and populate a `choice` with the default value.  Easy, eh?
 
-From here, you can go into the mountain goat admin center and add new metric variants to fit your need.  It's all built into *your* application, in house. 
+From here, you can go into the mountain goat admin center and add new `choices` to fit your need.  It's all built into *your* application, in house. 
 
      http://{your_rails_app}/mg  (e.g. if you're at railsrocks.com, then visit http://railsrocks.com/mg)
 
@@ -104,7 +104,7 @@ The other important code you'll need to implement is to tell the system when a g
        ...
      end
 	
-This will go in and record a conversion (a "rally") for a user purchasing coffee.  Further, it will track a hit for any metric-variants served to that user.  For example "Chuck Norris works here" might get reward points.  You will see which metrics lead to a conversion; this is the core of A/B and bandit testing.
+This will go in and record a goal (a `record`) for a user purchasing coffee.  Further, it will track a hit for any choices served to that user.  For example "Chuck Norris works here" might get reward points.  You will see which test choices lead to a goal; this is the core of A/B and bandit testing.
 
 ## Bandit Testing
 
@@ -130,33 +130,39 @@ A small variant on this is called epsilon-greedy-decreasing, which reduces epsil
 
 You can configure these options in `mountain-goat.yml`.
 
-## Mountain Goat admin suite
+## Mountain Goat Admin Suite
 
 Navigate to /mg in your rails application (on your actual server instance) to reach the mountain-goat admin center.  Here, you can analyze / adjust your A/B tests.
 
-The front page gives you a breakdown of each of your Goals, and the efficacy of each metric and metric-variant.  Select a given metric to drill into its variants.  Once you are in a specific metric, you'll be able to add new metric-variants and see what works best for your clients.
+The front page gives you a breakdown of each of your Goals, and the efficacy of each test and its choices.  Select a given test to drill into its choices.  Once you are in a specific test page, you'll be able to add new choices and see what works best for your clients.
 
 ###Goals
 
 Goals show you what users are doing.  Are they purchasing coffee?  Are they logging in?  Are they posting flames on your message board?  You can measure all of these things!
 
-In the Goals section, you'll get a break down of your goals and what metrics are leading in conversions.  Don't see anything here?  Add some metrics / goals / metric-variants from the code above.  Hint: Add meta data (see below) to see meta data associated with your conversions
+In the Goals section, you'll get a break down of your goals and what tests are leading in reward points.  Don't see anything here?  Add some tests / goals / choices from the code above.  Hint: Add meta data (see below) to see meta data associated with your records.
 
-###Metrics
+###Tests
 
-Go to "Metrics" and visit a specific metric.  You'll see which metric variants are getting the highest conversion rates.  Does having the font on the homescreen large draw more people into signing up, or does it turn people away?  This is where you can check and see.  Click 'New variant' below to add additional variants for testing.
+Go to `Tests` and visit a specific test.  You'll see which choices are getting the highest rewards.  Does having a large font on the homescreen draw more people into signing up, or does it turn people away?  This is where you can check and see.  Click 'New Choice' below to add additional variants for testing.
 
-* Click into a metric to explore (see above on how to create metrics from within your code-base)
-* Charts show you visually which variants are doing better than others
-* "Add variant" to add new variants for this metric
+* Click into a test to explore (see above on how to create tests from within your code-base)
+* Charts show you visually which choices are doing better than others
+* "Add Choice" to add new variants for this test
 
-###Rallies
+###Records
 
-Rallies shows you what's going on, in real time.  You will see conversions (goals) being hit by your clients in real time.  Grab a bag of pop-corn and watch users struggle (or glide) across your site.  Add meta data to get further information.   This page automatically updates as new rallies come in.
+Records shows you what's going on, in real time.  You will see goals being hit by your clients in real time.  Grab a bag of popcorn and watch users struggle (or glide) across your site.  Add meta data to get further information.   This page automatically updates as new records come in.
 
 ###Reports
 
 In the Mountain Goat Administrative suite, you can add reports.  Reports will be delivered as emails with an attached pdf showing statistics about your product.  You'll need the following installed to use Mountain Goat Reports.
+
+Funnel reports will display your goals as a flow of conversions across the site.  For instance, you may choose "hits" then "sign ups" then "purchases" and see how the funnel changes through these different goals.
+
+####Daily / Weekly Reports
+
+To get reports delivered to your inbox, first install the following gems:
 
      gem install pdfkit
      gem install svg-graph
@@ -172,17 +178,17 @@ Finally, simply set up a cron task on your system when you would like your repor
 
 ### Meta data
     
-You can track meta-data with any conversion.  E.g.
+You can track meta-data with any goal.  E.g.
     
-     rc(:user_visit, :referring_domain => request.env['HTTP_REFERER'], :user_id => session[:user_id])
+     rw(:user_visit, 10, :referring_domain => request.env['HTTP_REFERER'], :user_id => session[:user_id])
     
-These will be stored with the rally for the conversion and can get used for complex analytics down the line.  (see Converts.meta)
+These will be stored with the record for the goal and can get used for complex analytics down the line.  (see Goals.meta)
     
 ### Switch variants
     
 Instead of just serving text, you can also serve flow control in Mountain Goat, like so:
     
-      sv(:user_discount, :purchase_coffee) do |variant|
+      bds(:user_discount, :purchase_coffee) do |variant|
       
         variant.ten_percent do # "ten_percent" is the variant-name
           discount = 0.10
@@ -197,64 +203,72 @@ Instead of just serving text, you can also serve flow control in Mountain Goat, 
         end
       end
 
-Mountain goat will automatically break those down into three cases (:ten_percent, :big_winner, :whomp_whomp) and serve them out at random to the user.
+Mountain goat will automatically break those down into three cases (:ten_percent, :big_winner, :whomp_whomp) and serve them out to users using bandit methodology.
     
 ### Meta Options
 
-There is certain meta data that you may wish to collect for a number of different conversions.  For example, you may want to track ip-address so you can later pivot this column to find new / returning users.  To do this, add an initializer that calls MountainGoat.add_meta_option().
+There is certain meta data that you may wish to collect for a number of different goals.  For example, you may want to track IP-address so you can later pivot this column to find new / returning users.  To do this, add an initializer that calls MountainGoat.add_meta_option().
 
      MountainGoat.add_meta_option(:stats) do |c|
        { :ip => c.request.remote_ip }
      end
      
-Then, simply add ':stats => true' to your record_conversion call.  This will call into your block and replace the key-pair with the map returned from the block.  E.g.
+Then, simply add ':stats => true' to your `rw` call.  This will call into your block and replace the key-pair with the map returned from the block.  E.g.
 
-     record_conversion(:user_login, :login => @user.login, :stats => true)
+     rw(:user_login, 20, :login => @user.login, :stats => true)
      
-Then, when we track the conversion, you'll get meta-data for the user's ip-address.  You can add any number of "meta-options" that you would like.
+Then, when we track the conversion, you'll get meta-data for the user's IP-address.  You can add any number of "meta-options" that you would like.
 
+### Mountain-Goat.yml
+
+You can configure Mountain-Goat configuration through `config/mountain-goat.yml`.  There are application-wide settings and environment-specific settings.  E.g.
+
+     settings:
+       epsilon: 0.85
+       strategy: e-greedy
+       storage: session
+   
+     development:
+       password: your-password
+       wkhtmltopdf: /usr/local/bin/wkhtmltopdf
+
+- Settings:
+  * `Epsilon` - How often should Bandit deliver the best `choice` versus a random `choice`.  The idea is that we want to deliver the best choice ("Free Donuts When you Sign-Up") versus new (or less successful) choices ("Now Arsenic Free!").  0.85 means the system will deliver the best result 85% of the time (for strategy `e-greedy`)
+  * `Strategy` - Choice of "e-greedy", "e-greedy-decreasing" or "a/b".  For E-Greedy, as above, best case will be delivered epsilon-percent of the time.  For E-Greedy decreasing, this will decrease over time (so after a thousand tests, only the best result will be displayed).  Finally, a/b will ignore epsilon and always deliver a random choice.
+  * `Storage` - Should we store user choices in `session` or through `cookies`?  This is used to track the choices delivered to a user so we can reward points to these choices when the user completes a goal.  Cookies will also help ensure the page is consistent across many sessions (e.g. if you a/b test the background image, do you want it to be the same the next day for a user)
+- Environment:
+  * `Password` - Password to access Mountain Goat Admin Suite on this environment.  Choose a very secure password (a mix of letters, numbers, and symbols).
+  * `wkhtmltopdf` - Path to wkhtmltopdf executable for reports.  E.g. *Nix: `/usr/local/bin/wkhtmltopdf`, Windows: `C:\Program Files (x86)\wkhtmltopdf\wkhtmltopdf.exe` 
+ 
 ## Technical
 
-As mountain goat is a suite that is added into your project dynamically, the following routes and tables are added during setup:
+As mountain goat is a suite that is added into your project dynamically, the following models and tables are added during setup:
 
-- Tables
-  * mg_ci_metas (indexes: ci_metas_cmt_data_index, ci_metas_cmt_index, ci_metas_rally_index)
-  * mg_convert_meta_types
-  * mg_converts
-  * mg_cs_metas (indexes: cs_metas_cmt_data_index, cs_metas_cmt_index, cs_metas_rally_index)
-  * mg_metric_variants
-  * mg_metrics
-  * mg_rallies
-  * mg_report_items
-  * mg_reports
-
-- Routes (all namespaced mg)
-  * mg.mg '/mg', :controller => :converts, :action => :index, :path_prefix => ""
-  * mg.login '/login', :controller => :mountain_goat, :action => :login
-  * mg.login_create '/login/create', :controller => :mountain_goat, :action => :login_create
-  * mg.resources :metric_variants
-  * mg.resources :converts, :has_many => [ :rallies ]
-  * mg.resources :metrics, :has_many => :metric_variants
-  * mg.resources :rallies, :collection => { :new_rallies => :get }
-  * mg.resources :reports, :has_many => :report_items, :member => { :show_svg => :get }
-  * mg.resources :report_items, :member => { :destroy => :get, :update => :post }, :collection => { :get_extra => :get }
-  * mg.resources :playground, :collection => { :test => :get }
-  * mg.new_rallies '/rallies/new', :controller => :rallies, :action => :new_rallies 
-  * mg.fresh_metrics '/fresh-metrics', :controller => :metrics, :action => :fresh_metrics
-  * mg.connect '/public/:file', :controller => :mountain_goat, :action => :fetch
-    
-- Models
-  * Mg::CiMeta - Integer-typed meta data for Rallies (e.g. 'Click Count')
-  * Mg::ConvertMetaType - Meta-types for Rallies
-  * Mg::Convert - Goals (e.g. 'Page View', 'User Sign-up')
-  * Mg::CsMeta - String-typed meta data for Rallies (e.g. 'Referring domain')
-  * Mg::MetricVariant - Variant for a/b testing (e.g. 'Come see our store!')
-  * Mg::Metric - Type to vary for a/b testing (e.g. 'Homescreen Text')
-  * Mg::Rally - Instance of a goal conversion (e.g. when a user clicks sign up)
+- ActiveRecord Models
+  * Mg::GiMeta - Integer-typed meta data for Records (e.g. 'Click Count')
+  * Mg::GoalMetaType - Meta-types for Records
+  * Mg::Goal - Goals (e.g. 'Page View', 'User Sign-up')
+  * Mg::GsMeta - String-typed meta data for Records (e.g. 'Referring domain')
+  * Mg::Choice - Variant for a/b testing (e.g. 'Come see our store!')
+  * Mg::Test - Test to vary for a/b testing (e.g. 'Homescreen Text')
+  * Mg::Record - Instance of a goal completion (e.g. when a user clicks sign up)
   * Mg::ReportItem - Item to show in a report (e.g. Sign ups by day)
   * Mg::Report - Report to deliver (e.g. collection of user report items)
+
+- Database Tables
+  * mg_gi_metas
+  * mg_goal_meta_types
+  * mg_goals
+  * mg_gs_metas
+  * mg_choices
+  * mg_tests
+  * mg_records
+  * mg_report_items
+  * mg_reports
   
 ## Change log
+  1.0.1 - Renamed objects to reflect real-world thinking (e.g. metric => test)
+        - Fixed glitch in bandit choice selection
   1.0.0 - Changed from a/b testing to multi-armed bandit
         - Added Mountain Goat Reporting
         - Added extensive test cases for stability

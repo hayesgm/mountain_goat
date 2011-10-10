@@ -1,5 +1,5 @@
 <%# locals => report %>
 
-<% report.report_items.each do |report_item| %>
+<% report.mg_report_items.each do |report_item| %>
 	<%= render :partial => 'mg/report_items/show', :locals => { :report_item => report_item } %>
 <% end %>

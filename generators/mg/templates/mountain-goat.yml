@@ -19,6 +19,7 @@ settings:
   epsilon: 0.1
   strategy: e-greedy
   storage: cookies
+  email-from: 
    
 test:
   password: <%= password %>
