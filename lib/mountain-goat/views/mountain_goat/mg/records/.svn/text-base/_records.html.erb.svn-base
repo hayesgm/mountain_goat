@@ -1,5 +1,0 @@
-<%# locals => records %>
-
-<% records.each do |record| %>
-	<%= render 'record', :locals => { :record => record } %>
-<% end %>
