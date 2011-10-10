@@ -1,0 +1,12 @@
+<div id="container-main" class="mg-goal-edit">
+	<h1>Edit <%=h @goal.name.capitalize %></h1>
+	<div class="container-content">
+		<div class="edit-form">
+			<% form_for :goal, @goal, :url => mg_goal_url(:id => @goal.id), :html => { :method => :put } do |f| %>
+				<%= f.error_messages %>
+			
+				<%= render :partial => 'mg/goals/goal_form', :locals => { :f => f } %>
+			<% end %>
+		</div>
+	</div>
+</div>

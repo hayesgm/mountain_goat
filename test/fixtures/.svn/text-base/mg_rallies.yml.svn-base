@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  convert_id: 123
+
+two:
+  convert_id: 123
+  
+three:
+  convert_id: 234
+  

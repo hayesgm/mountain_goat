@@ -1,0 +1,30 @@
+
+<div id="container-main" class="mg-choices">
+	<div class="mountain-goat-panel cenetered">
+		<ul class="nav">
+			<li><a href="<%= mg_goals_url %>">Goals</a></li>
+			<li><a href="<%= mg_test_url :id => @choice.mg_test.id %>"><%=h @choice.mg_test.title %></a></li>
+		</ul>
+		
+		<h1><%=h @choice.name %></h1>
+		
+		<div class="test-category">
+			<div class="item rate">
+				<span class="rate-holder">
+					<span class="title"><a href="<%= mg_choice_url @choice %>"><%=h @choice.name %></a></span>
+					<span class="rates" style="width:<%= number_to_percentage(@choice.conversion_rate, :precision => 0) %>"></span>
+				</span>
+				
+				<span class="percent-holder">
+					<span class="val"><%= number_to_percentage(@choice.conversion_rate, :precision => 0) %></span>
+					(<span class="conversions"><%= @choice.conversions %></span> /
+					<span class="served"><%= @choice.served %></span>)
+				</span>
+			</div>
+		</div>
+		
+		<div class="actions">
+			<a class="button" href="<%= edit_mg_choice_url :id => @choice.id %>">Edit</a>
+		</div>
+	</div>
+</div>

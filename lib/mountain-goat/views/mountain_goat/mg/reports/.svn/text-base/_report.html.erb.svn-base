@@ -1,0 +1,22 @@
+<%# locals => report %>
+
+<style>
+	
+	h2, h4 { text-align: center; }
+	
+	.svg-chart {
+		width: 700px;
+		margin: 0 auto 30px auto;
+	}
+	
+</style>
+
+<h2><%=h report.title %></h2>
+
+<h4><%=h report.description %></h4>
+
+<% report.report_items.each do |report_item| %>
+	<div class="svg-chart">
+		<%= render 'mg/report_items/svg_chart', :report_item => report_item %>
+	</div>
+<% end %>

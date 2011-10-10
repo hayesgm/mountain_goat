@@ -1,0 +1,15 @@
+
+
+<div id="container-main" class="mg-choices">
+	<div class="mountain-goat-panel cenetered">
+		<h1>New Choice for <%=h @test.title %></h1>
+		
+		<% form_for :choice, @choice, :url => mg_choices_url do |f| %>
+			<%= f.error_messages %>
+		
+			<%= render 'choice_form', :f => f %>
+		<% end %>
+		
+		<a href="<%= mg_test_url :id => @test.id %>">Back to <%=h @test.title %></a>
+	</div>
+</div>

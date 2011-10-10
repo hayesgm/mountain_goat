@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  report_id: 123
+  reportable_id: 123
+  reportable_type: Mg::Convert
+  order: 1
+
+two:
+  report_id: 234
+  reportable_id: 234
+  reportable_type: Mg::Convert
+  order: 1

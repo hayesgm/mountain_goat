@@ -1,0 +1,4 @@
+<%# locals => report_item %>
+
+<% res = report_item.gerbil_chart.burn %>
+<%= res[res.index("<svg")..res.length] %>

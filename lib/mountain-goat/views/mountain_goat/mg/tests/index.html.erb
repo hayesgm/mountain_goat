@@ -1,0 +1,48 @@
+<div id="container-main" class="mg-tests">
+	<h1>Your Tests</h1>
+	<div class="container-content">
+		<div class="title-bar">
+			<span class="category test">Test</span>
+			<span class="category choice">Choice</span>
+			<span class="category served">Served</span>
+			<span class="category hit-points">Points</span>
+			<span class="category actions">Actions</span>
+		</div>
+		<ul class="listed">
+			<% @tests.each do |test| %>
+				<li class="test-condition">
+					<span class="category test"><%=h test.title %></span>
+					<span class="category choice"></span>
+					<span class="category served"><%=h test.total_served %></span>
+					<span class="category hit-points"><%=h test.total_reward %></span>
+					<span class="category actions">
+						<a href="<%= mg_test_url test %>">View</a>
+						<a href="<%= edit_mg_test_url :id => test %>">Edit</a>
+						<a href="<%= hide_mg_test_url test %>">Hide</a>
+					</span>
+					<ul class="choices">
+						<% test.mg_choices.each do |choice| %>
+							<li class="choice">
+								<span class="category test"></span>
+								<span class="category choice"><%=h choice.name %></span>
+								<span class="category served"><%=h choice.served %></span>
+								<span class="category hit-points"><%=h choice.reward %></span>
+								<span class="category actions"></span>
+							</li>
+						<% end %>
+					</ul>
+				</li>
+			<% end %>
+		</ul>
+		<div class="action-bar">
+			<a class="button" href="<%= new_mg_test_url %>">New Test</a>
+		</div>
+	</div>
+	
+	<div class="hidden-tests">
+		<% @hidden_tests.each do |test| %>
+			<span class="name"><%=h test.title %></span>
+			<span class="unhide"><a href="<%= unhide_mg_test_url :id => test.id %>">Restore</a></span>
+		<% end %>
+	</div>
+</div>

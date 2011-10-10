@@ -1,0 +1,18 @@
+<div id="container-main" class="mg-report-show">
+	<h1><%=h @report.title %></h1>
+	<div class="container-content">
+		<h3><%=h @report.description %></h3>
+		
+		<% if @report.report_type == 'graph' %>
+			<% @report.mg_report_items.each do |report_item| %>
+				<%= render 'mg/report_items/chart', :report_item => report_item %>
+			<% end %>
+		<% elsif @report.report_type == 'funnel' %>
+			<%= render 'mg/report_items/funnel', :report => @report %>
+		<% end %>
+		
+		<div class="actions">
+			<a class="button" href="<%= edit_mg_report_url @report %>">Edit</a>
+		</div>
+	</div>
+</div>

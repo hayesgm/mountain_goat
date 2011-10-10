@@ -1,0 +1,26 @@
+<%# locals => f %>
+
+<div class="item title">
+	<%= f.label :title %>
+	<%= f.text_field :title %>
+</div>
+
+<div class="item description">
+	<%= f.label :description %>
+	<%= f.text_field :description %>
+</div>
+
+<div class="item report_type">
+	<%= f.label :report_type, 'Report Type' %>
+	<%= f.select :report_type, options_for_select( [ [ 'Graph', 'graph' ], [ 'Funnel', 'funnel' ] ] ) %>
+</div>
+
+<div class="item delivert_set">
+	<%= f.label :delivery_set, 'Frequency' %>
+	<%= f.select :delivery_set, options_for_select( [ [ 'Daily', 'daily' ], [ 'Weekly', 'weekly' ], [ 'Monthly', 'monthly' ], ['Never', 'never'] ] ) %>
+</div>
+
+<div class="item recipients">
+	<%= f.label :recipients, 'Recipients' %>
+	<%= f.text_area :recipients %>
+</div>

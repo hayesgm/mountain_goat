@@ -1,0 +1,34 @@
+
+<div id="container-main" class="mg-choices">
+	<div class="mountain-goat-panel cenetered">
+		<h1>Listing Choices</h1>
+		
+		<table>
+		  <tr>
+		    <th>Metric</th>
+		    <th>Value</th>
+		    <th>Opt1</th>
+		    <th>Opt2</th>
+		    <th>Served</th>
+		    <th>Conversions</th>
+		  </tr>
+		
+		<% @choices.each do |choice| %>
+		  <tr>
+		    <td><%=h choice.mg_test_id %></td>
+		    <td><%=h choice.value %></td>
+		    <td><%=h choice.opt1 %></td>
+		    <td><%=h choice.opt2 %></td>
+		    <td><%=h choice.served %></td>
+		    <td><%=h choice.conversions %></td>
+		    <td><a href="<%= mg_choice_url choice %>">Show</a></td>
+		    <td><a href="<%= edit_mg_choice_url choice %>">Edit</a></td>
+		  </tr>
+		<% end %>
+		</table>
+		
+		<br />
+		
+		<%= link_to 'New Choice', new_mg_choice_url %>
+	</div>
+</div>

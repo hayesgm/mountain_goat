@@ -1,0 +1,15 @@
+<div id="container-main" class="mg-login">
+	<h1>Please login to Mountain Goat</h1>
+	<h3>Mountain Goat is your in-house analytics department.  Track metrics, run tests, and monitor your site in real-time.</h3>
+	<div class="container-content">
+		<div class="login-form">
+			<% form_tag mg_login_create_url do %>
+				<%= password_field_tag :password %>
+				<label>Admin Password</label>
+				<div class="submit">
+					<%= submit_tag :Enter %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,13 @@
+
+<div id="container-main" class="mg-records">
+	<div class="mountain-goat-panel centered">
+		<h2>New Record</h2>
+	
+		<% form_for :record, @record, :url => mg_records_url do |f| %>
+			<%= f.error_messages %>
+		
+			<%= render 'records_form', :f => f %>
+		<% end %>
+	
+	</div>
+</div>

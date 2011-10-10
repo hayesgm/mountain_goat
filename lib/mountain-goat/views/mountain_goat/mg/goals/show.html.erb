@@ -1,0 +1,32 @@
+<div id="container-main" class="mg-goals show">
+	<h1><%=h @goal.name.capitalize %></h1>
+	<div class="container-content">
+		<div class="statboard">
+			<div class="flyer-analysis statpad">
+				<div class="title">Records by Day</div>
+				<div class="statbody">
+					<%= mg_chart("analysis_graph#{@goal.id}",
+								{ "Conversions" => { :collection => @results_per_day, :x => :date, :y => :val } },
+								  { :xaxis => {:mode => 'time', :timeformat => "%b %d" }, :yaxis => { :min => 0, :minTickSize => 1 }, :lines => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "records(s)") %>
+				</div>
+			</div>
+			
+			<% @goal.mg_goal_meta_types.each do |gmt| %>
+				<div class="flyer-analysis statpad">
+					<div class="title">Records by <%=h gmt.name %></div>
+					<div class="statbody">					
+						<% if gmt.meta_type == 'ci_meta' || gmt.meta_type == 'gi_meta' %>
+							<%= mg_chart("analysis_graph#{gmt.id}",
+									{ "Records" => { :collection => @results_by_gmt[gmt.id], :x => :name, :y => :val } },
+									  { :xaxis => {:autoscaleMargin => 1, :minTickSize => 1 }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true, :align => 'center', :barWidth => 1 }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "records(s)") %>
+						<% elsif gmt.meta_type == 'cs_meta' || gmt.meta_type == 'gs_meta' %>
+							<%= mg_chart("analysis_graph#{gmt.id}",
+									{ "Conversions" => { :collection => @results_by_gmt[gmt.id], :x => :name, :y => :val } },
+									  { :xaxis => {:autoscaleMargin => 0.1, :ticks => @results_by_gmt_titles[gmt.id].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "records(s)") %>
+						<% end %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
