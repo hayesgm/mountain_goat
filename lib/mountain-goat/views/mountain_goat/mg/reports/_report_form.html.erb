@@ -12,12 +12,12 @@
 
 <div class="item report_type">
 	<%= f.label :report_type, 'Report Type' %>
-	<%= f.select :report_type, options_for_select( [ [ 'Graph', 'graph' ], [ 'Funnel', 'funnel' ] ] ) %>
+	<%= f.select :report_type, options_for_select( [ [ 'Graph', 'graph' ], [ 'Funnel', 'funnel' ] ], f.object.report_type ) %>
 </div>
 
 <div class="item delivert_set">
 	<%= f.label :delivery_set, 'Frequency' %>
-	<%= f.select :delivery_set, options_for_select( [ [ 'Daily', 'daily' ], [ 'Weekly', 'weekly' ], [ 'Monthly', 'monthly' ], ['Never', 'never'] ] ) %>
+	<%= f.select :delivery_set, options_for_select( [ [ 'Daily', 'daily' ], [ 'Weekly', 'weekly' ], [ 'Monthly', 'monthly' ], ['Never', 'never'] ], f.object.delivery_set ) %>
 </div>
 
 <div class="item recipients">

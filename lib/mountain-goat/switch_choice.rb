@@ -15,9 +15,9 @@ class SwitchChoice
         # each option and make sure we have a back-end entry in choices
         # for the type
         @logger.warn "Looking at option #{sym.to_s}"
-        if @test.choices.find( :first, :conditions => { :switch_type => sym.to_s } ).nil?
+        if @test.mg_choices.find( :first, :conditions => { :switch_type => sym.to_s } ).nil?
           @logger.warn "Creating switch-type choice #{sym.to_s}"
-          @test.choices.create!( :name => sym.to_s, :switch_type => sym.to_s, :value => nil )
+          @test.mg_choices.create!( :name => sym.to_s, :switch_type => sym.to_s, :value => nil )
         end
       else
         if @chosen_choice.switch_type.to_s == sym.to_s

@@ -28,22 +28,19 @@ class Mg::GoalsController < Mg
     end
     
     @results_by_gmt = {}
-    @results_by_gmt_titles = {}
     
     @goal.mg_goal_meta_types.each do |gmt|
       @results_by_gmt[gmt.id] = []
-      @results_by_gmt_titles[gmt.id] = {}
-      i = 0
+      
       gmt.meta.all(:select => "data, count(*) as count", :group => "data").each do |meta|
         next if meta.data.nil?
         if gmt.meta_type == 'cs_meta' || gmt.meta_type == 'gs_meta' 
-          @results_by_gmt[gmt.id].push( { :name => i, :val => meta.count } )
-          @results_by_gmt_titles[gmt.id].merge!({ i => meta.data })
+          @results_by_gmt[gmt.id].push( { :name => meta.data, :val => meta.count, :title => meta.data } )
+          #@results_by_gmt_titles[gmt.id].merge!({ i => meta.data })
         else
-          @results_by_gmt[gmt.id].push( { :name => meta.data, :val => meta.count } )
+          @results_by_gmt[gmt.id].push( { :name => meta.data, :val => meta.count, :title => meta.data } )
         end
         
-        i += 1
       end
     end
     

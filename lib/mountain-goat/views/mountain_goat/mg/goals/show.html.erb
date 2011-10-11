@@ -5,9 +5,16 @@
 			<div class="flyer-analysis statpad">
 				<div class="title">Records by Day</div>
 				<div class="statbody">
-					<%= mg_chart("analysis_graph#{@goal.id}",
-								{ "Conversions" => { :collection => @results_per_day, :x => :date, :y => :val } },
-								  { :xaxis => {:mode => 'time', :timeformat => "%b %d" }, :yaxis => { :min => 0, :minTickSize => 1 }, :lines => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "records(s)") %>
+					<% if @results_per_day.count > 2 %>
+						<div id="chart_item<%=h @goal.id %>" data-raphael="line" data-x-axis="date"
+							data-title0="Records"
+							data-x0="<%= @results_per_day.map { |i| i[:date] }.join(',') %>"
+							data-y0="<%= @results_per_day.map { |i| i[:val] }.join(',') %>"
+							style="width: 425px; height: 260px;" />
+						</div>
+					<% else %>
+						Results will populate shortly
+					<% end %>
 				</div>
 			</div>
 			
@@ -15,15 +22,16 @@
 				<div class="flyer-analysis statpad">
 					<div class="title">Records by <%=h gmt.name %></div>
 					<div class="statbody">					
-						<% if gmt.meta_type == 'ci_meta' || gmt.meta_type == 'gi_meta' %>
-							<%= mg_chart("analysis_graph#{gmt.id}",
-									{ "Records" => { :collection => @results_by_gmt[gmt.id], :x => :name, :y => :val } },
-									  { :xaxis => {:autoscaleMargin => 1, :minTickSize => 1 }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true, :align => 'center', :barWidth => 1 }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "records(s)") %>
-						<% elsif gmt.meta_type == 'cs_meta' || gmt.meta_type == 'gs_meta' %>
-							<%= mg_chart("analysis_graph#{gmt.id}",
-									{ "Conversions" => { :collection => @results_by_gmt[gmt.id], :x => :name, :y => :val } },
-									  { :xaxis => {:autoscaleMargin => 0.1, :ticks => @results_by_gmt_titles[gmt.id].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "records(s)") %>
-						<% end %>
+						<div id="chart_item_gmt_<%=h gmt.id %>" data-raphael="pie" data-x-axis="date"
+							<% if gmt.meta_type == 'ci_meta' || gmt.meta_type == 'gi_meta' %>
+								data-title="<%= @results_by_gmt[gmt.id].map { |i| "'#{( i[:title] || "(Blank)" )}'" }.join(',') %>"
+								data-x="<%= @results_by_gmt[gmt.id].map { |i| i[:name] }.join(',') %>"
+							<% else %>
+								data-x="<%= @results_by_gmt[gmt.id].map { |i| "'#{i[:name]}'" }.join(',') %>"
+							<% end %>
+							data-y="<%= @results_by_gmt[gmt.id].map { |i| i[:val] }.join(',') %>"
+							style="width: 425px; height: 260px;" />
+						</div>
 					</div>
 				</div>
 			<% end %>

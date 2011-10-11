@@ -1,5 +1,7 @@
 <%# locals => report %>
 
+<% i = 0 %>
 <% report.mg_report_items.each do |report_item| %>
-	<%= render :partial => 'mg/report_items/show', :locals => { :report_item => report_item } %>
+	<%= render :partial => 'mg/report_items/show', :locals => { :report_item => report_item, :show_up => i > 0, :show_down => i < report.mg_report_items.count - 1 } %>
+	<% i += 1 %>
 <% end %>

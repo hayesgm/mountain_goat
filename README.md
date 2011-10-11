@@ -40,13 +40,13 @@ For more information, read my blog post on how mountain goat quickly accomplishe
 
 ## Upgrade from < 1.0.0
 
-If you are upgrading from Mountain Goat < 1.0.2, please run the following command (please overwrite mountain-goat.yml when prompted):
+If you are upgrading from Mountain Goat < 1.0.3, please run the following command (please overwrite mountain-goat.yml when prompted):
 
-     ./script/generate mg --update=1.0.0,1.0.2
+     ./script/generate mg --update=1.0.0,1.0.3
 
      rake db:migrate
      
-This will install new migrations necessary for version 1.0.2.  Leave out the 1.0.0 from the command if you are upgrading from version 1.0.0.
+This will install new migrations necessary for version 1.0.3.  Leave out the 1.0.0 from the command if you are upgrading from version 1.0.0.
  
 ## Install
 
@@ -267,6 +267,7 @@ As mountain goat is a suite that is added into your project dynamically, the fol
   * mg_reports
   
 ## Change log
+  1.0.3 - Some overall bug-fixes and start to use Raphael Graphs
   1.0.2 - Big UI overhaul ~ Robert
         - Renamed objects to reflect real-world thinking (e.g. metric => test)
         - Fixed glitch in bandit choice selection

@@ -1,4 +1,4 @@
-<%# locals => report_item %>
+<%# locals => report_item, show_up, show_down %>
 
 <div class="report-item">
 	<span class="report-info">
@@ -23,7 +23,18 @@
 		</span>
 		
 		<span class="remove">
-			<a href="javascript:void(0)" class="remote-link smallbutton" data-path="<%= destroy_mg_report_item_url(:id => report_item.id) %>" data-res=".report-items-model .model">Remove</a>
+			<a href="javascript:void(0)" class="remote-link smallbutton" data-path="<%= destroy_mg_report_item_url(:id => report_item.id) %>" data-res=".report-report-items">Remove</a>
+		</span>
+		
+		<span class="up-down">
+			<% if show_up %>
+				<a href="javascript:void(0)" class="remote-link smallbutton" data-path="<%= up_mg_report_item_url(:id => report_item.id) %>" data-res=".report-report-items">Up</a>
+			<% end %>
+			
+			<% if show_down %>
+				<% if show_up %>/<% end %>
+				<a href="javascript:void(0)" class="remote-link smallbutton" data-path="<%= down_mg_report_item_url(:id => report_item.id) %>" data-res=".report-report-items">Down</a>
+			<% end %>
 		</span>
 	</span>
 </div>

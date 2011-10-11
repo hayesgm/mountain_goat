@@ -27,7 +27,7 @@ class Mg::Goal < ActiveRecord::Base
   
   # Helper function to retrieve a goal by symbol
   def self.by_type(s)
-    Mg::Goal.find( :first, :conditions => { :mg_goal_type => s.to_s } )
+    Mg::Goal.find( :first, :conditions => { :goal_type => s.to_s } )
   end
   
   # Get all records for given meta (e.g. for "Referer": { "Youtube" => Record1, } ...)

@@ -19,7 +19,7 @@ module MgCore
       mg.resources :tests, :has_many => :choices, :member => { :hide => :get, :unhide => :get }
       mg.resources :records, :collection => { :new_records => :get }
       mg.resources :reports, :has_many => :report_items, :member => { :show_svg => :get, :hide => :get, :unhide => :get }
-      mg.resources :report_items, :member => { :destroy => :get, :update => :post }, :collection => { :get_extra => :get }
+      mg.resources :report_items, :member => { :destroy => :get, :update => :post, :up => :get, :down => :get }, :collection => { :get_extra => :get }
       mg.resources :playground, :collection => { :test => :get }
       mg.new_records '/records/new', :controller => :records, :action => :new_records 
       mg.fresh_choices '/fresh-choices', :controller => :tests, :action => :fresh_choices
