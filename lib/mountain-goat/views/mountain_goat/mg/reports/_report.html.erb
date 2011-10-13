@@ -15,7 +15,7 @@
 
 <h4><%=h report.description %></h4>
 
-<% report.report_items.each do |report_item| %>
+<% report.mg_report_items.each do |report_item| %>
 	<div class="svg-chart">
 		<%= render 'mg/report_items/svg_chart', :report_item => report_item %>
 	</div>

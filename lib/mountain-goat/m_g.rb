@@ -1,23 +1,4 @@
 
-################
-# Setup PDFKit #
-################
-
-begin
-  require 'pdfkit'
-rescue LoadError
-  raise "Mountain Goat Reports will not work without the 'pdfkit' gem (please run `gem install pdfkit`)"
-end
-
-######################
-# Setup svg-graph    #
-######################
-
-begin
-  require 'SVG/Graph/TimeSeries'
-rescue LoadError
-  raise "Mountain Goat Reports will not work without the 'svg-graph' gem (please run `gem install svg-graph`)"
-end
 
 ############################
 # TODO: Verify Email Setup #
@@ -25,6 +6,26 @@ end
 
 class MG
   def self.deliver(delivery_set = nil)
+    ################
+    # Setup PDFKit #
+    ################
+    
+    begin
+      require 'pdfkit'
+    rescue LoadError
+      raise "Mountain Goat Reports will not work without the 'pdfkit' gem (please run `gem install pdfkit`)"
+    end
+    
+    ######################
+    # Setup svg-graph    #
+    ######################
+    
+    begin
+      require 'SVG/Graph/TimeSeries'
+    rescue LoadError
+      raise "Mountain Goat Reports will not work without the 'svg-graph' gem (please run `gem install svg-graph`)"
+    end
+    
     mg_yml = YAML::load(File.open("#{RAILS_ROOT}/config/mountain-goat.yml"))
     
     if mg_yml.blank? || mg_yml[RAILS_ENV].blank? || mg_yml[RAILS_ENV]['wkhtmltopdf'].blank?
