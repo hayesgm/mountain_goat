@@ -8,21 +8,24 @@
 			<% else %>
 				<div class="statboard">
 					<div class="flyer-analysis statpad">
-						<div class="title">Records</div>
+						<div class="title">Serves</div>
 						<div class="statbody">
-							<%= mg_chart("analysis_graph#{@test.id}",
-												{ "Served" => { :collection => @rates[:served], :x => :choice_type, :y => :value },
-													"Reward Count" => { :collection => @rates[:reward_count], :x => :choice_type, :y => :value } },
-													{ :xaxis => { :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :show => false, :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "record(s)") %>
+							<div id="chart_item_mg_test_#{@test.id}_served %>" data-raphael="pie"
+								data-x="<%= @test.mg_choices.map { |c| "'#{c.name}'" }.join(',') %>"
+								data-y="<%= @test.mg_choices.map { |c| c.served }.join(',') %>"
+								style="width: 425px; height: 260px;" />
+						</div>
 						
 						</div>
 					</div>
 					<div class="flyer-analysis statpad">
-						<div class="title">Reward Rates</div>
+						<div class="title">Avg. Rewards</div>
 						<div class="statbody">
-							<%= mg_chart("analysis_conv_graph#{@test.id}",
-												{ "Reward Rate" => { :collection => @rates[:reward_rates], :x => :choice_type, :y => :value } },
-													{ :xaxis => { :ticks => @rates[:titles].map { |i,t| [i + 0.5, t] }.sort }, :yaxis => { :min => 0, :minTickSize => 1 }, :bars => { :show => true }, :legend => { :show => false, :position => "ne" }, :grid => { :hoverable => true, :clickable => true }, :inline => false }, :placeholder_size => "420x260", :pie_hover => true, :line_hover_absolute => true, :item_title => "") %>
+							<div id="chart_item_mg_test_#{@test.id}_avg_reward %>" data-raphael="pie"
+								data-x="<%= @test.mg_choices.map { |c| "'#{c.name}'" }.join(',') %>"
+								data-y="<%= @test.mg_choices.map { |c| c.reward / c.served unless c.reward.blank? || c.served.blank? || c.served == 0 }.join(',') %>"
+								style="width: 425px; height: 260px;" />
+						</div>
 						
 						</div>
 					</div>
@@ -46,8 +49,8 @@
 									<span class="category choice"><%=h choice.name %></span>
 									<span class="category served"><%= choice.served %></span>
 									<span class="category hit-points"><%= choice.reward || "None" %></span>
-									<span class="category hit-points-avg"><%=h choice.reward_rate || "N/A" %></span>
-									<span class="category actions"><a href="<%= mg_choice_url choice %>">Edit</a></span>
+									<span class="category hit-points-avg"><%=h choice.avg_points_per_serve || "N/A" %></span>
+									<span class="category actions"><a href="<%= edit_mg_choice_url choice %>">Edit</a></span>
 								</li>
 							<% end %>
 						</ul>

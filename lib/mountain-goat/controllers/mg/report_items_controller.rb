@@ -22,7 +22,7 @@ class Mg::ReportItemsController < Mg
     raise ArgumentError, "Invalid report" if @report.nil?
     
     @report_item = @report.mg_report_items.new(params[:report_item].clone.delete_if { |k, v| k.intern == :reportable || k.intern == :pivot } )
-    @report_item.order = @report.mg_report_items.maximum(:order) + 1 # @report.mg_report_items.to_a.map { |ri| ri.order }.push(0).max + 1# -- weird sqlite3 bugs
+    @report_item.order = ( @report.mg_report_items.maximum(:order) || 0 ) + 1 # @report.mg_report_items.to_a.map { |ri| ri.order }.push(0).max + 1# -- weird sqlite3 bugs
     
     if !params[:report_item][:reportable].blank?
       id, model = params[:report_item][:reportable].split('-')

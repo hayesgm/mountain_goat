@@ -47,4 +47,10 @@ class Mg::Choice < ActiveRecord::Base
     return nil if self.reward_count == 0 || self.reward_count.nil? || self.reward.nil?
     return self.reward / self.reward_count.to_f
   end
+  
+  # What is the average reward given to this choice
+  def avg_points_per_serve
+    return nil if self.served == 0 || self.served.nil? || self.reward.nil?
+    return self.reward / self.served.to_f
+  end
 end

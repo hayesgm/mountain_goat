@@ -18,22 +18,6 @@ class Mg::TestsController < Mg
   # GET /mg/tests/1.xml
   def show
     @test = Mg::Test.find(params[:id])
-
-    @rates = {}
-    @rates[:served] = []
-    @rates[:reward_count] = []
-    @rates[:reward_rates] = []
-    @rates[:titles] = {}
-    i = 0
-    @test.mg_choices.each do |mv|
-      @rates[:served].push( { :choice_type => i, :value => mv.served } )
-      @rates[:reward_count].push( { :choice_type => i, :value => mv.reward_count } )
-      @rates[:reward_rates].push( { :choice_type => i, :value => mv.reward_rate } )
-      @rates[:titles].merge!({i => mv.name})
-      i += 1
-    end
-    
-    logger.warn @rates[:titles].inspect
     
     respond_to do |format|
       format.html # show.html.erb
