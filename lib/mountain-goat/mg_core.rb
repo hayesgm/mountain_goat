@@ -181,7 +181,7 @@ module MgCore
       options.each do |k, v|
         if k.to_s =~ /^test_(\w+)$/i
           options.delete k
-          tests.merge!({ $1, v })
+          tests.merge!({ $1 => v })
         end
       end
       
