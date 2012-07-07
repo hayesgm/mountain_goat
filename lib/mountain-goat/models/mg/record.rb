@@ -1,5 +1,5 @@
 class Mg::Record < ActiveRecord::Base
-  set_table_name :mg_records
+  self.table_name = 'mg_records'
   
   belongs_to :mg_goal, :class_name => "Mg::Goal"
   has_many :mg_goal_meta_types, :through => :mg_goal, :class_name => "Mg::GoalMetaType"

@@ -1,3 +1,4 @@
+require 'mountain-goat/helpers/mg/mg_helper'
 
 class Mg < ActionController::Base
   

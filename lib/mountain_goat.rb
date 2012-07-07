@@ -1,8 +1,14 @@
 
 require 'rubygems'
+
 require 'active_support'
 require 'action_controller'
-require 'action_controller/routing'
+require 'action_mailer'
+require 'active_record'
+# require 'action_controller/routing'
+
+# This is a hack -- Rails 2 + Ruby 1.9.3 = helper issues
+MissingSourceFile::REGEXPS << [/^cannot load such file -- (.+)$/i, 1]
 
 require File.join([File.dirname(__FILE__), 'mountain-goat/controllers/mg/mg'])
 require File.join([File.dirname(__FILE__), 'mountain-goat/controllers/mg/mountain_goat_controller'])

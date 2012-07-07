@@ -6,7 +6,7 @@
 # deleted_at:: Is this goal deleted? (MG Console)
 # is_hidden:: Is this goal hidden? (MG Console)
 class Mg::Goal < ActiveRecord::Base
-  set_table_name :mg_goals
+  self.table_name = 'mg_goals'
   
   # ActiveRecord Associations
   has_many :mg_records, :class_name => "Mg::Record", :foreign_key => "mg_goal_id"

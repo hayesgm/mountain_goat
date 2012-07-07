@@ -1,5 +1,5 @@
 class Mg::Report < ActiveRecord::Base
-  set_table_name :mg_reports
+  self.table_name = 'mg_reports'
   
   has_many :mg_report_items, :class_name => "Mg::ReportItem", :foreign_key => "mg_report_id", :order => "mg_report_items.order"
   has_many :reportables, :through => :mg_report_items

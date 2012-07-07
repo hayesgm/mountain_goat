@@ -1,6 +1,6 @@
 class Mg::ReportMailer < ActionMailer::Base
   
-  self.template_root = File.join([File.dirname(__FILE__), '../../views/mountain_goat/'])
+  template_root = File.join([File.dirname(__FILE__), '../../views/mountain_goat/'])
   
   def report(report, pdf)
     setup_sender

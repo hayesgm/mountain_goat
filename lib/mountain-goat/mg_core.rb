@@ -1,7 +1,7 @@
 require File.join([File.dirname(__FILE__), 'switch_choice'])
 
 module MgCore
-  
+=begin
   #Metric Tracking routes
   class << ActionController::Routing::Routes;self;end.class_eval do
     define_method :clear!, lambda {}
@@ -26,7 +26,7 @@ module MgCore
       mg.connect '/public/:file', :controller => :mountain_goat, :action => :fetch
     end
   end
-  
+=end  
   module Controller
   
     #This is just for testing

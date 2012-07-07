@@ -1,5 +1,5 @@
 class Mg::GoalMetaType < ActiveRecord::Base
-  set_table_name :mg_goal_meta_types
+  self.table_name = 'mg_goal_meta_types'
   
   belongs_to :mg_goal, :class_name => "Mg::Goal"
   has_many :gi_metas, :dependent => :destroy, :class_name => "Mg::GiMeta", :foreign_key => "mg_goal_meta_type_id" 

@@ -12,7 +12,7 @@
 # switch_type:: Is this a switch-type choice
 # deleted_at:: Is this choice still active?
 class Mg::Choice < ActiveRecord::Base
-  set_table_name :mg_choices
+  self.table_name = 'mg_choices'
   
   # ActiveRecord Associations
   belongs_to :mg_test, :class_name => "Mg::Test"

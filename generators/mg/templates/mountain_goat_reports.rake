@@ -11,7 +11,7 @@
 namespace :mg do
   
   desc "deliver mountain goat reports"
-  task :deliver, :delivery_set, :needs => :environment do |t, args|
+  task :deliver, [ :delivery_set ] => :environment do |t, args|
     MG.deliver(args[:delivery_set])
   end
 end

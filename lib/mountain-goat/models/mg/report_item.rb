@@ -1,5 +1,5 @@
 class Mg::ReportItem < ActiveRecord::Base
-  set_table_name :mg_report_items
+  self.table_name = 'mg_report_items'
   
   belongs_to :mg_report, :class_name => "Mg::Report", :foreign_key => "mg_report_id"
   belongs_to :reportable, :polymorphic => true
